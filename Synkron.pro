@@ -2,7 +2,7 @@ QT += network \
     sql \
     xml \
     xmlpatterns
-TARGET = bin/Synkron
+TARGET = Synkron
 TEMPLATE = app
 CONFIG += thread
 UI_DIR = tmp/ui
