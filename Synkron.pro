@@ -2,86 +2,91 @@ QT += network \
     sql \
     xml \
     xmlpatterns
-TARGET = Synkron
+TARGET = bin/Synkron
 TEMPLATE = app
 CONFIG += thread
-SOURCES += main.cpp \
-    mainwindow.cpp \
-    mtapplication.cpp \
-    maincontroller.cpp \
-    settings.cpp \
-    mtfile.cpp \
-    synctabform.cpp \
-    folders.cpp \
-    syncfolders.cpp \
-    folder.cpp \
-    syncfolderform.cpp \
-    module.cpp \
-    extendedtreewidget.cpp \
-    abstractsyncpage.cpp \
-    syncpage.cpp \
-    syncfolder.cpp \
-    abstractsyncadvancedview.cpp \
-    syncadvancedview.cpp \
-    exceptions.cpp \
-    exceptionbundle.cpp \
-    exceptiongroup.cpp \
-    blacklistgroup.cpp \
-    filtergroup.cpp \
-    fileblacklistgroup.cpp \
-    folderblacklistgroup.cpp \
-    exceptionform.cpp \
-    syncaction.cpp \
-    folderactiongroup.cpp \
-    syncfile.cpp \
-    abstractexceptionbundle.cpp \
-    syncexceptionbundle.cpp \
-    exceptionfile.cpp \
-    filecompare.cpp \
-    syncoutmessage.cpp \
-    mttablewidgetitem.cpp
-HEADERS += mainwindow.h \
-    mtapplication.h \
-    maincontroller.h \
-    settings.h \
-    mtfile.h \
-    mtadvancedgroupbox.h \
-    extendedlineedit.h \
-    extendedlistwidget.h \
-    extendedtreewidget.h \
-    synctabform.h \
-    folders.h \
-    syncfolders.h \
-    folder.h \
-    syncfolderform.h \
-    module.h \
-    abstractsyncpage.h \
-    syncpage.h \
-    syncfolder.h \
-    abstractsyncadvancedview.h \
-    syncadvancedview.h \
-    exceptions.h \
-    exceptionbundle.h \
-    exceptiongroup.h \
-    blacklistgroup.h \
-    filtergroup.h \
-    fileblacklistgroup.h \
-    folderblacklistgroup.h \
-    exceptionform.h \
-    syncaction.h \
-    folderactiongroup.h \
-    syncfile.h \
-    abstractexceptionbundle.h \
-    syncexceptionbundle.h \
-    exceptionfile.h \
-    filecompare.h \
-    syncoutmessage.h \
-    mttablewidgetitem.h
-FORMS += mainwindow.ui \
-    synctabform.ui \
-    syncfolderform.ui \
-    exceptionform.ui \
-    navigationitemform.ui
+UI_DIR = tmp/ui
+MOC_DIR = tmp/moc
+RCC_DIR = tmp/rcc
+OBJECTS_DIR = tmp/obj
+SOURCES += src/main.cpp \
+    src/mainwindow.cpp \
+    src/mtapplication.cpp \
+    src/maincontroller.cpp \
+    src/settings.cpp \
+    src/mtfile.cpp \
+    src/synctabform.cpp \
+    src/folders.cpp \
+    src/syncfolders.cpp \
+    src/folder.cpp \
+    src/syncfolderform.cpp \
+    src/module.cpp \
+    src/extendedtreewidget.cpp \
+    src/abstractsyncpage.cpp \
+    src/syncpage.cpp \
+    src/syncfolder.cpp \
+    src/abstractsyncadvancedview.cpp \
+    src/syncadvancedview.cpp \
+    src/exceptions.cpp \
+    src/exceptionbundle.cpp \
+    src/exceptiongroup.cpp \
+    src/blacklistgroup.cpp \
+    src/filtergroup.cpp \
+    src/fileblacklistgroup.cpp \
+    src/folderblacklistgroup.cpp \
+    src/exceptionform.cpp \
+    src/syncaction.cpp \
+    src/folderactiongroup.cpp \
+    src/syncfile.cpp \
+    src/abstractexceptionbundle.cpp \
+    src/syncexceptionbundle.cpp \
+    src/exceptionfile.cpp \
+    src/filecompare.cpp \
+    src/syncoutmessage.cpp \
+    src/mttablewidgetitem.cpp \
+    src/extendedlineedit.cpp
+HEADERS += src/mainwindow.h \
+    src/mtapplication.h \
+    src/maincontroller.h \
+    src/settings.h \
+    src/mtfile.h \
+    src/mtadvancedgroupbox.h \
+    src/extendedlineedit.h \
+    src/extendedlistwidget.h \
+    src/extendedtreewidget.h \
+    src/synctabform.h \
+    src/folders.h \
+    src/syncfolders.h \
+    src/folder.h \
+    src/syncfolderform.h \
+    src/module.h \
+    src/abstractsyncpage.h \
+    src/syncpage.h \
+    src/syncfolder.h \
+    src/abstractsyncadvancedview.h \
+    src/syncadvancedview.h \
+    src/exceptions.h \
+    src/exceptionbundle.h \
+    src/exceptiongroup.h \
+    src/blacklistgroup.h \
+    src/filtergroup.h \
+    src/fileblacklistgroup.h \
+    src/folderblacklistgroup.h \
+    src/exceptionform.h \
+    src/syncaction.h \
+    src/folderactiongroup.h \
+    src/syncfile.h \
+    src/abstractexceptionbundle.h \
+    src/syncexceptionbundle.h \
+    src/exceptionfile.h \
+    src/filecompare.h \
+    src/syncoutmessage.h \
+    src/mttablewidgetitem.h
+FORMS += ui/mainwindow.ui \
+    ui/synctabform.ui \
+    ui/syncfolderform.ui \
+    ui/exceptionform.ui \
+    ui/navigationitemform.ui
 RESOURCES += resources.qrc \
     i18n.qrc
 DESTDIR = ./
@@ -98,7 +103,7 @@ macx {
     # Comment the following line to use the NSFileManager class
     # to perform copy operations instead of QFile + /usr/bin/touch:
     DEFINES += USE_UNIX_TOUCH_COMMAND
-    SOURCES += mtfile_macx.mm
+    SOURCES += src/mtfile_macx.mm
     ICON = images/Synkron128.icns
     icons.path = Contents/Resources
     icons.files = images/slist.icns
