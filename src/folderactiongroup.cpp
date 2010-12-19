@@ -4,6 +4,24 @@
 
 FolderActionGroup::FolderActionGroup()
 {
+    init();
+}
+
+FolderActionGroup::FolderActionGroup(int i, const QString str)
+{
+    init();
+    ids->append(i); paths->append(str);
+}
+
+FolderActionGroup::FolderActionGroup(int i1, const QString str1, int i2, const QString str2)
+{
+    init();
+    ids->append(i1); paths->append(str1);
+    ids->append(i2); paths->append(str2);
+}
+
+void FolderActionGroup::init()
+{
     paths = new QStringList;
     ids = new QList<int>;
 }
@@ -35,4 +53,24 @@ int FolderActionGroup::count()
 int FolderActionGroup::idAt(int i)
 {
     return ids->at(i);
+}
+
+const QString & FolderActionGroup::first()
+{
+    return paths->first();
+}
+
+const QString & FolderActionGroup::last()
+{
+    return paths->last();
+}
+
+int FolderActionGroup::firstId()
+{
+    return ids->first();
+}
+
+int FolderActionGroup::lastId()
+{
+    return ids->last();
 }

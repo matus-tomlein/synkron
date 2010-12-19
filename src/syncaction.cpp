@@ -9,8 +9,6 @@
 #include "exceptiongroup.h"
 #include "mtfile.h"
 
-#include <QDir>
-#include <QFileInfo>
 #include <QSet>
 
 #include <QElapsedTimer>
@@ -123,10 +121,9 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
     QFileInfo fi;
     QDir dir;
 
-    //int * latest_index_arr = (int *) malloc(fag->count() * sizeof(int));
     int latest_index_arr[fag->count()];
     int latest_index = 0, c;
-    QFileInfo * newest_fi = NULL;
+    MTFileInfo * newest_fi = NULL;
     FolderActionGroup * sub_fag = NULL;
 
     for (int i = 0; i < parent->childCount(); ++i) {
@@ -144,10 +141,10 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
                 if (!sf->existsInFolder(fag->idAt(n))) {
                     if (dir.exists()) {
                         if (!dir.mkdir(sf->getName())) {
-                            emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, dir.absoluteFilePath(sf->getName()), QString(), true));
+                            emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName())), true));
                             continue;
                         } else {
-                            emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, dir.absoluteFilePath(sf->getName())));
+                            emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))));
                         }
                     }
                 }
@@ -162,7 +159,7 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
                     dir.setPath(fag->at(n));
                     fi.setFile(dir.absoluteFilePath(sf->getName()));
                     if (!newest_fi) {
-                        newest_fi = new QFileInfo(fi);
+                        newest_fi = new MTFileInfo(fi, fag->idAt(n));
                         latest_index_arr[n] = latest_index;
                     }
                     else {
@@ -188,44 +185,46 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
             for (int n = 0; n < fag->count(); ++n) {
                 dir.setPath(fag->at(n));
                 if (latest_index_arr[n] == -2) { // does not exist
-                    copyFile(newest_fi, dir.absoluteFilePath(sf->getName()));
+                    copyFile(new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
+                                                     fag->idAt(n), dir.absoluteFilePath(sf->getName())));
                 }
                 else if (latest_index_arr[n] < latest_index) { // is obsolete
-                    updateFile(newest_fi, dir.absoluteFilePath(sf->getName()));
+                    updateFile(new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
+                                                     fag->idAt(n), dir.absoluteFilePath(sf->getName())));
                 }
             }
         }
     }
 }
 
-void SyncAction::copyFile(QFileInfo * source, const QString & dest_string)
+void SyncAction::copyFile(FolderActionGroup * fag)
 {
-    MTFile source_file(source->absoluteFilePath());
-    if (source_file.copy(dest_string)) {
-        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileCopied, source->absoluteFilePath(), dest_string));
+    MTFile source_file(fag->first());
+    if (source_file.copy(fag->last())) {
+        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileCopied, fag));
     } else {
-        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileCopied, source->absoluteFilePath(), dest_string, true, source_file.errorString()));
+        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileCopied, fag, true, source_file.errorString()));
     }
 }
 
-void SyncAction::updateFile(QFileInfo * source, const QString & dest_string)
+void SyncAction::updateFile(FolderActionGroup * fag)
 {
-    MTFile file(dest_string);
+    MTFile file(fag->last());
 
     if (!backupFile(&file)) {
         return;
     }
 
     if (!file.remove()) {
-        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileUpdated, source->absoluteFilePath(), dest_string, true, file.errorString()));
+        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileUpdated, fag, true, file.errorString()));
         return;
     }
 
-    file.setFileName(source->absoluteFilePath());
-    if (!file.copy(dest_string)) {
-        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileUpdated, source->absoluteFilePath(), dest_string, true, file.errorString()));
+    file.setFileName(fag->first());
+    if (!file.copy(fag->last())) {
+        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileUpdated, fag, true, file.errorString()));
     } else {
-        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileUpdated, source->absoluteFilePath(), dest_string));
+        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileUpdated, fag));
     }
 }
 

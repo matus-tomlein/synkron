@@ -76,14 +76,20 @@ protected:
 class MTFileInfo : public QFileInfo
 {
 public:
-    MTFileInfo(): QFileInfo() {};
-    MTFileInfo(const QString & file): QFileInfo(file) {};
-    MTFileInfo(const QFile & file): QFileInfo(file) {};
-    MTFileInfo(const QDir & dir, const QString & file): QFileInfo(dir, file) {};
-    MTFileInfo(const QFileInfo & fileinfo): QFileInfo(fileinfo) {};
+    MTFileInfo(): QFileInfo() {}
+    MTFileInfo(const QString & file): QFileInfo(file) {}
+    MTFileInfo(const QFile & file): QFileInfo(file) {}
+    MTFileInfo(const QDir & dir, const QString & file): QFileInfo(dir, file) {}
+    MTFileInfo(const QFileInfo & fileinfo): QFileInfo(fileinfo) {}
+    MTFileInfo(const QFileInfo & fileinfo, int f_id): QFileInfo(fileinfo) { this->f_id = f_id; }
 
-    MTEvenDateTime lastModified() const { return MTEvenDateTime(QFileInfo::lastModified()); };
-    MTEvenDateTime lastRead() const { return MTEvenDateTime(QFileInfo::lastRead()); };
+    MTEvenDateTime lastModified() const { return MTEvenDateTime(QFileInfo::lastModified()); }
+    MTEvenDateTime lastRead() const { return MTEvenDateTime(QFileInfo::lastRead()); }
+
+    int folderId() { return f_id; }
+
+private:
+    int f_id;
 };
 
 class MTCheckBoxGroup : public QWidget

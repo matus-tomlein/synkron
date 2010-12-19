@@ -35,8 +35,8 @@ private:
 
     void createSyncFileFromFolders(SyncFile *, FolderActionGroup *&);
     void sync(SyncFile *, FolderActionGroup *&);
-    void copyFile(QFileInfo *, const QString &);
-    void updateFile(QFileInfo *, const QString &);
+    void copyFile(FolderActionGroup *);
+    void updateFile(FolderActionGroup *);
     bool backupFile(MTFile *);
 
 signals:
