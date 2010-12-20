@@ -46,6 +46,7 @@ signals:
 
     void fileCopied(const QString, const QString);
     void fileUpdated(const QString, const QString);
+    void anotherItemChecked();
 
     void syncOutMessage(SyncOutMessage *);
 };

@@ -45,10 +45,11 @@ void SyncAction::run()
     QElapsedTimer timer;
     timer.start();
     createSyncFileFromFolders(sf, fag);
+    emit filesCounted(sf->count());
+
     fag = base_folders->folderActionGroup();
     sync(sf, fag);
 
-    //emit filesCounted(sf->count());
     //emit messageBox(QString("COUNT %1").arg(sf->count()));
 
     //emit messageBox(QString("TIME %1").arg(timer.elapsed()));
@@ -194,6 +195,7 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
                 }
             }
         }
+        emit this->anotherItemChecked();
     }
 }
 

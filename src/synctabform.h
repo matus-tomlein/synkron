@@ -30,7 +30,7 @@ class AbstractSyncPage;
 class SyncAdvancedView;
 class SyncOutMessage;
 class Folder;
-class QProgressBar;
+class MTProgressBar;
 
 namespace Ui {
     class SyncTabForm;
@@ -48,7 +48,7 @@ public:
     void assignNavigationItem(QTreeWidgetItem *);
 
     QString title();
-    QProgressBar * progressBar() { return progress_bar; }
+    MTProgressBar * progressBar() { return progress_bar; }
     QWidget * navigationItemWidget();
 
 protected:
@@ -62,7 +62,7 @@ private:
     int i;
     QList<SyncFolderForm *>* folder_forms;
     QTreeWidgetItem * nav_item;
-    QProgressBar * progress_bar;
+    MTProgressBar * progress_bar;
 
     // Advanced options items +++
     QTreeWidgetItem * sync_hidden_item;
@@ -81,7 +81,7 @@ private slots:
     void toggleAdvanced();
     void hideAdvanced();
     void sync();
-    void showMessageBox(const QString);
+    void showMessageBox(const QString = QString());
     void syncFinished();
     void syncOutMessage(SyncOutMessage*);
 

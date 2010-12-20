@@ -27,11 +27,11 @@
 #include "syncaction.h"
 #include "syncoutmessage.h"
 #include "mttablewidgetitem.h"
+#include "mtprogressbar.h"
 
 #include <QList>
 #include <QTreeWidgetItem>
 #include <QMessageBox>
-#include <QProgressBar>
 
 /**
   * i is the index of the tab displayed in the title.
@@ -46,7 +46,7 @@ SyncTabForm::SyncTabForm(AbstractSyncPage * page, QWidget *parent) :
     nav_item = NULL;
     this->page = page;
 
-    progress_bar = new QProgressBar();
+    progress_bar = new MTProgressBar();
     progress_bar->setHidden(true);
 
     ui->sync_log_table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -221,9 +221,11 @@ void SyncTabForm::hideAdvanced()
 void SyncTabForm::sync()
 {
     progress_bar->setHidden(false);
+    progress_bar->setValue(0);
     SyncAction * sa = new SyncAction(page->foldersObject(), page->syncExceptionBundle());
     QObject::connect(sa, SIGNAL(messageBox(QString)), this, SLOT(showMessageBox(QString)), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(filesCounted(int)), progress_bar, SLOT(setMaximum(int)), Qt::QueuedConnection);
+    QObject::connect(sa, SIGNAL(anotherItemChecked()), progress_bar, SLOT(increaseValue()), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(finished()), this, SLOT(syncFinished()));
     QObject::connect(sa, SIGNAL(syncOutMessage(SyncOutMessage*)), this, SLOT(syncOutMessage(SyncOutMessage*)));
 

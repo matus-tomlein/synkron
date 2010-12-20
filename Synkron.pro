@@ -9,6 +9,7 @@ UI_DIR = tmp/ui
 MOC_DIR = tmp/moc
 RCC_DIR = tmp/rcc
 OBJECTS_DIR = tmp/obj
+INCLUDEPATH += src ui
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/mtapplication.cpp \
@@ -44,7 +45,8 @@ SOURCES += src/main.cpp \
     src/filecompare.cpp \
     src/syncoutmessage.cpp \
     src/mttablewidgetitem.cpp \
-    src/extendedlineedit.cpp
+    src/extendedlineedit.cpp \
+    src/mtprogressbar.cpp
 HEADERS += src/mainwindow.h \
     src/mtapplication.h \
     src/maincontroller.h \
@@ -81,7 +83,8 @@ HEADERS += src/mainwindow.h \
     src/exceptionfile.h \
     src/filecompare.h \
     src/syncoutmessage.h \
-    src/mttablewidgetitem.h
+    src/mttablewidgetitem.h \
+    src/mtprogressbar.h
 FORMS += ui/mainwindow.ui \
     ui/synctabform.ui \
     ui/syncfolderform.ui \
