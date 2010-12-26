@@ -47,8 +47,6 @@ void ExceptionFile::addWildcard(const QString card)
 
 const QString & ExceptionFile::wildcardAt(int i)
 {
-    if (!wildcards) return "";
-
     return wildcards->at(i);
 }
 

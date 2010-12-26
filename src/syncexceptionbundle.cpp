@@ -50,7 +50,7 @@ const QStringList & SyncExceptionBundle::filters()
     return *filter_extensions;
 }
 
-bool SyncExceptionBundle::isInBlacklist(const QString & name, bool is_dir)
+bool SyncExceptionBundle::isInBlacklist(const QString &, bool)
 {
     /*ExceptionGroup * group = groupById(is_dir ? ExceptionGroup::FolderBlacklist : ExceptionGroup::FileBlacklist);
 

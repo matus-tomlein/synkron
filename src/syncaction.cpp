@@ -10,7 +10,6 @@
 #include "mtfile.h"
 
 #include <QSet>
-
 #include <QElapsedTimer>
 
 SyncAction::SyncAction(Folders * folders, SyncExceptionBundle * bundle) : QThread()
@@ -34,35 +33,42 @@ void SyncAction::start(Priority priority)
 
 void SyncAction::run()
 {
+    run(NULL);
+}
+
+void SyncAction::run(SyncFile * sf)
+{
     QObject::connect(this, SIGNAL(finished()), this, SLOT(deleteLater()), Qt::DirectConnection);
 
-    SyncFile * sf = new SyncFile("/");
     FolderActionGroup * fag = base_folders->folderActionGroup();
     skipped_count = 0;
 
     exception_bundle->updateRootFolder(fag);
+    if (!sf) {
+        sf = new SyncFile(tr("Root"));
+        createSyncFileFromFolders(sf, fag);
+    }
 
-    QElapsedTimer timer;
-    timer.start();
-    createSyncFileFromFolders(sf, fag);
+
+    //QElapsedTimer timer;
+    //timer.start();
+
     emit filesCounted(sf->count());
-
-    fag = base_folders->folderActionGroup();
     sync(sf, fag);
 
     //emit messageBox(QString("COUNT %1").arg(sf->count()));
-
     //emit messageBox(QString("TIME %1").arg(timer.elapsed()));
-    emit finished();
 
-    delete sf;
+    delete fag;
+
+    finish(sf);
 }
 
 /**
   * Fills up the parent sync file with all the content of folders in the folder action group.
   * Recursively calls itself when finds a folder.
   */
-void SyncAction::createSyncFileFromFolders(SyncFile * parent, FolderActionGroup *& fag)
+void SyncAction::createSyncFileFromFolders(SyncFile * parent, FolderActionGroup * fag)
 {
     QSet<QString> entries;
 
@@ -103,17 +109,20 @@ void SyncAction::createSyncFileFromFolders(SyncFile * parent, FolderActionGroup 
             }
 
             //sf->setBlacklisted(exception_bundle->isInBlacklist());
-            if (child_dirs_fag) createSyncFileFromFolders(sf, child_dirs_fag);
+            if (child_dirs_fag) {
+                createSyncFileFromFolders(sf, child_dirs_fag);
+
+                delete child_dirs_fag; child_dirs_fag = NULL;
+            }
         }
 
         exception_bundle->cdUp();
     }
 
-    delete fag;
     fag = NULL;
 }
 
-void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
+void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
 {
     if (!parent)
         return;
@@ -140,14 +149,16 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
             for (int n = 0; n < fag->count(); ++n) {
                 dir.setPath(fag->at(n));
                 if (!sf->existsInFolder(fag->idAt(n))) {
-                    if (dir.exists()) {
+                    /*if (dir.exists()) {
                         if (!dir.mkdir(sf->getName())) {
                             emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName())), true));
                             continue;
                         } else {
                             emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))));
                         }
-                    }
+                    }*/
+                    if (!createFolder(sf, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))))
+                        continue;
                 }
                 sub_fag->insert(fag->idAt(n), dir.absoluteFilePath(sf->getName()));
             }
@@ -186,11 +197,11 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
             for (int n = 0; n < fag->count(); ++n) {
                 dir.setPath(fag->at(n));
                 if (latest_index_arr[n] == -2) { // does not exist
-                    copyFile(new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
+                    copyFile(sf, new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
                                                      fag->idAt(n), dir.absoluteFilePath(sf->getName())));
                 }
                 else if (latest_index_arr[n] < latest_index) { // is obsolete
-                    updateFile(new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
+                    updateFile(sf, new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
                                                      fag->idAt(n), dir.absoluteFilePath(sf->getName())));
                 }
             }
@@ -199,7 +210,7 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup *& fag)
     }
 }
 
-void SyncAction::copyFile(FolderActionGroup * fag)
+void SyncAction::copyFile(SyncFile *, FolderActionGroup * fag)
 {
     MTFile source_file(fag->first());
     if (source_file.copy(fag->last())) {
@@ -209,7 +220,7 @@ void SyncAction::copyFile(FolderActionGroup * fag)
     }
 }
 
-void SyncAction::updateFile(FolderActionGroup * fag)
+void SyncAction::updateFile(SyncFile *, FolderActionGroup * fag)
 {
     MTFile file(fag->last());
 
@@ -230,7 +241,17 @@ void SyncAction::updateFile(FolderActionGroup * fag)
     }
 }
 
-bool SyncAction::backupFile(MTFile * file)
+bool SyncAction::createFolder(SyncFile *, FolderActionGroup * fag)
+{
+    if (!QDir().mkpath(fag->first())) {
+        emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, fag, true));
+        return false;
+    }
+    emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, fag));
+    return true;
+}
+
+bool SyncAction::backupFile(MTFile *)
 {
     /*QDir(sp->mp_parent->temp_path).mkdir(update_time);
         if (!file->copy(QString("%1/%2/%3.%4").arg(sp->mp_parent->temp_path).arg(update_time).arg(file_info2->fileName()).arg(synced_files))) {
@@ -241,4 +262,10 @@ bool SyncAction::backupFile(MTFile * file)
         sp->saveBackedUpFile(*file_info2);*/
 
     return true;
+}
+
+void SyncAction::finish(SyncFile * sf)
+{
+    delete sf;
+    emit finished();
 }

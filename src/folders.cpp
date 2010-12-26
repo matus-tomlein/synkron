@@ -105,6 +105,16 @@ Folder * Folders::at(int i)
     return folders.at(i);
 }
 
+Folder * Folders::byId(int id)
+{
+    for (int i = 0; i < folders.count(); ++i) {
+        if (folders.at(i)->index() == id)
+            return folders.at(i);
+    }
+
+    return NULL;
+}
+
 /**
   * Returns path of the folder at position i.
   */

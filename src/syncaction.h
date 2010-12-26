@@ -22,6 +22,7 @@ public:
     ~SyncAction();
 
     void run();
+    void run(SyncFile *);
 
 public slots:
     void start(Priority = InheritPriority);
@@ -33,11 +34,14 @@ private:
 
     int skipped_count;
 
-    void createSyncFileFromFolders(SyncFile *, FolderActionGroup *&);
-    void sync(SyncFile *, FolderActionGroup *&);
-    void copyFile(FolderActionGroup *);
-    void updateFile(FolderActionGroup *);
+    void createSyncFileFromFolders(SyncFile *, FolderActionGroup *);
+    void sync(SyncFile *, FolderActionGroup *);
+    virtual void copyFile(SyncFile *, FolderActionGroup *);
+    virtual void updateFile(SyncFile *, FolderActionGroup *);
+    virtual bool createFolder(SyncFile *, FolderActionGroup *);
     bool backupFile(MTFile *);
+
+    virtual void finish(SyncFile *);
 
 signals:
     void messageBox(const QString);

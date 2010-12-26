@@ -9,8 +9,10 @@ public:
     FolderActionGroup();
     FolderActionGroup(int, const QString);
     FolderActionGroup(int, const QString, int, const QString);
+    ~FolderActionGroup();
 
     void insert(int, const QString);
+    void insertId(int);
     const QString & at(int);
     const QString & byId(int);
     const QString & first();
@@ -19,6 +21,10 @@ public:
     int firstId();
     int lastId();
     int count();
+
+    void idsOnly();
+
+    QString & operator[] (int);
 
 private:
     QStringList * paths;

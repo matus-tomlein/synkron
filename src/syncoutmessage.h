@@ -26,6 +26,13 @@ public:
     int secondFolderId();
     const QString & errorString() { return error_str; }
 
+    void labelFolder(int, int, const QString &);
+    int folderCount();
+    const QString & stringAt(int);
+    int folderIdAt(int);
+
+    FolderActionGroup * folderActionGroup() { return fag; }
+
 private:
     QString error_str;
     FolderActionGroup * fag;

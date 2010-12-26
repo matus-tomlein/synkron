@@ -46,7 +46,12 @@ SOURCES += src/main.cpp \
     src/syncoutmessage.cpp \
     src/mttablewidgetitem.cpp \
     src/extendedlineedit.cpp \
-    src/mtprogressbar.cpp
+    src/mtprogressbar.cpp \
+    src/messagehandler.cpp \
+    src/analyseaction.cpp \
+    src/analyseform.cpp \
+    src/analysetreewidgetitem.cpp \
+    src/syncform.cpp
 HEADERS += src/mainwindow.h \
     src/mtapplication.h \
     src/maincontroller.h \
@@ -84,12 +89,19 @@ HEADERS += src/mainwindow.h \
     src/filecompare.h \
     src/syncoutmessage.h \
     src/mttablewidgetitem.h \
-    src/mtprogressbar.h
+    src/mtprogressbar.h \
+    src/messagehandler.h \
+    src/analyseaction.h \
+    src/analyseform.h \
+    src/analysetreewidgetitem.h \
+    src/syncform.h
 FORMS += ui/mainwindow.ui \
     ui/synctabform.ui \
     ui/syncfolderform.ui \
     ui/exceptionform.ui \
-    ui/navigationitemform.ui
+    ui/navigationitemform.ui \
+    ui/analyseform.ui \
+    ui/syncform.ui
 RESOURCES += resources.qrc \
     i18n.qrc
 DESTDIR = ./

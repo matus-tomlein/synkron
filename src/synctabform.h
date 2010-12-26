@@ -30,7 +30,10 @@ class AbstractSyncPage;
 class SyncAdvancedView;
 class SyncOutMessage;
 class Folder;
+class FolderActionGroup;
 class MTProgressBar;
+class AnalyseForm;
+class SyncForm;
 
 namespace Ui {
     class SyncTabForm;
@@ -58,6 +61,8 @@ private:
     Ui::SyncTabForm *ui;
     AbstractSyncPage * page;
     SyncAdvancedView * advanced_view;
+    AnalyseForm * analyse_form;
+    SyncForm * sync_form;
 
     int i;
     QList<SyncFolderForm *>* folder_forms;
@@ -81,9 +86,7 @@ private slots:
     void toggleAdvanced();
     void hideAdvanced();
     void sync();
-    void showMessageBox(const QString = QString());
-    void syncFinished();
-    void syncOutMessage(SyncOutMessage*);
+    void analyse();
 
 signals:
     void addFolderSig(int, int);

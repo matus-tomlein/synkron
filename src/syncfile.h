@@ -6,6 +6,17 @@
 class SyncFile
 {
 public:
+    enum FileStatus {
+        OK,
+        Obsolete,
+        NotFound,
+        Deleted
+    };
+    struct FolderStatus {
+        SyncFile::FileStatus file_stat;
+        int folder_id;
+    };
+
     SyncFile(const QString);
     ~SyncFile();
 
@@ -17,8 +28,11 @@ public:
     int childCount();
     int count(bool = true);
     SyncFile * childAt(int);
+
     void addFolder(int);
     bool existsInFolder(int);
+    void setFileStatusInFolder(int, FileStatus);
+    SyncFile::FileStatus fileStatusInFolder(int);
 
     bool isDir() { return is_dir; }
     void setDir(bool d) { is_dir = d; }
@@ -28,11 +42,13 @@ public:
 
 private:
     QList<SyncFile *> * children;
-    QList<int> * folders;
+    QList<SyncFile::FolderStatus> * folders;
 
     QString name;
     bool is_dir;
     bool blacklisted;
+
+    int indexOfFolder(int);
 };
 
 #endif // SYNCFILE_H

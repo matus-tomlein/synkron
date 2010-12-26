@@ -11,11 +11,11 @@ void MTTableWidgetItem::loadSyncOutMessage(SyncOutMessage * message)
 {
     switch (message->getType()) {
     case SyncOutMessage::FileCopied:
-        this->setText(QString("File %1 copied from %2").arg(message->firstString()).arg(message->secondString()));
+        this->setText(QString("File %1 copied to %2").arg(message->firstString()).arg(message->secondString()));
         break;
 
     case SyncOutMessage::FileUpdated:
-        this->setText(QString("File %1 updated from %2").arg(message->firstString()).arg(message->secondString()));
+        this->setText(QString("File %1 updated from %2").arg(message->secondString()).arg(message->firstString()));
         break;
 
     case SyncOutMessage::FolderCreated:

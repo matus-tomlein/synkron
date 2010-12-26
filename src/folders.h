@@ -42,6 +42,7 @@ public:
     int count();
 
     Folder * at(int);
+    Folder * byId(int);
     const QString pathAt(int);
     FolderActionGroup * folderActionGroup();
 

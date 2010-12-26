@@ -9,7 +9,7 @@ SyncFile::SyncFile(const QString name)
     setDir(false);
     setBlacklisted(false);
 
-    folders = new QList<int>;
+    folders = new QList<FolderStatus>;
 }
 
 SyncFile::~SyncFile()
@@ -78,14 +78,36 @@ SyncFile * SyncFile::childAt(int i)
 
 void SyncFile::addFolder(int i)
 {
-    folders->append(i);
+    FolderStatus fstat;
+    fstat.file_stat = SyncFile::OK;
+    fstat.folder_id = i;
+    folders->append(fstat);
 }
 
 bool SyncFile::existsInFolder(int i)
 {
+    return fileStatusInFolder(i) != SyncFile::NotFound;
+}
+
+SyncFile::FileStatus SyncFile::fileStatusInFolder(int i)
+{
     for (int n = 0; n < folders->count(); ++n) {
-        if (folders->at(n) == i)
-            return true;
+        if (folders->at(n).folder_id == i)
+            return folders->at(n).file_stat;
     }
-    return false;
+    return SyncFile::NotFound;
+}
+
+void SyncFile::setFileStatusInFolder(int i, FileStatus status)
+{
+    for (int n = 0; n < folders->count(); ++n) {
+        if (folders->at(n).folder_id == i) {
+            (*folders)[n].file_stat = status;
+            return;
+        }
+    }
+    FolderStatus fstat;
+    fstat.file_stat = status;
+    fstat.folder_id = i;
+    folders->append(fstat);
 }

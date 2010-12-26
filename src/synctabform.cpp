@@ -28,6 +28,10 @@
 #include "syncoutmessage.h"
 #include "mttablewidgetitem.h"
 #include "mtprogressbar.h"
+#include "messagehandler.h"
+#include "folderactiongroup.h"
+#include "analyseform.h"
+#include "syncform.h"
 
 #include <QList>
 #include <QTreeWidgetItem>
@@ -49,12 +53,17 @@ SyncTabForm::SyncTabForm(AbstractSyncPage * page, QWidget *parent) :
     progress_bar = new MTProgressBar();
     progress_bar->setHidden(true);
 
-    ui->sync_log_table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-
     QObject::connect(ui->add_folder_btn, SIGNAL(clicked()), this, SLOT(addFolder()));
     QObject::connect(ui->tab_name_le, SIGNAL(textChanged(QString)), this, SLOT(nameChanged(QString)));
     QObject::connect(ui->advanced_btn, SIGNAL(clicked()), this, SLOT(toggleAdvanced()));
     QObject::connect(ui->sync_btn, SIGNAL(clicked()), this, SLOT(sync()));
+    QObject::connect(ui->analyse_btn, SIGNAL(clicked()), this, SLOT(analyse()));
+
+    sync_form = new SyncForm(progress_bar, page->foldersObject(), ui->logs_stckw);
+    ui->logs_stckw->addWidget(sync_form);
+
+    analyse_form = new AnalyseForm(ui->logs_stckw);
+    ui->logs_stckw->addWidget(analyse_form);
 
     advanced_view = new SyncAdvancedView(page, ui->advanced_tree);
     load();
@@ -69,6 +78,7 @@ SyncTabForm::~SyncTabForm()
         delete folder_forms->takeAt(n);
     }
     delete folder_forms;
+    delete analyse_form;
     delete ui;
 }
 
@@ -220,21 +230,8 @@ void SyncTabForm::hideAdvanced()
   */
 void SyncTabForm::sync()
 {
-    progress_bar->setHidden(false);
-    progress_bar->setValue(0);
-    SyncAction * sa = new SyncAction(page->foldersObject(), page->syncExceptionBundle());
-    QObject::connect(sa, SIGNAL(messageBox(QString)), this, SLOT(showMessageBox(QString)), Qt::QueuedConnection);
-    QObject::connect(sa, SIGNAL(filesCounted(int)), progress_bar, SLOT(setMaximum(int)), Qt::QueuedConnection);
-    QObject::connect(sa, SIGNAL(anotherItemChecked()), progress_bar, SLOT(increaseValue()), Qt::QueuedConnection);
-    QObject::connect(sa, SIGNAL(finished()), this, SLOT(syncFinished()));
-    QObject::connect(sa, SIGNAL(syncOutMessage(SyncOutMessage*)), this, SLOT(syncOutMessage(SyncOutMessage*)));
-
-    sa->start();
-}
-
-void SyncTabForm::showMessageBox(const QString s)
-{
-    QMessageBox::information(NULL, "", s);
+    ui->logs_stckw->setCurrentWidget(sync_form);
+    sync_form->startSync(page->syncExceptionBundle());
 }
 
 QWidget * SyncTabForm::navigationItemWidget()
@@ -247,15 +244,8 @@ QWidget * SyncTabForm::navigationItemWidget()
     return w;
 }
 
-void SyncTabForm::syncFinished()
+void SyncTabForm::analyse()
 {
-    progress_bar->setHidden(true);
-}
-
-void SyncTabForm::syncOutMessage(SyncOutMessage * msg)
-{
-    ui->sync_log_table->insertRow(ui->sync_log_table->rowCount());
-    MTTableWidgetItem *item = new MTTableWidgetItem(msg);
-    ui->sync_log_table->setItem(ui->sync_log_table->rowCount() - 1, 0, item);
-    delete msg;
+    ui->logs_stckw->setCurrentWidget(analyse_form);
+    analyse_form->analyse(page->foldersObject(), page->syncExceptionBundle());
 }
