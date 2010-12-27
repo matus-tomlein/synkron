@@ -8,7 +8,7 @@ class AnalyseAction : public SyncAction
     Q_OBJECT
 
 public:
-    AnalyseAction(Folders *, SyncExceptionBundle *);
+    AnalyseAction(FolderActionGroup *, SyncExceptionBundle *, SyncFile * sf = NULL);
 
 private:
     void copyFile(SyncFile *, FolderActionGroup *);

@@ -6,19 +6,20 @@
 #include "syncexceptionbundle.h"
 #include "syncaction.h"
 #include "messagehandler.h"
+#include "abstractsyncpage.h"
 
 #include <QMessageBox>
 
-SyncForm::SyncForm(MTProgressBar * progress_bar, Folders * folders, QWidget *parent) :
+SyncForm::SyncForm(MTProgressBar * progress_bar, AbstractSyncPage * page, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SyncForm)
 {
     ui->setupUi(this);
 
     this->progress_bar = progress_bar;
-    this->folders = folders;
+    this->page = page;
 
-    msg_handler = new MessageHandler(folders, ui->sync_log_table);
+    msg_handler = new MessageHandler(page->foldersObject(), ui->sync_log_table);
 
     ui->sync_log_table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 }
@@ -28,12 +29,13 @@ SyncForm::~SyncForm()
     delete ui;
 }
 
-void SyncForm::startSync(SyncExceptionBundle * bundle)
+void SyncForm::startSync(SyncAction * sa)
 {
     progress_bar->setHidden(false);
     progress_bar->setValue(0);
 
-    SyncAction * sa = new SyncAction(folders, bundle);
+    if (!sa)
+        sa = new SyncAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle());
 
     QObject::connect(sa, SIGNAL(messageBox(QString)), this, SLOT(showMessageBox(QString)), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(filesCounted(int)), progress_bar, SLOT(setMaximum(int)), Qt::QueuedConnection);
@@ -42,6 +44,11 @@ void SyncForm::startSync(SyncExceptionBundle * bundle)
     QObject::connect(sa, SIGNAL(syncOutMessage(SyncOutMessage*)), msg_handler, SLOT(logMessage(SyncOutMessage*)), Qt::QueuedConnection);
 
     sa->start();
+}
+
+void SyncForm::startSync(SyncFile * sf, FolderActionGroup * fag)
+{
+    startSync(new SyncAction(fag, page->syncExceptionBundle(), sf));
 }
 
 void SyncForm::syncFinished()

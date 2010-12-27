@@ -131,6 +131,8 @@ void SyncExceptionBundle::updateFolder(QStringList * list)
         split_list = list->at(i).split('/');
 
         for (int n = 0; n < split_list.count(); ++n) {
+            if (split_list.at(n).isEmpty())
+                continue;
             if (split_list.at(n).contains("*")) {
                 file->addWildcard(QString("*%1").arg(list->at(i).section('*', 1)));
                 break;

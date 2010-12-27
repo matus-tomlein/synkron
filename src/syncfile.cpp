@@ -45,6 +45,13 @@ SyncFile * SyncFile::addChild(const QString & child_name)
     return child;
 }
 
+void SyncFile::addChild(SyncFile * sf)
+{
+    if (!children) children = new QList<SyncFile *>;
+
+    children->append(sf);
+}
+
 /**
   * Returns number of child SyncFiles in the folder on one level.
   */

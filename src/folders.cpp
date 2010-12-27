@@ -105,6 +105,11 @@ Folder * Folders::at(int i)
     return folders.at(i);
 }
 
+Folder * Folders::first()
+{
+    return folders.first();
+}
+
 Folder * Folders::byId(int id)
 {
     for (int i = 0; i < folders.count(); ++i) {

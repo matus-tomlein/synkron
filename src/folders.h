@@ -43,6 +43,7 @@ public:
 
     Folder * at(int);
     Folder * byId(int);
+    Folder * first();
     const QString pathAt(int);
     FolderActionGroup * folderActionGroup();
 

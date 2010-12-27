@@ -21,6 +21,7 @@ public:
     ~SyncFile();
 
     SyncFile * addChild(const QString &);
+    void addChild(SyncFile *);
 
     void setName(const QString);
     const QString & getName();

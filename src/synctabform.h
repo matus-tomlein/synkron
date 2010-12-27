@@ -33,6 +33,7 @@ class Folder;
 class FolderActionGroup;
 class MTProgressBar;
 class AnalyseForm;
+class SyncFile;
 class SyncForm;
 
 namespace Ui {
@@ -86,6 +87,7 @@ private slots:
     void toggleAdvanced();
     void hideAdvanced();
     void sync();
+    void sync(SyncFile*, FolderActionGroup*);
     void analyse();
 
 signals:

@@ -3,8 +3,8 @@
 #include "syncfile.h"
 #include "folderactiongroup.h"
 
-AnalyseAction::AnalyseAction(Folders * folders, SyncExceptionBundle * bundle)
-    : SyncAction(folders, bundle)
+AnalyseAction::AnalyseAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncFile * sf)
+    : SyncAction(fag, bundle, sf)
 {
 }
 

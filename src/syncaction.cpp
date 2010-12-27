@@ -1,6 +1,5 @@
 #include "syncaction.h"
 
-#include "folders.h"
 #include "filecompare.h"
 #include "folderactiongroup.h"
 #include "syncfile.h"
@@ -12,10 +11,11 @@
 #include <QSet>
 #include <QElapsedTimer>
 
-SyncAction::SyncAction(Folders * folders, SyncExceptionBundle * bundle) : QThread()
+SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncFile * sf) : QThread()
 {
-    base_folders = folders;
+    starting_fag = fag;
     exception_bundle = bundle;
+    starting_sf = sf;
     skipped_count = 0;
     file_compare = new FileCompare();
 }
@@ -33,35 +33,28 @@ void SyncAction::start(Priority priority)
 
 void SyncAction::run()
 {
-    run(NULL);
-}
-
-void SyncAction::run(SyncFile * sf)
-{
     QObject::connect(this, SIGNAL(finished()), this, SLOT(deleteLater()), Qt::DirectConnection);
 
-    FolderActionGroup * fag = base_folders->folderActionGroup();
     skipped_count = 0;
 
-    exception_bundle->updateRootFolder(fag);
-    if (!sf) {
-        sf = new SyncFile(tr("Root"));
-        createSyncFileFromFolders(sf, fag);
+    exception_bundle->updateRootFolder(starting_fag);
+    if (!starting_sf) {
+        starting_sf = new SyncFile(tr("Root"));
+        createSyncFileFromFolders(starting_sf, starting_fag);
     }
-
 
     //QElapsedTimer timer;
     //timer.start();
 
-    emit filesCounted(sf->count());
-    sync(sf, fag);
+    emit filesCounted(starting_sf->count());
+    sync(starting_sf, starting_fag);
 
     //emit messageBox(QString("COUNT %1").arg(sf->count()));
     //emit messageBox(QString("TIME %1").arg(timer.elapsed()));
 
-    delete fag;
+    delete starting_fag;
 
-    finish(sf);
+    finish(starting_sf);
 }
 
 /**

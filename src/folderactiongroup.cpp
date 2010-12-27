@@ -35,17 +35,8 @@ void FolderActionGroup::init()
 
 void FolderActionGroup::insert(int id, const QString path)
 {
-    if (!paths) {
-        insertId(id);
-        return;
-    }
     ids->append(id);
     paths->append(path);
-}
-
-void FolderActionGroup::insertId(int id)
-{
-    ids->append(id);
 }
 
 const QString & FolderActionGroup::at(int i)
@@ -94,11 +85,4 @@ int FolderActionGroup::lastId()
 QString & FolderActionGroup::operator[] (int i)
 {
     return (*paths)[i];
-}
-
-void FolderActionGroup::idsOnly()
-{
-    if (paths)
-        delete paths;
-    paths = NULL;
 }

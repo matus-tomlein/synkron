@@ -18,17 +18,17 @@ class SyncAction : public QThread
     Q_OBJECT
 
 public:
-    SyncAction(Folders *, SyncExceptionBundle *);
+    SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncFile * = NULL);
     ~SyncAction();
 
     void run();
-    void run(SyncFile *);
 
 public slots:
     void start(Priority = InheritPriority);
 
 private:
-    Folders * base_folders;
+    FolderActionGroup * starting_fag;
+    SyncFile * starting_sf;
     FileCompare * file_compare;
     SyncExceptionBundle * exception_bundle;
 

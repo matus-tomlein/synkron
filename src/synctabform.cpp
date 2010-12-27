@@ -59,11 +59,13 @@ SyncTabForm::SyncTabForm(AbstractSyncPage * page, QWidget *parent) :
     QObject::connect(ui->sync_btn, SIGNAL(clicked()), this, SLOT(sync()));
     QObject::connect(ui->analyse_btn, SIGNAL(clicked()), this, SLOT(analyse()));
 
-    sync_form = new SyncForm(progress_bar, page->foldersObject(), ui->logs_stckw);
+    sync_form = new SyncForm(progress_bar, page, ui->logs_stckw);
     ui->logs_stckw->addWidget(sync_form);
 
-    analyse_form = new AnalyseForm(ui->logs_stckw);
+    analyse_form = new AnalyseForm(page, ui->logs_stckw);
     ui->logs_stckw->addWidget(analyse_form);
+
+    QObject::connect(analyse_form, SIGNAL(syncSig(SyncFile*,FolderActionGroup*)), this, SLOT(sync(SyncFile*,FolderActionGroup*)));
 
     advanced_view = new SyncAdvancedView(page, ui->advanced_tree);
     load();
@@ -231,7 +233,13 @@ void SyncTabForm::hideAdvanced()
 void SyncTabForm::sync()
 {
     ui->logs_stckw->setCurrentWidget(sync_form);
-    sync_form->startSync(page->syncExceptionBundle());
+    sync_form->startSync();
+}
+
+void SyncTabForm::sync(SyncFile * sf, FolderActionGroup * fag)
+{
+    ui->logs_stckw->setCurrentWidget(sync_form);
+    sync_form->startSync(sf, fag);
 }
 
 QWidget * SyncTabForm::navigationItemWidget()
@@ -247,5 +255,5 @@ QWidget * SyncTabForm::navigationItemWidget()
 void SyncTabForm::analyse()
 {
     ui->logs_stckw->setCurrentWidget(analyse_form);
-    analyse_form->analyse(page->foldersObject(), page->syncExceptionBundle());
+    analyse_form->analyse();
 }

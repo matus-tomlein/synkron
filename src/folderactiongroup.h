@@ -12,7 +12,6 @@ public:
     ~FolderActionGroup();
 
     void insert(int, const QString);
-    void insertId(int);
     const QString & at(int);
     const QString & byId(int);
     const QString & first();
@@ -21,8 +20,6 @@ public:
     int firstId();
     int lastId();
     int count();
-
-    void idsOnly();
 
     QString & operator[] (int);
 

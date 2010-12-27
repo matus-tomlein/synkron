@@ -4,9 +4,11 @@
 #include <QWidget>
 
 class MTProgressBar;
-class Folders;
-class SyncExceptionBundle;
+class AbstractSyncPage;
+class FolderActionGroup;
+class SyncFile;
 class MessageHandler;
+class SyncAction;
 
 namespace Ui {
     class SyncForm;
@@ -17,10 +19,11 @@ class SyncForm : public QWidget
     Q_OBJECT
 
 public:
-    explicit SyncForm(MTProgressBar *, Folders *, QWidget *parent = 0);
+    explicit SyncForm(MTProgressBar *, AbstractSyncPage *, QWidget *parent = 0);
     ~SyncForm();
 
-    void startSync(SyncExceptionBundle *);
+    void startSync(SyncAction * = NULL);
+    void startSync(SyncFile *, FolderActionGroup *);
 
 private slots:
     void syncFinished();
@@ -29,7 +32,7 @@ private slots:
 private:
     Ui::SyncForm *ui;
 
-    Folders * folders;
+    AbstractSyncPage * page;
     MTProgressBar * progress_bar;
     MessageHandler * msg_handler;
 };

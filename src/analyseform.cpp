@@ -8,20 +8,40 @@
 #include "syncexceptionbundle.h"
 #include "syncfile.h"
 #include "analysetreewidgetitem.h"
+#include "abstractsyncpage.h"
+#include "exceptionbundle.h"
+#include "exceptiongroup.h"
 
 #include <QTimer>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QMenu>
+#include <QDir>
 
-AnalyseForm::AnalyseForm(QWidget *parent) :
+AnalyseForm::AnalyseForm(AbstractSyncPage * page, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AnalyseForm)
 {
     ui->setupUi(this);
     current_level_item = NULL;
+    current_sf = NULL;
+    this->page = page;
+
+    QMenu * open_menu = new QMenu;
+    ui->open_btn->setMenu(open_menu);
+
+    QMenu * bl_menu = new QMenu;
+    ui->blacklist_btn->setMenu(bl_menu);
 
     ui->tree->setExpandsOnDoubleClick(false);
     QObject::connect(ui->tree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(treeItemDoubleClicked(QTreeWidgetItem*,int)));
-    QObject::connect(ui->tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(treeItemClicked(QTreeWidgetItem*,int)));
+    QObject::connect(ui->tree, SIGNAL(itemSelectionChanged()), this, SLOT(treeItemSelectionChanged()));
+    QObject::connect(open_menu, SIGNAL(aboutToShow()), this, SLOT(aboutToShowOpenMenu()));
+    QObject::connect(open_menu, SIGNAL(triggered(QAction*)), this, SLOT(openSelected(QAction*)));
+    QObject::connect(bl_menu, SIGNAL(aboutToShow()), this, SLOT(aboutToShowBlacklistMenu()));
+    QObject::connect(bl_menu, SIGNAL(triggered(QAction*)), this, SLOT(blacklistSelected(QAction*)));
+    QObject::connect(ui->sync_btn, SIGNAL(clicked()), this, SLOT(syncSelected()));
 }
 
 AnalyseForm::~AnalyseForm()
@@ -29,15 +49,16 @@ AnalyseForm::~AnalyseForm()
     delete ui;
 }
 
-void AnalyseForm::analyse(Folders * folders, SyncExceptionBundle * bundle)
+void AnalyseForm::analyse()
 {
     ui->tree->clear();
     sf_queue.clear();
     current_level_item = NULL;
-    this->folders = folders;
-    AnalyseAction * aa = new AnalyseAction(folders, bundle);
+    AnalyseAction * aa = new AnalyseAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle());
 
     QObject::connect(aa, SIGNAL(finished(SyncFile*)), this, SLOT(syncFileReceived(SyncFile*)), Qt::QueuedConnection);
+
+    Folders * folders = page->foldersObject();
 
     ui->folders_table->clearContents();
     ui->folders_table->setRowCount(0);
@@ -70,6 +91,7 @@ void AnalyseForm::loadSyncFile(AnalyseTreeWidgetItem * root_item)
     }
 
     sf_queue << parent_sf;
+    root_item->sortChildren(0, Qt::AscendingOrder);
     root_item->setExpanded(true);
 }
 
@@ -96,7 +118,7 @@ void AnalyseForm::treeItemDoubleClicked(QTreeWidgetItem * qitem, int)
             return;
 
         sf_queue.takeLast();
-        while (current_level_item = (AnalyseTreeWidgetItem *) current_level_item->parent()) {
+        while ((current_level_item = (AnalyseTreeWidgetItem *) current_level_item->parent())) {
             removeItemChildren(current_level_item);
             sf_queue.takeLast();
             if (current_level_item == item) {
@@ -118,27 +140,24 @@ AnalyseTreeWidgetItem * AnalyseForm::nextLevelItem(SyncFile * sf)
     return current_level_item;
 }
 
-void AnalyseForm::treeItemClicked(QTreeWidgetItem * item, int)
+void AnalyseForm::treeItemSelectionChanged()
 {
-    updateSelectedInfo((AnalyseTreeWidgetItem *) item);
+    if (ui->tree->selectedItems().count())
+        updateSelectedInfo((AnalyseTreeWidgetItem *) ui->tree->selectedItems().first());
 }
 
 void AnalyseForm::updateSelectedInfo(AnalyseTreeWidgetItem * item)
 {
     SyncFile * sf = item->syncFile();
+    current_sf = sf;
 
-    QStringList rel_path;
-    for (int i = 1; i < sf_queue.count(); ++i) {
-        if (sf == sf_queue.at(i))
-            break;
-        rel_path << sf_queue.at(i)->getName();
-    }
-    rel_path << sf->getName();
+    QStringList rel_path = relativePath(sf);
     ui->rel_path_le->clear();
     ui->rel_path_le->setText(rel_path.join("/"));
 
     ui->folder_chb->setChecked(sf->isDir());
 
+    Folders * folders = page->foldersObject();
     QTableWidgetItem * folder_item;
     for (int i = 0; i < folders->count(); ++i) {
         folder_item = ui->folders_table->item(i, 1);
@@ -156,4 +175,121 @@ void AnalyseForm::updateSelectedInfo(AnalyseTreeWidgetItem * item)
             break;
         }
     }
+}
+
+void AnalyseForm::openSelected(QAction * action)
+{
+    int i = ui->open_btn->menu()->actions().indexOf(action);
+
+    if (i < 0 || !current_sf)
+        return;
+
+    QStringList path = relativePath(current_sf);
+    path.prepend(page->foldersObject()->at(i)->path());
+
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path.join("/")));
+}
+
+void AnalyseForm::aboutToShowOpenMenu()
+{
+    QMenu * menu = ui->open_btn->menu();
+    menu->clear();
+
+    Folders * folders = page->foldersObject();
+    for (int i = 0; i < folders->count(); ++i) {
+        menu->addAction(folders->at(i)->label());
+    }
+}
+
+void AnalyseForm::blacklistSelected(QAction * action)
+{
+    ExceptionBundle * bundle = page->exceptionBundle(action->data().toInt());
+    ExceptionGroup * group;
+    if (current_sf->isDir())
+        group = bundle->groupByType(ExceptionGroup::FolderBlacklist);
+    else
+        group = bundle->groupByType(ExceptionGroup::FileBlacklist);
+
+    QStringList path = relativePath(current_sf);
+    path.prepend(page->foldersObject()->first()->path());
+
+    group->addItem(path.join("/"));
+
+    delete current_sf;
+    delete ui->tree->selectedItems().first();
+}
+
+void AnalyseForm::aboutToShowBlacklistMenu()
+{
+    QMenu * menu = ui->blacklist_btn->menu();
+    menu->clear();
+
+    QAction * action;
+
+    QList<int> bundle_ids = page->exceptionBundleIds();
+    for (int i = 0; i < bundle_ids.count(); ++i) {
+        action = new QAction(menu);
+        action->setText(page->exceptionBundle(bundle_ids.at(i))->name());
+        action->setData(bundle_ids.at(i));
+        menu->addAction(action);
+    }
+}
+
+QStringList AnalyseForm::relativePath(SyncFile * sf)
+{
+    QStringList rel_path;
+
+    if (sf == sf_queue.at(0))
+        return rel_path;
+
+    for (int i = 1; i < sf_queue.count(); ++i) {
+        if (sf == sf_queue.at(i))
+            break;
+        rel_path << sf_queue.at(i)->getName();
+    }
+    rel_path << sf->getName();
+
+    return rel_path;
+}
+
+void AnalyseForm::syncSelected()
+{
+    QList<QTreeWidgetItem *> selected = ui->tree->selectedItems();
+    if (!selected.count())
+        return;
+
+    QStringList rel_path = relativePath(sf_queue.last());
+
+    SyncFile * sf, * sf_i;
+    sf = new SyncFile("/");
+
+    for (int i = 0; i < selected.count(); ++i) {
+        sf_i = ((AnalyseTreeWidgetItem *) selected.at(i))->syncFile();
+
+        for (int i = 0; i < sf_queue.count(); ++i) {
+            if (sf_queue.at(i) == sf_i) {
+                delete sf;
+                sf = sf_i;
+                rel_path = relativePath(sf);
+                sf_i = NULL;
+            }
+        }
+
+        if (!sf_i)
+            break;
+
+        sf->addChild(sf_i);
+    }
+
+    FolderActionGroup * sync_fag = new FolderActionGroup;
+    Folders * folders = page->foldersObject();
+    QDir dir;
+    QString rel_path_str = rel_path.join("/");
+    for (int i = 0; i < folders->count(); ++i) {
+        dir.setPath(folders->at(i)->path());
+        sync_fag->insert(folders->at(i)->index(), dir.absoluteFilePath(rel_path_str));
+    }
+
+    if (sf)
+        emit syncSig(sf, sync_fag);
 }
