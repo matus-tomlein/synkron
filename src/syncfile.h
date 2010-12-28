@@ -20,8 +20,8 @@ public:
     SyncFile(const QString);
     ~SyncFile();
 
-    SyncFile * addChild(const QString &);
-    void addChild(SyncFile *);
+    virtual SyncFile * addChild(const QString &);
+    void addSyncFile(SyncFile *);
 
     void setName(const QString);
     const QString & getName();
@@ -42,6 +42,7 @@ public:
     void setBlacklisted(bool b) { blacklisted = b; }
 
 private:
+
     QList<SyncFile *> * children;
     QList<SyncFile::FolderStatus> * folders;
 

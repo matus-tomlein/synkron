@@ -3,20 +3,22 @@
 
 #include <QTreeWidgetItem>
 
-class SyncFile;
+class AnalyseFile;
 
 class AnalyseTreeWidgetItem : public QTreeWidgetItem
 {
 public:
     AnalyseTreeWidgetItem(QTreeWidget *);
     AnalyseTreeWidgetItem(QTreeWidgetItem *);
-    AnalyseTreeWidgetItem(SyncFile *, QTreeWidget *);
-    AnalyseTreeWidgetItem(SyncFile *, QTreeWidgetItem *);
+    AnalyseTreeWidgetItem(AnalyseFile *, QTreeWidget *);
+    AnalyseTreeWidgetItem(AnalyseFile *, QTreeWidgetItem *);
 
-    SyncFile * syncFile();
+    AnalyseFile * syncFile();
 
 private:
-    SyncFile * sf;
+    void setTextFromAnalyseFile();
+
+    AnalyseFile * sf;
 };
 
 #endif // ANALYSETREEWIDGETITEM_H

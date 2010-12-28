@@ -41,7 +41,11 @@ private:
     virtual bool createFolder(SyncFile *, FolderActionGroup *);
     bool backupFile(MTFile *);
 
+    virtual SyncFile * createRootSyncFile();
     virtual void finish(SyncFile *);
+
+protected:
+    QList<SyncFile *> sf_queue;
 
 signals:
     void messageBox(const QString);

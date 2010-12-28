@@ -5,6 +5,7 @@
 
 class Folders;
 class SyncExceptionBundle;
+class AnalyseFile;
 class SyncFile;
 class AnalyseTreeWidgetItem;
 class FolderActionGroup;
@@ -27,7 +28,7 @@ public:
     void analyse();
 
 private slots:
-    void syncFileReceived(SyncFile *);
+    void syncFileReceived(AnalyseFile *);
     void treeItemDoubleClicked(QTreeWidgetItem *, int);
     void treeItemSelectionChanged();
     void updateSelectedInfo(AnalyseTreeWidgetItem *);
@@ -38,18 +39,18 @@ private slots:
     void syncSelected();
 
 private:
-    void loadSyncFile(SyncFile *);
+    void loadSyncFile(AnalyseFile *);
     void loadSyncFile(AnalyseTreeWidgetItem *);
     void removeItemChildren(AnalyseTreeWidgetItem *);
-    AnalyseTreeWidgetItem * nextLevelItem(SyncFile *);
-    QStringList relativePath(SyncFile *);
+    AnalyseTreeWidgetItem * nextLevelItem(AnalyseFile *);
+    QStringList relativePath(AnalyseFile *);
 
     Ui::AnalyseForm *ui;
 
     AbstractSyncPage * page;
-    QList<SyncFile *> sf_queue;
+    QList<AnalyseFile *> sf_queue;
     AnalyseTreeWidgetItem * current_level_item;
-    SyncFile * current_sf;
+    AnalyseFile * current_sf;
 
 signals:
     void syncSig(SyncFile *, FolderActionGroup *);

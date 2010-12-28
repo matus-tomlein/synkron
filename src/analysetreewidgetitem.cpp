@@ -1,5 +1,5 @@
 #include "analysetreewidgetitem.h"
-#include "syncfile.h"
+#include "analysefile.h"
 
 AnalyseTreeWidgetItem::AnalyseTreeWidgetItem(QTreeWidget * parent)
     : QTreeWidgetItem(parent)
@@ -13,21 +13,26 @@ AnalyseTreeWidgetItem::AnalyseTreeWidgetItem(QTreeWidgetItem * parent)
     this->sf = NULL;
 }
 
-AnalyseTreeWidgetItem::AnalyseTreeWidgetItem(SyncFile * sf, QTreeWidget * parent)
+AnalyseTreeWidgetItem::AnalyseTreeWidgetItem(AnalyseFile * sf, QTreeWidget * parent)
     : QTreeWidgetItem(parent)
 {
     this->sf = sf;
-    this->setText(0, sf->getName());
+    setTextFromAnalyseFile();
 }
 
-AnalyseTreeWidgetItem::AnalyseTreeWidgetItem(SyncFile * sf, QTreeWidgetItem * parent)
+AnalyseTreeWidgetItem::AnalyseTreeWidgetItem(AnalyseFile * sf, QTreeWidgetItem * parent)
     : QTreeWidgetItem(parent)
 {
     this->sf = sf;
-    this->setText(0, sf->getName());
+    setTextFromAnalyseFile();
 }
 
-SyncFile * AnalyseTreeWidgetItem::syncFile()
+AnalyseFile * AnalyseTreeWidgetItem::syncFile()
 {
     return sf;
+}
+
+void AnalyseTreeWidgetItem::setTextFromAnalyseFile()
+{
+    this->setText(0, QString("%1 (%2)").arg(sf->getName()).arg(sf->numNotSynced()));
 }

@@ -38,14 +38,12 @@ void SyncFile::setName(const QString name)
   */
 SyncFile * SyncFile::addChild(const QString & child_name)
 {
-    if (!children) children = new QList<SyncFile *>;
-
     SyncFile * child = new SyncFile(child_name);
-    children->append(child);
+    addSyncFile(child);
     return child;
 }
 
-void SyncFile::addChild(SyncFile * sf)
+void SyncFile::addSyncFile(SyncFile * sf)
 {
     if (!children) children = new QList<SyncFile *>;
 

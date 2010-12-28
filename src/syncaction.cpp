@@ -39,7 +39,12 @@ void SyncAction::run()
 
     exception_bundle->updateRootFolder(starting_fag);
     if (!starting_sf) {
-        starting_sf = new SyncFile(tr("Root"));
+        starting_sf = createRootSyncFile();
+        starting_sf->setDir(true);
+        for (int i = 0; i < starting_fag->count(); ++i) {
+            starting_sf->addFolder(starting_fag->idAt(i));
+        }
+
         createSyncFileFromFolders(starting_sf, starting_fag);
     }
 
@@ -129,6 +134,8 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
     MTFileInfo * newest_fi = NULL;
     FolderActionGroup * sub_fag = NULL;
 
+    sf_queue << parent;
+
     for (int i = 0; i < parent->childCount(); ++i) {
         sf = parent->childAt(i);
         latest_index = 0;
@@ -201,6 +208,8 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
         }
         emit this->anotherItemChecked();
     }
+
+    sf_queue.takeLast();
 }
 
 void SyncAction::copyFile(SyncFile *, FolderActionGroup * fag)
@@ -261,4 +270,9 @@ void SyncAction::finish(SyncFile * sf)
 {
     delete sf;
     emit finished();
+}
+
+SyncFile * SyncAction::createRootSyncFile()
+{
+    return new SyncFile(tr("Root"));
 }

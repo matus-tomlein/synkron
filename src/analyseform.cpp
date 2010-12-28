@@ -6,7 +6,7 @@
 #include "folder.h"
 #include "folderactiongroup.h"
 #include "syncexceptionbundle.h"
-#include "syncfile.h"
+#include "analysefile.h"
 #include "analysetreewidgetitem.h"
 #include "abstractsyncpage.h"
 #include "exceptionbundle.h"
@@ -56,7 +56,7 @@ void AnalyseForm::analyse()
     current_level_item = NULL;
     AnalyseAction * aa = new AnalyseAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle());
 
-    QObject::connect(aa, SIGNAL(finished(SyncFile*)), this, SLOT(syncFileReceived(SyncFile*)), Qt::QueuedConnection);
+    QObject::connect(aa, SIGNAL(finished(AnalyseFile*)), this, SLOT(syncFileReceived(AnalyseFile*)), Qt::QueuedConnection);
 
     Folders * folders = page->foldersObject();
 
@@ -71,23 +71,23 @@ void AnalyseForm::analyse()
     aa->start();
 }
 
-void AnalyseForm::syncFileReceived(SyncFile * sf)
+void AnalyseForm::syncFileReceived(AnalyseFile * sf)
 {
     sf_queue.clear();
 
     loadSyncFile(sf);
 }
 
-void AnalyseForm::loadSyncFile(SyncFile * parent_sf)
+void AnalyseForm::loadSyncFile(AnalyseFile * parent_sf)
 {
     loadSyncFile(nextLevelItem(parent_sf));
 }
 
 void AnalyseForm::loadSyncFile(AnalyseTreeWidgetItem * root_item)
 {
-    SyncFile * parent_sf = root_item->syncFile();
+    AnalyseFile * parent_sf = root_item->syncFile();
     for (int i = 0; i < parent_sf->childCount(); ++i) {
-        new AnalyseTreeWidgetItem(parent_sf->childAt(i), root_item);
+        new AnalyseTreeWidgetItem((AnalyseFile *) parent_sf->childAt(i), root_item);
     }
 
     sf_queue << parent_sf;
@@ -129,7 +129,7 @@ void AnalyseForm::treeItemDoubleClicked(QTreeWidgetItem * qitem, int)
     }
 }
 
-AnalyseTreeWidgetItem * AnalyseForm::nextLevelItem(SyncFile * sf)
+AnalyseTreeWidgetItem * AnalyseForm::nextLevelItem(AnalyseFile * sf)
 {
     if (!current_level_item) {
         current_level_item = new AnalyseTreeWidgetItem(sf, ui->tree);
@@ -148,7 +148,7 @@ void AnalyseForm::treeItemSelectionChanged()
 
 void AnalyseForm::updateSelectedInfo(AnalyseTreeWidgetItem * item)
 {
-    SyncFile * sf = item->syncFile();
+    AnalyseFile * sf = item->syncFile();
     current_sf = sf;
 
     QStringList rel_path = relativePath(sf);
@@ -162,11 +162,11 @@ void AnalyseForm::updateSelectedInfo(AnalyseTreeWidgetItem * item)
     for (int i = 0; i < folders->count(); ++i) {
         folder_item = ui->folders_table->item(i, 1);
         switch (sf->fileStatusInFolder(folders->at(i)->index())) {
-        case SyncFile::OK:
+        case AnalyseFile::OK:
             folder_item->setText(tr("OK"));
             break;
 
-        case SyncFile::Obsolete:
+        case AnalyseFile::Obsolete:
             folder_item->setText(tr("Obsolete"));
             break;
 
@@ -235,7 +235,7 @@ void AnalyseForm::aboutToShowBlacklistMenu()
     }
 }
 
-QStringList AnalyseForm::relativePath(SyncFile * sf)
+QStringList AnalyseForm::relativePath(AnalyseFile * sf)
 {
     QStringList rel_path;
 
@@ -260,8 +260,8 @@ void AnalyseForm::syncSelected()
 
     QStringList rel_path = relativePath(sf_queue.last());
 
-    SyncFile * sf, * sf_i;
-    sf = new SyncFile("/");
+    AnalyseFile * sf, * sf_i;
+    sf = new AnalyseFile("/");
 
     for (int i = 0; i < selected.count(); ++i) {
         sf_i = ((AnalyseTreeWidgetItem *) selected.at(i))->syncFile();
@@ -278,7 +278,7 @@ void AnalyseForm::syncSelected()
         if (!sf_i)
             break;
 
-        sf->addChild(sf_i);
+        sf->addSyncFile((SyncFile *) sf_i);
     }
 
     FolderActionGroup * sync_fag = new FolderActionGroup;

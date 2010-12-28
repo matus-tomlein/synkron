@@ -3,6 +3,8 @@
 
 #include "syncaction.h"
 
+class AnalyseFile;
+
 class AnalyseAction : public SyncAction
 {
     Q_OBJECT
@@ -15,10 +17,11 @@ private:
     void updateFile(SyncFile *, FolderActionGroup *);
     bool createFolder(SyncFile *, FolderActionGroup *);
 
+    SyncFile * createRootSyncFile();
     void finish(SyncFile *);
 
 signals:
-    void finished(SyncFile *);
+    void finished(AnalyseFile *);
 };
 
 #endif // ANALYSEACTION_H
