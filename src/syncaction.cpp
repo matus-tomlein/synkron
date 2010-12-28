@@ -178,7 +178,7 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
         }
         else { // is not dir
             for (int n = 0; n < fag->count(); ++n) {
-                if (sf->fileStatusInFolder(n) == SyncFile::Obsolete) { // Found, checked and obsolete
+                if (sf->fileStatusInFolder(fag->idAt(n)) == SyncFile::Obsolete) { // Found, checked and obsolete
                     latest_index_arr[n] = latest_index - 1;
                 }
                 else if (sf->existsInFolder(fag->idAt(n))) { // Found but not checked yet
@@ -189,7 +189,7 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
                         latest_index_arr[n] = latest_index;
                     }
                     else {
-                        if (sf->fileStatusInFolder(n) == SyncFile::OK || // checked before and is newest
+                        if (sf->fileStatusInFolder(fag->idAt(n)) == SyncFile::OK || // checked before and is newest
                             (c = file_compare->compareTwoFiles(&fi, newest_fi)) == 0) { // equal to the newest
                             latest_index_arr[n] = latest_index;
                         }

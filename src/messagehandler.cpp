@@ -65,26 +65,27 @@ void MessageHandler::addLogItem(SyncOutMessage * msg, const QString & rel_path, 
     switch (msg->getType()) {
     case SyncOutMessage::FileCopied:
         action = tr("Copied");
-        folders_item_str = tr("From %1 to %2").arg(msg_labels.first()).arg(msg_labels.last());
+        folders_item_str = trUtf8("%1 \xe2\x9e\x94 %2").arg(msg_labels.first()).arg(msg_labels.last());
         break;
 
     case SyncOutMessage::FileUpdated:
         action = tr("Updated");
-        folders_item_str = tr("From %1 to %2").arg(msg_labels.first()).arg(msg_labels.last());
+        folders_item_str = trUtf8("%1 \xe2\x9e\x94 %2").arg(msg_labels.first()).arg(msg_labels.last());
         break;
 
     case SyncOutMessage::FolderCreated:
         action = tr("Created");
-        folders_item_str = tr("In %1").arg(msg_labels.first());
+        folders_item_str = tr("%1").arg(msg_labels.first());
         break;
 
     case SyncOutMessage::FileDeleted:
     case SyncOutMessage::FolderDeleted:
         action = tr("Deleted");
-        folders_item_str = tr("From %1").arg(msg_labels.first());
+        folders_item_str = tr("%1").arg(msg_labels.first());
         break;
     }
 
+    log_tbl->setRowHeight(log_tbl->rowCount() - 1, 22);
     log_tbl->setItem(log_tbl->rowCount() - 1, 1, new QTableWidgetItem(action));
     log_tbl->setItem(log_tbl->rowCount() - 1, 2, new QTableWidgetItem(folders_item_str));
 }
