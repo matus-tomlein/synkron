@@ -1,3 +1,22 @@
+/*******************************************************************
+ This file is part of Synkron
+ Copyright (C) 2005-2011 Matus Tomlein (matus.tomlein@gmail.com)
+
+ Synkron is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public Licence
+ as published by the Free Software Foundation; either version 2
+ of the Licence, or (at your option) any later version.
+
+ Synkron is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public Licence for more details.
+
+ You should have received a copy of the GNU General Public Licence
+ along with Synkron; if not, write to the Free Software Foundation,
+ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+********************************************************************/
+
 #include "syncaction.h"
 
 #include "filecompare.h"
@@ -76,7 +95,7 @@ void SyncAction::createSyncFileFromFolders(SyncFile * parent, FolderActionGroup 
         QDir sync_dir(fag->at(i));
         if (!sync_dir.exists()) continue;
 
-        entries.unite(sync_dir.entryList(exception_bundle->filters(), QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs).toSet());
+        entries.unite(sync_dir.entryList(exception_bundle->filters(), QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs, (QDir::Name | QDir::DirsFirst | QDir::IgnoreCase)).toSet());
     }
 
     QFileInfo fi;
@@ -96,13 +115,13 @@ void SyncAction::createSyncFileFromFolders(SyncFile * parent, FolderActionGroup 
                 fi.setFile(QDir(fag->at(n)).absoluteFilePath(entry));
 
                 if (fi.exists()) {
-                    sf->addFolder(fag->idAt(n));
-
                     if (fi.isDir()) {
                         sf->setDir(true);
                         if (!child_dirs_fag) child_dirs_fag = new FolderActionGroup;
                         child_dirs_fag->insert(fag->idAt(n), fi.absoluteFilePath());
                     }
+
+                    sf->addFolder(fag->idAt(n));
                 }
             }
 
@@ -149,14 +168,6 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
             for (int n = 0; n < fag->count(); ++n) {
                 dir.setPath(fag->at(n));
                 if (!sf->existsInFolder(fag->idAt(n))) {
-                    /*if (dir.exists()) {
-                        if (!dir.mkdir(sf->getName())) {
-                            emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName())), true));
-                            continue;
-                        } else {
-                            emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))));
-                        }
-                    }*/
                     if (!createFolder(sf, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))))
                         continue;
                 }
@@ -167,7 +178,10 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
         }
         else { // is not dir
             for (int n = 0; n < fag->count(); ++n) {
-                if (sf->existsInFolder(fag->idAt(n))) {
+                if (sf->fileStatusInFolder(n) == SyncFile::Obsolete) { // Found, checked and obsolete
+                    latest_index_arr[n] = latest_index - 1;
+                }
+                else if (sf->existsInFolder(fag->idAt(n))) { // Found but not checked yet
                     dir.setPath(fag->at(n));
                     fi.setFile(dir.absoluteFilePath(sf->getName()));
                     if (!newest_fi) {
@@ -175,18 +189,21 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
                         latest_index_arr[n] = latest_index;
                     }
                     else {
-                        if ((c = file_compare->compareTwoFiles(&fi, newest_fi)) == 0) { // equal to the newest
+                        if (sf->fileStatusInFolder(n) == SyncFile::OK || // checked before and is newest
+                            (c = file_compare->compareTwoFiles(&fi, newest_fi)) == 0) { // equal to the newest
                             latest_index_arr[n] = latest_index;
                         }
                         else if (c > 0) { // fi is newer
                             newest_fi->setFile(fi.absoluteFilePath());
+                            newest_fi->setFolderId(fag->idAt(n));
                             latest_index_arr[n] = ++latest_index;
                         }
                         else { // fi is older
                             latest_index_arr[n] = latest_index - 1;
                         }
                     }
-                } else {
+                }
+                else { // Not found
                     latest_index_arr[n] = -2;
                 }
             }
@@ -203,6 +220,8 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
                 else if (latest_index_arr[n] < latest_index) { // is obsolete
                     updateFile(sf, new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
                                                      fag->idAt(n), dir.absoluteFilePath(sf->getName())));
+                } else { // is fine
+                    sf->setFileStatusInFolder(fag->idAt(n), SyncFile::OK);
                 }
             }
         }

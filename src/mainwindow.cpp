@@ -1,6 +1,6 @@
 /*******************************************************************
  This file is part of Synkron
- Copyright (C) 2005-2010 Matus Tomlein (matus.tomlein@gmail.com)
+ Copyright (C) 2005-2011 Matus Tomlein (matus.tomlein@gmail.com)
 
  Synkron is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public Licence
@@ -62,13 +62,16 @@ MainWindow::MainWindow(Module * module, QWidget *parent) :
     QObject::connect(exception_act_menu, SIGNAL(triggered(QAction*)), this, SLOT(exceptionActMenuActionTriggered(QAction*)));
     ui->exceptions_act->setMenu(exception_act_menu);
 
-    QAction * view_toolbar_act = new QAction(ui->toolbar);
-    view_toolbar_act->setToolTip(tr("View"));
-    view_toolbar_act->setIcon(QIcon(":/images/syncview_48.png"));
-    view_toolbar_act->setMenu(ui->view_menu);
+    QPushButton * view_toolbar_btn = new QPushButton(ui->toolbar);
+    view_toolbar_btn->setToolTip(tr("View"));
+    view_toolbar_btn->setIcon(QIcon(":/images/syncview_48.png"));
+    view_toolbar_btn->setMenu(ui->view_menu);
+    view_toolbar_btn->setFlat(true);
+    view_toolbar_btn->setIconSize(QSize(32, 32));
+    view_toolbar_btn->setMaximumSize(32, 32);
 
     ui->toolbar->addSeparator();
-    ui->toolbar->addAction(view_toolbar_act);
+    ui->toolbar->addWidget(view_toolbar_btn);
     // Toolbar menus ---
 
     load();
