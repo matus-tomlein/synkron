@@ -83,6 +83,36 @@
            </property>
           </widget>
          </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Items to update</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Items to copy</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="num_copy_lbl"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="num_update_lbl"/>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Items to delete</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="num_delete_lbl"/>
+         </item>
         </layout>
        </item>
        <item>
@@ -100,7 +130,7 @@
          </column>
          <column>
           <property name="text">
-           <string>State</string>
+           <string>Status</string>
           </property>
          </column>
         </widget>
@@ -128,6 +158,10 @@
            <property name="text">
             <string>Add to Blacklist</string>
            </property>
+           <property name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/images/blacklist.png</normaloff>:/images/blacklist.png</iconset>
+           </property>
            <property name="flat">
             <bool>true</bool>
            </property>
@@ -144,6 +178,10 @@
            <property name="text">
             <string>Open</string>
            </property>
+           <property name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/images/syncview_48.png</normaloff>:/images/syncview_48.png</iconset>
+           </property>
            <property name="flat">
             <bool>true</bool>
            </property>
@@ -159,6 +197,10 @@
            </property>
            <property name="text">
             <string>Sync selected</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/images/sync22.png</normaloff>:/images/sync22.png</iconset>
            </property>
            <property name="flat">
             <bool>true</bool>
@@ -186,6 +228,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

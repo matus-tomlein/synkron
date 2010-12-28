@@ -17,14 +17,14 @@ AnalyseTreeWidgetItem::AnalyseTreeWidgetItem(AnalyseFile * sf, QTreeWidget * par
     : QTreeWidgetItem(parent)
 {
     this->sf = sf;
-    setTextFromAnalyseFile();
+    setupFromAnalyseFile();
 }
 
 AnalyseTreeWidgetItem::AnalyseTreeWidgetItem(AnalyseFile * sf, QTreeWidgetItem * parent)
     : QTreeWidgetItem(parent)
 {
     this->sf = sf;
-    setTextFromAnalyseFile();
+    setupFromAnalyseFile();
 }
 
 AnalyseFile * AnalyseTreeWidgetItem::syncFile()
@@ -32,7 +32,17 @@ AnalyseFile * AnalyseTreeWidgetItem::syncFile()
     return sf;
 }
 
-void AnalyseTreeWidgetItem::setTextFromAnalyseFile()
+void AnalyseTreeWidgetItem::setupFromAnalyseFile()
 {
-    this->setText(0, QString("%1 (%2)").arg(sf->getName()).arg(sf->numNotSynced()));
+    if (sf->numNotSynced()) {
+        setText(0, QString("%1 (%2)").arg(sf->getName()).arg(sf->numNotSynced()));
+        setForeground(0, QBrush(Qt::red));
+    } else {
+        setText(0, sf->getName());
+    }
+
+    if (sf->isDir())
+        setIcon(0, QIcon(":/images/folder_16.png"));
+    else
+        setIcon(0, QIcon(":/images/file.png"));
 }

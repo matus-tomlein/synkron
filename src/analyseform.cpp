@@ -86,6 +86,7 @@ void AnalyseForm::loadSyncFile(AnalyseFile * parent_sf)
 void AnalyseForm::loadSyncFile(AnalyseTreeWidgetItem * root_item)
 {
     AnalyseFile * parent_sf = root_item->syncFile();
+
     for (int i = 0; i < parent_sf->childCount(); ++i) {
         new AnalyseTreeWidgetItem((AnalyseFile *) parent_sf->childAt(i), root_item);
     }
@@ -156,6 +157,9 @@ void AnalyseForm::updateSelectedInfo(AnalyseTreeWidgetItem * item)
     ui->rel_path_le->setText(rel_path.join("/"));
 
     ui->folder_chb->setChecked(sf->isDir());
+    ui->num_copy_lbl->setText(QVariant(sf->numNotFound()).toString());
+    ui->num_delete_lbl->setText(QVariant(sf->numDeleted()).toString());
+    ui->num_update_lbl->setText(QVariant(sf->numObsolete()).toString());
 
     Folders * folders = page->foldersObject();
     QTableWidgetItem * folder_item;

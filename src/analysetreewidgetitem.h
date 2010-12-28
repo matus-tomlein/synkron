@@ -16,7 +16,7 @@ public:
     AnalyseFile * syncFile();
 
 private:
-    void setTextFromAnalyseFile();
+    void setupFromAnalyseFile();
 
     AnalyseFile * sf;
 };
