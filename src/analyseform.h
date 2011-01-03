@@ -31,6 +31,7 @@ class FolderActionGroup;
 class AbstractSyncPage;
 
 class QTreeWidgetItem;
+class QTableWidgetItem;
 
 namespace Ui {
     class AnalyseForm;
@@ -70,6 +71,10 @@ private:
     QList<AnalyseFile *> sf_queue;
     AnalyseTreeWidgetItem * current_level_item;
     AnalyseFile * current_sf;
+
+    QTableWidgetItem * num_copy_item;
+    QTableWidgetItem * num_delete_item;
+    QTableWidgetItem * num_update_item;
 
 signals:
     void syncSig(SyncFile *, FolderActionGroup *);

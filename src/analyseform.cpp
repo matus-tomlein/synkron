@@ -1,17 +1,3 @@
-#include "analyseform.h"
-#include "ui_analyseform.h"
-
-#include "analyseaction.h"
-#include "folders.h"
-#include "folder.h"
-#include "folderactiongroup.h"
-#include "syncexceptionbundle.h"
-#include "analysefile.h"
-#include "analysetreewidgetitem.h"
-#include "abstractsyncpage.h"
-#include "exceptionbundle.h"
-#include "exceptiongroup.h"
-
 /*******************************************************************
  This file is part of Synkron
  Copyright (C) 2005-2011 Matus Tomlein (matus.tomlein@gmail.com)
@@ -30,6 +16,20 @@
  along with Synkron; if not, write to the Free Software Foundation,
  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ********************************************************************/
+
+#include "analyseform.h"
+#include "ui_analyseform.h"
+
+#include "analyseaction.h"
+#include "folders.h"
+#include "folder.h"
+#include "folderactiongroup.h"
+#include "syncexceptionbundle.h"
+#include "analysefile.h"
+#include "analysetreewidgetitem.h"
+#include "abstractsyncpage.h"
+#include "exceptionbundle.h"
+#include "exceptiongroup.h"
 
 #include <QTimer>
 #include <QMessageBox>
@@ -52,6 +52,14 @@ AnalyseForm::AnalyseForm(AbstractSyncPage * page, QWidget *parent) :
 
     QMenu * bl_menu = new QMenu;
     ui->blacklist_btn->setMenu(bl_menu);
+
+    ui->folder_items_status_table->hide();
+    num_copy_item = new QTableWidgetItem;
+    ui->folder_items_status_table->setItem(0, 0, num_copy_item);
+    num_delete_item = new QTableWidgetItem;
+    ui->folder_items_status_table->setItem(2, 0, num_delete_item);
+    num_update_item = new QTableWidgetItem;
+    ui->folder_items_status_table->setItem(1, 0, num_update_item);
 
     ui->tree->setExpandsOnDoubleClick(false);
     QObject::connect(ui->tree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(treeItemDoubleClicked(QTreeWidgetItem*,int)));
@@ -95,6 +103,8 @@ void AnalyseForm::syncFileReceived(AnalyseFile * sf)
     sf_queue.clear();
 
     loadSyncFile(sf);
+    if (ui->tree->topLevelItemCount())
+        updateSelectedInfo((AnalyseTreeWidgetItem *) ui->tree->topLevelItem(0));
 }
 
 void AnalyseForm::loadSyncFile(AnalyseFile * parent_sf)
@@ -179,9 +189,11 @@ void AnalyseForm::updateSelectedInfo(AnalyseTreeWidgetItem * item)
     ui->rel_path_le->setText(rel_path.join("/"));
 
     ui->folder_chb->setChecked(sf->isDir());
-    ui->num_copy_lbl->setText(QVariant(sf->numNotFound()).toString());
-    ui->num_delete_lbl->setText(QVariant(sf->numDeleted()).toString());
-    ui->num_update_lbl->setText(QVariant(sf->numObsolete()).toString());
+    num_copy_item->setText(QVariant(sf->numNotFound()).toString());
+    num_delete_item->setText(QVariant(sf->numDeleted()).toString());
+    num_update_item->setText(QVariant(sf->numObsolete()).toString());
+
+    ui->folder_items_status_table->setHidden(!(sf->isDir() && sf->numNotSynced()));
 
     Folders * folders = page->foldersObject();
     QTableWidgetItem * folder_item;

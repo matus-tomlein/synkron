@@ -36,7 +36,7 @@
       </column>
      </widget>
      <widget class="QWidget" name="verticalLayoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="info_panel_layout">
        <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
@@ -102,54 +102,11 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Items to update</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Items to copy</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="num_copy_lbl"/>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="num_update_lbl"/>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_7">
-           <property name="text">
-            <string>Items to delete</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="num_delete_lbl"/>
-         </item>
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="1">
           <widget class="QTableWidget" name="folders_table">
            <property name="maximumSize">
             <size>
@@ -175,7 +132,20 @@
            </column>
           </widget>
          </item>
-         <item>
+         <item row="0" column="0">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="2">
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -187,6 +157,39 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="1" column="1">
+          <widget class="QTableWidget" name="folder_items_status_table">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>110</height>
+            </size>
+           </property>
+           <attribute name="horizontalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <row>
+            <property name="text">
+             <string>Items to copy</string>
+            </property>
+           </row>
+           <row>
+            <property name="text">
+             <string>Items to update</string>
+            </property>
+           </row>
+           <row>
+            <property name="text">
+             <string>Items to delete</string>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string>Number of items</string>
+            </property>
+           </column>
+          </widget>
          </item>
         </layout>
        </item>
