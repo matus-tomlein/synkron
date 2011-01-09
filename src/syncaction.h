@@ -52,6 +52,7 @@ private:
     SyncExceptionBundle * exception_bundle;
 
     int skipped_count;
+    int changed_count;
 
     void createSyncFileFromFolders(SyncFile *, FolderActionGroup *);
     void sync(SyncFile *, FolderActionGroup *);
@@ -69,7 +70,7 @@ protected:
 signals:
     void messageBox(const QString);
     void filesCounted(int);
-    void finished();
+    void finished(int, int);
 
     void fileCopied(const QString, const QString);
     void fileUpdated(const QString, const QString);

@@ -59,9 +59,10 @@ void SyncForm::startSync(SyncAction * sa)
     QObject::connect(sa, SIGNAL(messageBox(QString)), this, SLOT(showMessageBox(QString)), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(filesCounted(int)), progress_bar, SLOT(setMaximum(int)), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(anotherItemChecked()), progress_bar, SLOT(increaseValue()), Qt::QueuedConnection);
-    QObject::connect(sa, SIGNAL(finished()), this, SLOT(syncFinished()), Qt::QueuedConnection);
+    QObject::connect(sa, SIGNAL(finished(int, int)), this, SLOT(syncFinished(int, int)), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(syncOutMessage(SyncOutMessage*)), msg_handler, SLOT(logMessage(SyncOutMessage*)), Qt::QueuedConnection);
 
+    msg_handler->syncStarted();
     sa->start();
 }
 
@@ -70,9 +71,11 @@ void SyncForm::startSync(SyncFile * sf, FolderActionGroup * fag)
     startSync(new SyncAction(fag, page->syncExceptionBundle(), sf));
 }
 
-void SyncForm::syncFinished()
+void SyncForm::syncFinished(int changed_count, int skipped_count)
 {
     progress_bar->setHidden(true);
+    msg_handler->showSkippedMessage(skipped_count);
+    msg_handler->syncFinished(changed_count);
 }
 
 void SyncForm::showMessageBox(const QString s)

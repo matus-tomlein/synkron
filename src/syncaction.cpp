@@ -55,6 +55,7 @@ void SyncAction::run()
     QObject::connect(this, SIGNAL(finished()), this, SLOT(deleteLater()), Qt::DirectConnection);
 
     skipped_count = 0;
+    changed_count = 0;
 
     exception_bundle->updateRootFolder(starting_fag);
     if (!starting_sf) {
@@ -238,6 +239,7 @@ void SyncAction::copyFile(SyncFile *, FolderActionGroup * fag)
         emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileCopied, fag));
     } else {
         emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileCopied, fag, true, source_file.errorString()));
+        changed_count++;
     }
 }
 
@@ -259,6 +261,7 @@ void SyncAction::updateFile(SyncFile *, FolderActionGroup * fag)
         emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileUpdated, fag, true, file.errorString()));
     } else {
         emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileUpdated, fag));
+        changed_count++;
     }
 }
 
@@ -269,6 +272,7 @@ bool SyncAction::createFolder(SyncFile *, FolderActionGroup * fag)
         return false;
     }
     emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, fag));
+    changed_count++;
     return true;
 }
 
@@ -288,7 +292,7 @@ bool SyncAction::backupFile(MTFile *)
 void SyncAction::finish(SyncFile * sf)
 {
     delete sf;
-    emit finished();
+    emit finished(changed_count, skipped_count);
 }
 
 SyncFile * SyncAction::createRootSyncFile()

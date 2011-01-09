@@ -25,6 +25,7 @@
 class MTTableWidgetItem;
 class Folders;
 class SyncOutMessage;
+class QTableWidgetItem;
 class QTableWidget;
 
 class MessageHandler : public QObject
@@ -36,9 +37,13 @@ public:
 
 public slots:
     void logMessage(SyncOutMessage *);
+    void syncStarted();
+    void showSkippedMessage(int);
+    void syncFinished(int);
 
 private:
     void addLogItem(SyncOutMessage *, const QString &, const QStringList &);
+    void insertSpannedItem(QTableWidgetItem *);
 
     Folders * folders;
     QTableWidget * log_tbl;

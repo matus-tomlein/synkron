@@ -25,6 +25,9 @@
 #include "folder.h"
 
 #include <QHeaderView>
+#include <QTime>
+
+#define ROW_HEIGHT 22
 
 MessageHandler::MessageHandler(Folders * folders, QTableWidget * log_tbl)
 {
@@ -85,7 +88,40 @@ void MessageHandler::addLogItem(SyncOutMessage * msg, const QString & rel_path, 
         break;
     }
 
-    log_tbl->setRowHeight(log_tbl->rowCount() - 1, 22);
+    log_tbl->setRowHeight(log_tbl->rowCount() - 1, ROW_HEIGHT);
     log_tbl->setItem(log_tbl->rowCount() - 1, 1, new QTableWidgetItem(action));
     log_tbl->setItem(log_tbl->rowCount() - 1, 2, new QTableWidgetItem(folders_item_str));
+}
+
+void MessageHandler::syncStarted()
+{
+    QTableWidgetItem * item = new QTableWidgetItem(tr("%1	Synchronisation started").arg(QTime().currentTime().toString("hh:mm:ss")));
+    item->setBackground(QBrush(Qt::yellow));
+    insertSpannedItem(item);
+}
+
+void MessageHandler::insertSpannedItem(QTableWidgetItem * item)
+{
+    log_tbl->insertRow(log_tbl->rowCount());
+    log_tbl->setSpan(log_tbl->rowCount() - 1, 0, 1, 3);
+    log_tbl->setRowHeight(log_tbl->rowCount() - 1, ROW_HEIGHT);
+    log_tbl->setItem(log_tbl->rowCount() - 1, 0, item);
+}
+
+void MessageHandler::syncFinished(int changed_count)
+{
+    QTableWidgetItem * item = new QTableWidgetItem(tr("%1	Synchronisation complete: %2 file(s) synchronised").arg(QTime().currentTime().toString("hh:mm:ss")).arg(changed_count));
+    item->setBackground(QBrush(Qt::green));
+    insertSpannedItem(item);
+}
+
+void MessageHandler::showSkippedMessage(int skipped_count)
+{
+    if (skipped_count > 0) {
+        QTableWidgetItem * item = new QTableWidgetItem(tr("%1 files skipped").arg(skipped_count));
+        item->setBackground(QBrush(Qt::darkGray));
+        item->setForeground(QBrush(Qt::white));
+        item->setIcon(QIcon(":/new/prefix1/images/file.png"));
+        insertSpannedItem(item);
+    }
 }

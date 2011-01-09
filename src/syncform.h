@@ -45,7 +45,7 @@ public:
     void startSync(SyncFile *, FolderActionGroup *);
 
 private slots:
-    void syncFinished();
+    void syncFinished(int, int);
     void showMessageBox(const QString = QString());
 
 private:

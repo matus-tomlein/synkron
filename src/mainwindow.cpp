@@ -30,6 +30,7 @@
 #include <QMessageBox>
 #include <QMap>
 #include <QProgressBar>
+#include <QToolButton>
 
 MainWindow::MainWindow(Module * module, QWidget *parent) :
     QMainWindow(parent),
@@ -62,11 +63,11 @@ MainWindow::MainWindow(Module * module, QWidget *parent) :
     QObject::connect(exception_act_menu, SIGNAL(triggered(QAction*)), this, SLOT(exceptionActMenuActionTriggered(QAction*)));
     ui->exceptions_act->setMenu(exception_act_menu);
 
-    QPushButton * view_toolbar_btn = new QPushButton(ui->toolbar);
+    QToolButton * view_toolbar_btn = new QToolButton(ui->toolbar);
     view_toolbar_btn->setToolTip(tr("View"));
     view_toolbar_btn->setIcon(QIcon(":/images/syncview_48.png"));
     view_toolbar_btn->setMenu(ui->view_menu);
-    view_toolbar_btn->setFlat(true);
+    view_toolbar_btn->setPopupMode(QToolButton::InstantPopup);
     view_toolbar_btn->setIconSize(QSize(32, 32));
     view_toolbar_btn->setMaximumSize(32, 32);
 
