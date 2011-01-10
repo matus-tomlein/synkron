@@ -26,6 +26,7 @@
 #include "syncaction.h"
 #include "messagehandler.h"
 #include "abstractsyncpage.h"
+#include "syncactionoptions.h"
 
 #include <QMessageBox>
 
@@ -54,7 +55,7 @@ void SyncForm::startSync(SyncAction * sa)
     progress_bar->setValue(0);
 
     if (!sa)
-        sa = new SyncAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle());
+        sa = new SyncAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle(), page->syncOptions());
 
     QObject::connect(sa, SIGNAL(messageBox(QString)), this, SLOT(showMessageBox(QString)), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(filesCounted(int)), progress_bar, SLOT(setMaximum(int)), Qt::QueuedConnection);
@@ -68,7 +69,7 @@ void SyncForm::startSync(SyncAction * sa)
 
 void SyncForm::startSync(SyncFile * sf, FolderActionGroup * fag)
 {
-    startSync(new SyncAction(fag, page->syncExceptionBundle(), sf));
+    startSync(new SyncAction(fag, page->syncExceptionBundle(), page->syncOptions(), sf));
 }
 
 void SyncForm::syncFinished(int changed_count, int skipped_count)

@@ -27,6 +27,7 @@ class SyncExceptionBundle;
 class FileCompare;
 class SyncOutMessage;
 class MTFile;
+class SyncActionOptions;
 
 class QFileInfo;
 
@@ -37,7 +38,7 @@ class SyncAction : public QThread
     Q_OBJECT
 
 public:
-    SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncFile * = NULL);
+    SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionOptions *, SyncFile * = NULL);
     ~SyncAction();
 
     void run();
@@ -50,6 +51,8 @@ private:
     SyncFile * starting_sf;
     FileCompare * file_compare;
     SyncExceptionBundle * exception_bundle;
+    SyncActionOptions * options;
+    int dir_filters;
 
     int skipped_count;
     int changed_count;

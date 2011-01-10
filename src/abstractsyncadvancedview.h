@@ -61,6 +61,9 @@ private:
     QTreeWidgetItem * detect_collisions_item;
     QTreeWidgetItem * exceptions_item;
 
+    QTreeWidgetItem * analyse_item;
+    QTreeWidgetItem * analyse_changed_only_item;
+
     void populateAdvancedTree();
     void initializeItem(QTreeWidgetItem *&, QTreeWidgetItem *, const QString &, const QString &);
     void loadExceptionBundles();

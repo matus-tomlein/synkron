@@ -81,7 +81,7 @@ void AnalyseForm::analyse()
     ui->tree->clear();
     sf_queue.clear();
     current_level_item = NULL;
-    AnalyseAction * aa = new AnalyseAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle());
+    AnalyseAction * aa = new AnalyseAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle(), page->syncOptions());
 
     QObject::connect(aa, SIGNAL(finished(AnalyseFile*)), this, SLOT(syncFileReceived(AnalyseFile*)), Qt::QueuedConnection);
 
@@ -117,7 +117,8 @@ void AnalyseForm::loadSyncFile(AnalyseTreeWidgetItem * root_item)
     AnalyseFile * parent_sf = root_item->syncFile();
 
     for (int i = 0; i < parent_sf->childCount(); ++i) {
-        new AnalyseTreeWidgetItem((AnalyseFile *) parent_sf->childAt(i), root_item);
+        if (parent_sf->numNotSynced() || !page->value("analyse_changed_only").toBool())
+            new AnalyseTreeWidgetItem((AnalyseFile *) parent_sf->childAt(i), root_item);
     }
 
     sf_queue << parent_sf;

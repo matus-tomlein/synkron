@@ -69,6 +69,11 @@ void AbstractSyncAdvancedView::populateAdvancedTree()
     initializeItem(propagate_deletions_item, general_item, "propagate_deletions", tr("Propagate deletions"));
     initializeItem(detect_collisions_item, general_item, "detect_collisions", tr("Detect collisions"));
 
+    analyse_item = new QTreeWidgetItem(tree, QStringList("Analysis"));
+    analyse_item->setExpanded(true);
+
+    initializeItem(analyse_changed_only_item, analyse_item, "analyse_changed_only", tr("List files which need to be synchronised only"));
+
     exceptions_item = new QTreeWidgetItem(tree, QStringList(tr("Exceptions")));
     exceptions_item->setExpanded(true);
 }

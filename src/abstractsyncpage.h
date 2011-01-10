@@ -25,6 +25,7 @@ class Folder;
 class Settings;
 class ExceptionBundle;
 class SyncExceptionBundle;
+class SyncActionOptions;
 
 #include <QVariant>
 
@@ -44,6 +45,7 @@ public:
     void closeFolder(int);
 
     Folders * foldersObject() { return folders; }
+    SyncActionOptions * syncOptions();
 
     void setValue(const QString &, const QVariant &);
     const QVariant value(const QString &);
@@ -60,6 +62,8 @@ public slots:
     void changeExceptionBundle(ExceptionBundle *);
 
 protected:
+    QMap<QString, QVariant> * getCopyOfSettings();
+
     int id;
     Folders * folders;
 

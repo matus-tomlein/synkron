@@ -26,14 +26,16 @@
 #include "syncoutmessage.h"
 #include "exceptiongroup.h"
 #include "mtfile.h"
+#include "syncactionoptions.h"
 
 #include <QSet>
 #include <QElapsedTimer>
 
-SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncFile * sf) : QThread()
+SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionOptions * opts, SyncFile * sf) : QThread()
 {
     starting_fag = fag;
     exception_bundle = bundle;
+    options = opts;
     starting_sf = sf;
     skipped_count = 0;
     file_compare = new FileCompare();
@@ -42,6 +44,7 @@ SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, Sy
 SyncAction::~SyncAction()
 {
     delete exception_bundle;
+    delete options;
 }
 
 void SyncAction::start(Priority priority)
@@ -56,6 +59,10 @@ void SyncAction::run()
 
     skipped_count = 0;
     changed_count = 0;
+
+    dir_filters = QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs;
+    if (options->runHidden())
+        dir_filters |= QDir::Hidden;
 
     exception_bundle->updateRootFolder(starting_fag);
     if (!starting_sf) {
@@ -96,7 +103,7 @@ void SyncAction::createSyncFileFromFolders(SyncFile * parent, FolderActionGroup 
         QDir sync_dir(fag->at(i));
         if (!sync_dir.exists()) continue;
 
-        entries.unite(sync_dir.entryList(exception_bundle->filters(), QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs, (QDir::Name | QDir::DirsFirst | QDir::IgnoreCase)).toSet());
+        entries.unite(sync_dir.entryList(exception_bundle->filters(), static_cast<QDir::Filter>(dir_filters), (QDir::Name | QDir::DirsFirst | QDir::IgnoreCase)).toSet());
     }
 
     QFileInfo fi;
@@ -165,17 +172,19 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
         }
 
         if (sf->isDir()) {
-            sub_fag = new FolderActionGroup;
-            for (int n = 0; n < fag->count(); ++n) {
-                dir.setPath(fag->at(n));
-                if (!sf->existsInFolder(fag->idAt(n))) {
-                    if (!createFolder(sf, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))))
-                        continue;
+            if (sf->childCount() || options->createEmptyFolders()) {
+                sub_fag = new FolderActionGroup;
+                for (int n = 0; n < fag->count(); ++n) {
+                    dir.setPath(fag->at(n));
+                    if (!sf->existsInFolder(fag->idAt(n))) {
+                        if (!createFolder(sf, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))))
+                                continue;
+                    }
+                    sub_fag->insert(fag->idAt(n), dir.absoluteFilePath(sf->getName()));
                 }
-                sub_fag->insert(fag->idAt(n), dir.absoluteFilePath(sf->getName()));
+                sync(sf, sub_fag);
+                delete sub_fag;
             }
-            sync(sf, sub_fag);
-            delete sub_fag;
         }
         else { // is not dir
             for (int n = 0; n < fag->count(); ++n) {

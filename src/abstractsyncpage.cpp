@@ -22,6 +22,7 @@
 #include "settings.h"
 #include "exceptionbundle.h"
 #include "syncexceptionbundle.h"
+#include "syncactionoptions.h"
 
 #include <QMessageBox>
 
@@ -179,4 +180,14 @@ SyncExceptionBundle * AbstractSyncPage::syncExceptionBundle()
      }
 
      return bundle;
+}
+
+QMap<QString, QVariant> * AbstractSyncPage::getCopyOfSettings()
+{
+    return new QMap<QString, QVariant>(*settings_map);
+}
+
+SyncActionOptions * AbstractSyncPage::syncOptions()
+{
+    return new SyncActionOptions(getCopyOfSettings());
 }
