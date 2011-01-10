@@ -18,7 +18,9 @@
 ********************************************************************/
 
 #include "folder.h"
+
 #include "settings.h"
+#include "syncactionfolderoptions.h"
 
 Folder::Folder(int id)
 {
@@ -88,4 +90,9 @@ void Folder::setValue(const QString & key, const QVariant & value)
 const QVariant Folder::value(const QString & key)
 {
     return settings_map->value(key);
+}
+
+SyncActionFolderOptions * Folder::folderOptions()
+{
+    return new SyncActionFolderOptions(new QMap<QString, QVariant>(*settings_map));
 }

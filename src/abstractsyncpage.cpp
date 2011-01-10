@@ -22,7 +22,7 @@
 #include "settings.h"
 #include "exceptionbundle.h"
 #include "syncexceptionbundle.h"
-#include "syncactionoptions.h"
+#include "syncactiongeneraloptions.h"
 
 #include <QMessageBox>
 
@@ -187,7 +187,9 @@ QMap<QString, QVariant> * AbstractSyncPage::getCopyOfSettings()
     return new QMap<QString, QVariant>(*settings_map);
 }
 
-SyncActionOptions * AbstractSyncPage::syncOptions()
+SyncActionGeneralOptions * AbstractSyncPage::syncOptions()
 {
-    return new SyncActionOptions(getCopyOfSettings());
+    SyncActionGeneralOptions * sago = new SyncActionGeneralOptions(getCopyOfSettings());
+    folders->insertFolderOptions(sago);
+    return sago;
 }

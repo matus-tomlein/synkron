@@ -25,7 +25,7 @@ class Folder;
 class Settings;
 class ExceptionBundle;
 class SyncExceptionBundle;
-class SyncActionOptions;
+class SyncActionGeneralOptions;
 
 #include <QVariant>
 
@@ -45,7 +45,7 @@ public:
     void closeFolder(int);
 
     Folders * foldersObject() { return folders; }
-    SyncActionOptions * syncOptions();
+    SyncActionGeneralOptions * syncOptions();
 
     void setValue(const QString &, const QVariant &);
     const QVariant value(const QString &);

@@ -29,7 +29,7 @@ class AnalyseAction : public SyncAction
     Q_OBJECT
 
 public:
-    AnalyseAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionOptions *, SyncFile * sf = NULL);
+    AnalyseAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionGeneralOptions *, SyncFile * sf = NULL);
 
 private:
     void copyFile(SyncFile *, FolderActionGroup *);

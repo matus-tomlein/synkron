@@ -20,12 +20,12 @@ bool SyncActionOptions::boolValue(const QString & key)
     return settings->value(key).toBool();
 }
 
-bool SyncActionOptions::runHidden()
-{
-    return settings->value("sync_hidden").toBool();
-}
-
 bool SyncActionOptions::createEmptyFolders()
 {
     return !settings->value("no_empty_folders").toBool();
+}
+
+bool SyncActionOptions::updateOnly()
+{
+    return settings->value("update_only").toBool();
 }

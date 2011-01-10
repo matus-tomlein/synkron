@@ -93,6 +93,7 @@ void AnalyseForm::analyse()
         ui->folders_table->insertRow(ui->folders_table->rowCount());
         ui->folders_table->setItem(ui->folders_table->rowCount() - 1, 0, new QTableWidgetItem(folders->at(i)->label()));
         ui->folders_table->setItem(ui->folders_table->rowCount() - 1, 1, new QTableWidgetItem);
+        ui->folders_table->setRowHeight(ui->folders_table->rowCount() - 1, 22);
     }
 
     aa->start();

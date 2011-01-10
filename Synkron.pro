@@ -53,7 +53,9 @@ SOURCES += src/main.cpp \
     src/analysetreewidgetitem.cpp \
     src/syncform.cpp \
     src/analysefile.cpp \
-    src/syncactionoptions.cpp
+    src/syncactionoptions.cpp \
+    src/syncactiongeneraloptions.cpp \
+    src/syncactionfolderoptions.cpp
 HEADERS += src/mainwindow.h \
     src/mtapplication.h \
     src/maincontroller.h \
@@ -98,7 +100,9 @@ HEADERS += src/mainwindow.h \
     src/analysetreewidgetitem.h \
     src/syncform.h \
     src/analysefile.h \
-    src/syncactionoptions.h
+    src/syncactionoptions.h \
+    src/syncactiongeneraloptions.h \
+    src/syncactionfolderoptions.h
 FORMS += ui/mainwindow.ui \
     ui/synctabform.ui \
     ui/syncfolderform.ui \

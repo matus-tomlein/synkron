@@ -22,6 +22,9 @@
 #include "settings.h"
 #include "folderactiongroup.h"
 
+#include "syncactiongeneraloptions.h"
+#include "syncactionfolderoptions.h"
+
 #include <QList>
 
 Folders::Folders()
@@ -139,4 +142,11 @@ FolderActionGroup * Folders::folderActionGroup()
         fag->insert(folders.at(i)->index(), folders.at(i)->path());
     }
     return fag;
+}
+
+void Folders::insertFolderOptions(SyncActionGeneralOptions * sago)
+{
+    for (int i = 0; i < folders.count(); ++i) {
+        sago->insertFolderOptions(folders.at(i)->index(), folders.at(i)->folderOptions());
+    }
 }

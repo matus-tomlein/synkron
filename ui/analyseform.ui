@@ -75,27 +75,13 @@
           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
          </property>
          <item row="0" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Relative path</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="rel_path_le">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
             <string>Folder</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="0" column="1">
           <widget class="QCheckBox" name="folder_chb">
            <property name="enabled">
             <bool>false</bool>
@@ -106,7 +92,7 @@
        </item>
        <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="1">
+         <item row="1" column="1">
           <widget class="QTableWidget" name="folders_table">
            <property name="maximumSize">
             <size>
@@ -132,7 +118,7 @@
            </column>
           </widget>
          </item>
-         <item row="0" column="0">
+         <item row="1" column="0">
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -145,7 +131,7 @@
            </property>
           </spacer>
          </item>
-         <item row="0" column="2">
+         <item row="1" column="2">
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -158,7 +144,7 @@
            </property>
           </spacer>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="QTableWidget" name="folder_items_status_table">
            <property name="maximumSize">
             <size>
@@ -189,6 +175,13 @@
              <string>Number of items</string>
             </property>
            </column>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="rel_path_le">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
         </layout>

@@ -12,10 +12,10 @@ public:
     const QVariant value(const QString &);
     bool boolValue(const QString &);
 
-    bool runHidden();
     bool createEmptyFolders();
+    bool updateOnly();
 
-private:
+protected:
     QMap<QString, QVariant> * settings;
 };
 

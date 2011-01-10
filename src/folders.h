@@ -24,6 +24,7 @@ class Folder;
 
 class Settings;
 class FolderActionGroup;
+class SyncActionGeneralOptions;
 
 #include <QStringList>
 
@@ -46,6 +47,7 @@ public:
     Folder * first();
     const QString pathAt(int);
     FolderActionGroup * folderActionGroup();
+    void insertFolderOptions(SyncActionGeneralOptions *);
 
 private:
     int folderListIndex(int);

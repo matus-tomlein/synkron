@@ -26,6 +26,7 @@ template<class Key, class T>
 class QMap;
 
 class Settings;
+class SyncActionFolderOptions;
 
 class Folder
 {
@@ -45,6 +46,8 @@ public:
 
     void save(Settings *);
     void load(Settings *);
+
+    SyncActionFolderOptions * folderOptions();
 
 private:
     int id;

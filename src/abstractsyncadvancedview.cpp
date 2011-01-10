@@ -64,7 +64,7 @@ void AbstractSyncAdvancedView::populateAdvancedTree()
     initializeItem(sync_hidden_item, general_item, "sync_hidden", tr("Synchronise hidden files and folders"));
     initializeItem(no_empty_folders_item, general_item, "no_empty_folders", tr("Do not create empty folders"));
     initializeItem(sync_no_subdirs_item, general_item, "sync_no_subdirs", tr("Do not synchronise subdirectories"));
-    initializeItem(no_backup_item, general_item, "no_backup", tr("Do not backup updated files"));
+    initializeItem(no_backup_item, general_item, "dont_backup", tr("Do not backup updated files"));
     initializeItem(update_only_item, general_item, "update_only", tr("Update existing files only"));
     initializeItem(propagate_deletions_item, general_item, "propagate_deletions", tr("Propagate deletions"));
     initializeItem(detect_collisions_item, general_item, "detect_collisions", tr("Detect collisions"));

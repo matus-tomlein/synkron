@@ -26,12 +26,12 @@
 #include "syncoutmessage.h"
 #include "exceptiongroup.h"
 #include "mtfile.h"
-#include "syncactionoptions.h"
+#include "syncactiongeneraloptions.h"
 
 #include <QSet>
 #include <QElapsedTimer>
 
-SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionOptions * opts, SyncFile * sf) : QThread()
+SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, SyncFile * sf) : QThread()
 {
     starting_fag = fag;
     exception_bundle = bundle;
@@ -61,7 +61,7 @@ void SyncAction::run()
     changed_count = 0;
 
     dir_filters = QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs;
-    if (options->runHidden())
+    if (options->syncHidden())
         dir_filters |= QDir::Hidden;
 
     exception_bundle->updateRootFolder(starting_fag);
@@ -172,19 +172,24 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
         }
 
         if (sf->isDir()) {
-            if (sf->childCount() || options->createEmptyFolders()) {
-                sub_fag = new FolderActionGroup;
-                for (int n = 0; n < fag->count(); ++n) {
-                    dir.setPath(fag->at(n));
-                    if (!sf->existsInFolder(fag->idAt(n))) {
-                        if (!createFolder(sf, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))))
-                                continue;
+            sub_fag = new FolderActionGroup;
+            for (int n = 0; n < fag->count(); ++n) {
+                dir.setPath(fag->at(n));
+                if (!sf->existsInFolder(fag->idAt(n))) {
+                    if (options->canCopy(fag->idAt(n))
+                        && (sf->childCount() || options->createEmptyFolders(fag->idAt(n)))) {
+
+                        if (createFolder(sf, new FolderActionGroup(fag->idAt(n), dir.absoluteFilePath(sf->getName()))))
+                            sub_fag->insert(fag->idAt(n), dir.absoluteFilePath(sf->getName()));
+
                     }
+                } else {
                     sub_fag->insert(fag->idAt(n), dir.absoluteFilePath(sf->getName()));
                 }
-                sync(sf, sub_fag);
-                delete sub_fag;
             }
+            if (options->syncSubdirs())
+                sync(sf, sub_fag);
+            delete sub_fag;
         }
         else { // is not dir
             for (int n = 0; n < fag->count(); ++n) {
@@ -224,11 +229,13 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
             for (int n = 0; n < fag->count(); ++n) {
                 dir.setPath(fag->at(n));
                 if (latest_index_arr[n] == -2) { // does not exist
-                    copyFile(sf, new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
+                    if (options->canCopy(fag->idAt(n)))
+                        copyFile(sf, new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
                                                      fag->idAt(n), dir.absoluteFilePath(sf->getName())));
                 }
                 else if (latest_index_arr[n] < latest_index) { // is obsolete
-                    updateFile(sf, new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
+                    if (options->canUpdate(fag->idAt(n)))
+                        updateFile(sf, new FolderActionGroup(newest_fi->folderId(), newest_fi->absoluteFilePath(),
                                                      fag->idAt(n), dir.absoluteFilePath(sf->getName())));
                 } else { // is fine
                     sf->setFileStatusInFolder(fag->idAt(n), SyncFile::OK);
