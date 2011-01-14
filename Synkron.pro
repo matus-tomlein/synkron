@@ -57,7 +57,8 @@ SOURCES += src/main.cpp \
     src/syncactiongeneraloptions.cpp \
     src/syncactionfolderoptions.cpp \
     src/backuphandler.cpp \
-    src/backupaction.cpp
+    src/backupaction.cpp \
+    src/restoreform.cpp
 HEADERS += src/mainwindow.h \
     src/mtapplication.h \
     src/maincontroller.h \
@@ -106,14 +107,16 @@ HEADERS += src/mainwindow.h \
     src/syncactiongeneraloptions.h \
     src/syncactionfolderoptions.h \
     src/backuphandler.h \
-    src/backupaction.h
+    src/backupaction.h \
+    src/restoreform.h
 FORMS += ui/mainwindow.ui \
     ui/synctabform.ui \
     ui/syncfolderform.ui \
     ui/exceptionform.ui \
     ui/navigationitemform.ui \
     ui/analyseform.ui \
-    ui/syncform.ui
+    ui/syncform.ui \
+    ui/restoreform.ui
 RESOURCES += resources.qrc \
     i18n.qrc
 DESTDIR = ./

@@ -12,6 +12,7 @@ BackupHandler::BackupHandler()
 {
     temp_path = NULL;
     db = NULL;
+    last_shown = NULL;
 }
 
 BackupHandler::~BackupHandler()
@@ -74,4 +75,30 @@ void BackupHandler::record(const QString & path, int index, const QString & time
 void BackupHandler::commit()
 {
     db->commit();
+}
+
+QStringList * BackupHandler::newDates()
+{
+    QStringList * dates = new QStringList;
+    QSqlQuery query(*db);
+
+    QString query_str = "SELECT DISTINCT time FROM records";
+    if (last_shown) {
+        query_str.append(" WHERE time > '");
+        query_str.append(*last_shown);
+        query_str.append("'");
+    }
+    query_str.append(" ORDER BY time");
+    if (!query.exec(query_str)) return dates;
+
+    while (query.next()) {
+        dates->append(query.value(0).toString());
+    }
+
+    if (dates->count()) {
+        if (last_shown) delete last_shown;
+        last_shown = new QString(dates->last());
+    }
+
+    return dates;
 }

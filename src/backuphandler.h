@@ -22,6 +22,8 @@ public:
 
     BackupAction * backupAction();
 
+    QStringList * newDates();
+
 public slots:
     void record(const QString &, int, const QString &);
     void commit();
@@ -30,6 +32,7 @@ private:
     bool createDatabase();
 
     QString * temp_path;
+    QString * last_shown;
     QSqlDatabase * db;
 };
 

@@ -25,6 +25,7 @@
 #include "syncpage.h"
 #include "exceptionform.h"
 #include "exceptionbundle.h"
+#include "restoreform.h"
 
 #include <QActionGroup>
 #include <QMessageBox>
@@ -65,6 +66,9 @@ MainWindow::MainWindow(Module * module, QWidget *parent) :
 
     exception_form = new ExceptionForm(nav_exceptions_item, module->getExceptions(), ui->main_stckw);
     ui->main_stckw->addWidget(exception_form);
+
+    restore_form = new RestoreForm(module->backupHandler());
+    ui->main_stckw->addWidget(restore_form);
 
     // Toolbar menus +++
     sync_act_menu = new QMenu;
@@ -160,7 +164,8 @@ void MainWindow::switchView(QTreeWidgetItem * item, int)
         ui->main_stckw->setCurrentWidget(ui->synchronise_page);
     }
     else if (item == nav_restore_item) {
-        ui->main_stckw->setCurrentWidget(ui->restore_page);
+        ui->main_stckw->setCurrentWidget(restore_form);
+        restore_form->reload();
     }
     else if (item == nav_exceptions_item) {
         ui->main_stckw->setCurrentWidget(exception_form);

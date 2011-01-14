@@ -26,12 +26,14 @@ class QTreeWidget;
 class QTreeWidgetItem;
 template<class Key, class T>
 class QMap;
+class QLabel;
+class QProgressBar;
+
 class SyncTabForm;
 class Module;
 class AbstractSyncPage;
 class ExceptionForm;
-class QLabel;
-class QProgressBar;
+class RestoreForm;
 
 namespace Ui {
     class MainWindow;
@@ -55,6 +57,7 @@ private:
     Ui::MainWindow *ui;
     Module * module;
     ExceptionForm * exception_form;
+    RestoreForm * restore_form;
 
     // Navigation tree items +++
     QTreeWidgetItem * nav_sync_item;

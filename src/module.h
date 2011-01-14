@@ -47,6 +47,7 @@ public:
     QMapIterator<int, AbstractSyncPage *> * syncIterator();
 
     Exceptions * getExceptions() { return exceptions; }
+    BackupHandler * backupHandler() { return backup_handler; }
 
     void save();
     void load();
