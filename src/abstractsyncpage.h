@@ -26,6 +26,8 @@ class Settings;
 class ExceptionBundle;
 class SyncExceptionBundle;
 class SyncActionGeneralOptions;
+class Exceptions;
+class BackupHandler;
 
 #include <QVariant>
 
@@ -34,7 +36,7 @@ class AbstractSyncPage : public QObject
      Q_OBJECT
 
 public:
-    AbstractSyncPage(int);
+    AbstractSyncPage(int, Exceptions *, BackupHandler *);
 
     void save(Settings *);
     void load(Settings *);
@@ -50,26 +52,30 @@ public:
     void setValue(const QString &, const QVariant &);
     const QVariant value(const QString &);
 
-    QList<int> exceptionBundleIds();
+    ExceptionBundle * exceptionBundleAt(int);
+    ExceptionBundle * exceptionBundleById(int);
+    int exceptionBundleCount();
+
     bool exceptionBundleChecked(int);
     void checkExceptionBundle(int, bool);
-    ExceptionBundle * exceptionBundle(int);
     SyncExceptionBundle * syncExceptionBundle();
+
+    BackupHandler * backupHandler();
 
 public slots:
     void addExceptionBundle(ExceptionBundle *);
     void removeExceptionBundle(int);
-    void changeExceptionBundle(ExceptionBundle *);
 
 protected:
     QMap<QString, QVariant> * getCopyOfSettings();
 
     int id;
     Folders * folders;
+    Exceptions * exceptions;
+    BackupHandler * backup_handler;
 
     QMap<QString, QVariant> * settings_map;
     QMap<int, bool> * exception_bundle_ids_map;
-    QMap<int, ExceptionBundle *> * exception_bundles_map;
 
 signals:
     void exceptionBundleAdded(ExceptionBundle *);

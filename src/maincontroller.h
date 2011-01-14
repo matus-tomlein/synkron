@@ -35,6 +35,7 @@ class MainController : public QObject
 
 public:
     MainController();
+    ~MainController();
 
 private:
 

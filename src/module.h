@@ -28,6 +28,7 @@ class AbstractSyncPage;
 class SyncPage;
 class Folder;
 class Exceptions;
+class BackupHandler;
 
 template<class Key, class T>
 class QMap;
@@ -38,6 +39,7 @@ class Module : public QObject
 
 public:
     Module(const QString &);
+    ~Module();
 
     QVariant value(const QString &);
     void setValue(const QString &, const QVariant &);
@@ -61,6 +63,7 @@ private:
 
     Settings * sync_settings;
     Exceptions * exceptions;
+    BackupHandler * backup_handler;
 
     QMap<QString, QVariant> * settings_map;
     QMap<int, AbstractSyncPage *> * syncs;

@@ -38,6 +38,20 @@ MainWindow::MainWindow(Module * module, QWidget *parent) :
 {
     ui->setupUi(this);
 
+#ifdef Q_WS_MAC
+
+    ui->navigation_tree->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->navigation_tree->setAutoFillBackground(true);
+
+    QPalette palette = ui->navigation_tree->palette();
+    QColor macSidebarColor(231, 237, 246);
+    // QColor macSidebarHighlightColor(168, 183, 205);
+    // palette.setColor(QPalette::Highlight, macSidebarHighlightColor);
+    palette.setColor(QPalette::Base, macSidebarColor);
+    ui->navigation_tree->setPalette(palette);
+
+#endif
+
     ui->main_stckw->setCurrentIndex(0);
     for (int i = ui->sync_stckw->count() - 1; i >= 0; --i) delete ui->sync_stckw->widget(i);
 

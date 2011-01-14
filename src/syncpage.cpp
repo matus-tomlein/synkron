@@ -21,7 +21,7 @@
 #include "syncfolders.h"
 #include "settings.h"
 
-SyncPage::SyncPage(int id) : AbstractSyncPage(id)
+SyncPage::SyncPage(int id, Exceptions * exceptions, BackupHandler * backup_handler) : AbstractSyncPage(id, exceptions, backup_handler)
 {
     folders = new SyncFolders;
 }

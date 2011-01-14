@@ -28,6 +28,7 @@ class FileCompare;
 class SyncOutMessage;
 class MTFile;
 class SyncActionGeneralOptions;
+class BackupAction;
 
 class QFileInfo;
 
@@ -38,7 +39,7 @@ class SyncAction : public QThread
     Q_OBJECT
 
 public:
-    SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionGeneralOptions *, SyncFile * = NULL);
+    SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionGeneralOptions *, BackupAction *, SyncFile * = NULL);
     ~SyncAction();
 
     void run();
@@ -52,6 +53,7 @@ private:
     FileCompare * file_compare;
     SyncExceptionBundle * exception_bundle;
     SyncActionGeneralOptions * options;
+    BackupAction * backup_action;
     int dir_filters;
 
     int skipped_count;
@@ -62,7 +64,6 @@ private:
     virtual void copyFile(SyncFile *, FolderActionGroup *);
     virtual void updateFile(SyncFile *, FolderActionGroup *);
     virtual bool createFolder(SyncFile *, FolderActionGroup *);
-    bool backupFile(MTFile *);
 
     virtual SyncFile * createRootSyncFile();
     virtual void finish(SyncFile *);

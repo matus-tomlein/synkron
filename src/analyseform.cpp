@@ -30,6 +30,7 @@
 #include "abstractsyncpage.h"
 #include "exceptionbundle.h"
 #include "exceptiongroup.h"
+#include "backuphandler.h"
 
 #include <QTimer>
 #include <QMessageBox>
@@ -81,7 +82,7 @@ void AnalyseForm::analyse()
     ui->tree->clear();
     sf_queue.clear();
     current_level_item = NULL;
-    AnalyseAction * aa = new AnalyseAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle(), page->syncOptions());
+    AnalyseAction * aa = new AnalyseAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle(), page->syncOptions(), page->backupHandler()->backupAction());
 
     QObject::connect(aa, SIGNAL(finished(AnalyseFile*)), this, SLOT(syncFileReceived(AnalyseFile*)), Qt::QueuedConnection);
 
@@ -243,7 +244,7 @@ void AnalyseForm::aboutToShowOpenMenu()
 
 void AnalyseForm::blacklistSelected(QAction * action)
 {
-    ExceptionBundle * bundle = page->exceptionBundle(action->data().toInt());
+    ExceptionBundle * bundle = page->exceptionBundleById(action->data().toInt());
     ExceptionGroup * group;
     if (current_sf->isDir())
         group = bundle->groupByType(ExceptionGroup::FolderBlacklist);
@@ -255,8 +256,10 @@ void AnalyseForm::blacklistSelected(QAction * action)
 
     group->addItem(path.join("/"));
 
-    delete current_sf;
-    delete ui->tree->selectedItems().first();
+    if (page->exceptionBundleChecked(bundle->index())) {
+        delete current_sf;
+        delete ui->tree->selectedItems().first();
+    }
 }
 
 void AnalyseForm::aboutToShowBlacklistMenu()
@@ -266,11 +269,11 @@ void AnalyseForm::aboutToShowBlacklistMenu()
 
     QAction * action;
 
-    QList<int> bundle_ids = page->exceptionBundleIds();
-    for (int i = 0; i < bundle_ids.count(); ++i) {
+    for (int i = 0; i < page->exceptionBundleCount(); ++i) {
+        ExceptionBundle * bundle = page->exceptionBundleAt(i);
         action = new QAction(menu);
-        action->setText(page->exceptionBundle(bundle_ids.at(i))->name());
-        action->setData(bundle_ids.at(i));
+        action->setText(bundle->name());
+        action->setData(bundle->index());
         menu->addAction(action);
     }
 }

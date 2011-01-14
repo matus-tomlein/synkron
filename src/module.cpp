@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "syncpage.h"
 #include "exceptions.h"
+#include "backuphandler.h"
 
 #include <QFileInfo>
 #include <QDir>
@@ -30,10 +31,19 @@ Module::Module(const QString & path)
 {
     settings_map = new QMap<QString, QVariant>;
     syncs = new QMap<int, AbstractSyncPage *>;
-    exceptions = new Exceptions();
+    exceptions = new Exceptions;
+    backup_handler = new BackupHandler;
 
     setupSyncSettings(path);
     load();
+}
+
+Module::~Module()
+{
+    delete backup_handler;
+    delete exceptions;
+    delete syncs;
+    delete settings_map;
 }
 
 /**
@@ -106,11 +116,11 @@ SyncPage * Module::addSync()
   */
 SyncPage * Module::addSync(int sync_id)
 {
-    SyncPage * sync = new SyncPage(sync_id);
+    SyncPage * sync = new SyncPage(sync_id, exceptions, backup_handler);
     syncs->insert(sync_id, sync);
 
     QObject::connect(exceptions, SIGNAL(bundleAddedSig(ExceptionBundle*)), sync, SLOT(addExceptionBundle(ExceptionBundle*)));
-    QObject::connect(exceptions, SIGNAL(bundleChangedSig(ExceptionBundle*)), sync, SLOT(changeExceptionBundle(ExceptionBundle*)));
+    QObject::connect(exceptions, SIGNAL(bundleChangedSig(ExceptionBundle*)), sync, SIGNAL(exceptionBundleChanged(ExceptionBundle*)));
     QObject::connect(exceptions, SIGNAL(bundleRemovedSig(int)), sync, SLOT(removeExceptionBundle(int)));
     return sync;
 }
@@ -171,6 +181,9 @@ void Module::save()
 
     // Saving exceptions
     exceptions->save(sync_settings);
+
+    // Saving restore settings
+    backup_handler->save(sync_settings);
 }
 
 /**
@@ -199,4 +212,7 @@ void Module::load()
 
     // Loading exceptions
     exceptions->load(sync_settings);
+
+    // Loading restore settings
+    backup_handler->load(sync_settings);
 }

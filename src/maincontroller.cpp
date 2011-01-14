@@ -41,6 +41,12 @@ MainController::MainController()
     window->show();
 }
 
+MainController::~MainController()
+{
+    delete module;
+    delete window;
+}
+
 /**
  translation setup at startup
  */

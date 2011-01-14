@@ -23,16 +23,18 @@
 #include "exceptionbundle.h"
 #include "syncexceptionbundle.h"
 #include "syncactiongeneraloptions.h"
+#include "exceptions.h"
 
 #include <QMessageBox>
 
-AbstractSyncPage::AbstractSyncPage(int id)
+AbstractSyncPage::AbstractSyncPage(int id, Exceptions * exceptions, BackupHandler * backup_handler)
 {
     this->id = id;
+    this->exceptions = exceptions;
+    this->backup_handler = backup_handler;
 
     settings_map = new QMap<QString, QVariant>;
     exception_bundle_ids_map = new QMap<int, bool>;
-    exception_bundles_map = new QMap<int, ExceptionBundle *>;
     setValue("title", QObject::tr("Sync #%1").arg(index()));
 }
 
@@ -124,29 +126,15 @@ void AbstractSyncPage::addExceptionBundle(ExceptionBundle * bundle)
 {
     if (!exception_bundle_ids_map->contains(bundle->index()))
         exception_bundle_ids_map->insert(bundle->index(), false);
-    exception_bundles_map->insert(bundle->index(), bundle);
 
     emit exceptionBundleAdded(bundle);
-}
-
-void AbstractSyncPage::changeExceptionBundle(ExceptionBundle * bundle)
-{
-    exception_bundles_map->insert(bundle->index(), bundle);
-
-    emit exceptionBundleChanged(bundle);
 }
 
 void AbstractSyncPage::removeExceptionBundle(int i)
 {
     exception_bundle_ids_map->remove(i);
-    exception_bundles_map->remove(i);
 
     emit exceptionBundleRemoved(i);
-}
-
-QList<int> AbstractSyncPage::exceptionBundleIds()
-{
-    return exception_bundle_ids_map->keys();
 }
 
 bool AbstractSyncPage::exceptionBundleChecked(int i)
@@ -154,9 +142,19 @@ bool AbstractSyncPage::exceptionBundleChecked(int i)
     return exception_bundle_ids_map->value(i);
 }
 
-ExceptionBundle * AbstractSyncPage::exceptionBundle(int i)
+ExceptionBundle * AbstractSyncPage::exceptionBundleById(int i)
 {
-    return exception_bundles_map->value(i);
+    return exceptions->bundleById(i);
+}
+
+ExceptionBundle * AbstractSyncPage::exceptionBundleAt(int i)
+{
+    return exceptions->at(i);
+}
+
+int AbstractSyncPage::exceptionBundleCount()
+{
+    return exceptions->count();
 }
 
 void AbstractSyncPage::checkExceptionBundle(int i, bool b)
@@ -174,8 +172,10 @@ SyncExceptionBundle * AbstractSyncPage::syncExceptionBundle()
 
     QMapIterator<int, bool> i(*exception_bundle_ids_map);
      while (i.hasNext()) { i.next();
-         if (i.value() && exception_bundles_map->contains(i.key())) {
-             bundle->importBundle(exception_bundles_map->value(i.key()));
+         if (i.value()) {
+             ExceptionBundle * b = exceptionBundleById(i.key());
+             if (b)
+                 bundle->importBundle(b);
          }
      }
 
@@ -192,4 +192,9 @@ SyncActionGeneralOptions * AbstractSyncPage::syncOptions()
     SyncActionGeneralOptions * sago = new SyncActionGeneralOptions(getCopyOfSettings());
     folders->insertFolderOptions(sago);
     return sago;
+}
+
+BackupHandler * AbstractSyncPage::backupHandler()
+{
+    return backup_handler;
 }

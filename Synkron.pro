@@ -55,7 +55,9 @@ SOURCES += src/main.cpp \
     src/analysefile.cpp \
     src/syncactionoptions.cpp \
     src/syncactiongeneraloptions.cpp \
-    src/syncactionfolderoptions.cpp
+    src/syncactionfolderoptions.cpp \
+    src/backuphandler.cpp \
+    src/backupaction.cpp
 HEADERS += src/mainwindow.h \
     src/mtapplication.h \
     src/maincontroller.h \
@@ -102,7 +104,9 @@ HEADERS += src/mainwindow.h \
     src/analysefile.h \
     src/syncactionoptions.h \
     src/syncactiongeneraloptions.h \
-    src/syncactionfolderoptions.h
+    src/syncactionfolderoptions.h \
+    src/backuphandler.h \
+    src/backupaction.h
 FORMS += ui/mainwindow.ui \
     ui/synctabform.ui \
     ui/syncfolderform.ui \

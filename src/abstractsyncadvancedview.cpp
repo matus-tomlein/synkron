@@ -131,8 +131,7 @@ void AbstractSyncAdvancedView::changeBundle(ExceptionBundle * bundle)
 
 void AbstractSyncAdvancedView::loadExceptionBundles()
 {
-    QList<int> ids = page->exceptionBundleIds();
-    for (int i = 0; i < ids.count(); ++i) {
-        addBundle(page->exceptionBundle(ids.at(i)));
+    for (int i = 0; i < page->exceptionBundleCount(); ++i) {
+        addBundle(page->exceptionBundleAt(i));
     }
 }

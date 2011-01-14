@@ -28,7 +28,10 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Matus Tomlein");
     app.setApplicationName("Synkron");
 
-    new MainController();
+    MainController * mc = new MainController();
 
-    return app.exec();
+    bool exec = app.exec();
+    delete mc;
+
+    return exec;
 }

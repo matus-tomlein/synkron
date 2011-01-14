@@ -22,8 +22,8 @@
 #include "analysefile.h"
 #include "folderactiongroup.h"
 
-AnalyseAction::AnalyseAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, SyncFile * sf)
-    : SyncAction(fag, bundle, opts, sf)
+AnalyseAction::AnalyseAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, BackupAction * ba, SyncFile * sf)
+    : SyncAction(fag, bundle, opts, ba, sf)
 {
 }
 

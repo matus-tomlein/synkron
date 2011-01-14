@@ -27,15 +27,17 @@
 #include "exceptiongroup.h"
 #include "mtfile.h"
 #include "syncactiongeneraloptions.h"
+#include "backupaction.h"
 
 #include <QSet>
 #include <QElapsedTimer>
 
-SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, SyncFile * sf) : QThread()
+SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, BackupAction * ba, SyncFile * sf) : QThread()
 {
     starting_fag = fag;
     exception_bundle = bundle;
     options = opts;
+    backup_action = ba;
     starting_sf = sf;
     skipped_count = 0;
     file_compare = new FileCompare();
@@ -45,6 +47,7 @@ SyncAction::~SyncAction()
 {
     delete exception_bundle;
     delete options;
+    delete backup_action;
 }
 
 void SyncAction::start(Priority priority)
@@ -263,7 +266,7 @@ void SyncAction::updateFile(SyncFile *, FolderActionGroup * fag)
 {
     MTFile file(fag->last());
 
-    if (!backupFile(&file)) {
+    if (!backup_action->backupFile(&file)) {
         return;
     }
 
@@ -289,19 +292,6 @@ bool SyncAction::createFolder(SyncFile *, FolderActionGroup * fag)
     }
     emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, fag));
     changed_count++;
-    return true;
-}
-
-bool SyncAction::backupFile(MTFile *)
-{
-    /*QDir(sp->mp_parent->temp_path).mkdir(update_time);
-        if (!file->copy(QString("%1/%2/%3.%4").arg(sp->mp_parent->temp_path).arg(update_time).arg(file_info2->fileName()).arg(synced_files))) {
-            sp->errorCopyingFile(file_info2->absoluteFilePath(), file->errorString(), true);
-            delete file;
-            continue;
-        }
-        sp->saveBackedUpFile(*file_info2);*/
-
     return true;
 }
 

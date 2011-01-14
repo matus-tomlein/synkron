@@ -25,7 +25,7 @@
 class SyncPage : public AbstractSyncPage
 {
 public:
-    SyncPage(int);
+    SyncPage(int, Exceptions *, BackupHandler *);
 };
 
 #endif // SYNCPAGE_H
