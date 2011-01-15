@@ -17,36 +17,20 @@
  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ********************************************************************/
 
-#ifndef RESTOREFORM_H
-#define RESTOREFORM_H
+#include "backupdatabaserecord.h"
 
-#include <QWidget>
-
-class QTreeWidgetItem;
-
-class BackupHandler;
-
-namespace Ui {
-    class RestoreForm;
+BackupDatabaseRecord::BackupDatabaseRecord(const QString & path, int sync_index)
+{
+    this->path_str = path;
+    this->sync_index = sync_index;
 }
 
-class RestoreForm : public QWidget
+const QString & BackupDatabaseRecord::path()
 {
-    Q_OBJECT
+    return path_str;
+}
 
-public:
-    explicit RestoreForm(BackupHandler *, QWidget *parent = 0);
-    ~RestoreForm();
-
-public slots:
-    void reload();
-
-private slots:
-    void itemExpanded(QTreeWidgetItem *);
-
-private:
-    Ui::RestoreForm *ui;
-    BackupHandler * backup_handler;
-};
-
-#endif // RESTOREFORM_H
+int BackupDatabaseRecord::syncIndex()
+{
+    return sync_index;
+}

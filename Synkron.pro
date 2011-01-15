@@ -58,7 +58,9 @@ SOURCES += src/main.cpp \
     src/syncactionfolderoptions.cpp \
     src/backuphandler.cpp \
     src/backupaction.cpp \
-    src/restoreform.cpp
+    src/restoreform.cpp \
+    src/backupdatabaserecord.cpp \
+    src/restoretreewidgetitem.cpp
 HEADERS += src/mainwindow.h \
     src/mtapplication.h \
     src/maincontroller.h \
@@ -108,7 +110,9 @@ HEADERS += src/mainwindow.h \
     src/syncactionfolderoptions.h \
     src/backuphandler.h \
     src/backupaction.h \
-    src/restoreform.h
+    src/restoreform.h \
+    src/backupdatabaserecord.h \
+    src/restoretreewidgetitem.h
 FORMS += ui/mainwindow.ui \
     ui/synctabform.ui \
     ui/syncfolderform.ui \
