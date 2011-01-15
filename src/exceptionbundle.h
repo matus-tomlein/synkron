@@ -45,6 +45,9 @@ public:
 
     const QString name();
 
+    void addItemToGroup(int, const QString &);
+    void removeItemFromGroup(int, const QString &);
+
 private:
     int id;
 

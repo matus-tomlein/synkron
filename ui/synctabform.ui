@@ -98,6 +98,81 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
+         <widget class="QWidget" name="sync_page">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="sync_log_lbl">
+               <property name="text">
+                <string>Sync log:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="ExtendedLineEdit" name="search_le">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Search</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTableWidget" name="sync_log_table">
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
+             <attribute name="horizontalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Sync log</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Action</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Folders</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
        <item>
@@ -227,6 +302,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ExtendedLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>src/extendedlineedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../resources.qrc"/>
  </resources>

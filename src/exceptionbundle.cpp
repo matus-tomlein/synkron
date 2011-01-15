@@ -98,3 +98,17 @@ const QString ExceptionBundle::name()
 {
     return value("name").toString();
 }
+
+void ExceptionBundle::addItemToGroup(int group_id, const QString & item_str)
+{
+    ExceptionGroup * group = groupByType(group_id);
+    if (group)
+        group->addItem(item_str);
+}
+
+void ExceptionBundle::removeItemFromGroup(int group_id, const QString & item_str)
+{
+    ExceptionGroup * group = groupByType(group_id);
+    if (group)
+        group->removeItem(item_str);
+}

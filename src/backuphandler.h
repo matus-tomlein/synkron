@@ -45,6 +45,9 @@ public:
     QStringList * newDates();
     QList<BackupDatabaseRecord *> * recordsByTime(const QString &);
 
+    bool restoreRecord(BackupDatabaseRecord *);
+    bool removeRecord(BackupDatabaseRecord *);
+
 public slots:
     void record(const QString &, int, const QString &);
     void commit();

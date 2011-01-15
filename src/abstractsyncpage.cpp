@@ -24,6 +24,10 @@
 #include "syncexceptionbundle.h"
 #include "syncactiongeneraloptions.h"
 #include "exceptions.h"
+#include "analyseaction.h"
+#include "analysefile.h"
+#include "folderactiongroup.h"
+#include "backuphandler.h"
 
 #include <QMessageBox>
 
@@ -35,6 +39,7 @@ AbstractSyncPage::AbstractSyncPage(int id, Exceptions * exceptions, BackupHandle
 
     settings_map = new QMap<QString, QVariant>;
     exception_bundle_ids_map = new QMap<int, bool>;
+
     setValue("title", QObject::tr("Sync #%1").arg(index()));
 }
 
@@ -197,4 +202,41 @@ SyncActionGeneralOptions * AbstractSyncPage::syncOptions()
 BackupHandler * AbstractSyncPage::backupHandler()
 {
     return backup_handler;
+}
+
+void AbstractSyncPage::startSync()
+{
+    startSync(NULL);
+}
+
+void AbstractSyncPage::startSync(SyncAction * sa)
+{
+    emit syncStarted();
+
+    if (!sa)
+        sa = new SyncAction(folders->folderActionGroup(), syncExceptionBundle(), syncOptions(), backup_handler->backupAction());
+
+    QObject::connect(sa, SIGNAL(messageBox(QString)), this, SIGNAL(messageBox(QString)), Qt::QueuedConnection);
+    QObject::connect(sa, SIGNAL(filesCounted(int)), this, SIGNAL(setProgressBarMaximum(int)), Qt::QueuedConnection);
+    QObject::connect(sa, SIGNAL(anotherItemChecked()), this, SIGNAL(increaseProgressBarValue()), Qt::QueuedConnection);
+    QObject::connect(sa, SIGNAL(finished(int, int)), this, SIGNAL(syncFinished(int,int)), Qt::QueuedConnection);
+    QObject::connect(sa, SIGNAL(syncOutMessage(SyncOutMessage*)), this, SIGNAL(messageFromSync(SyncOutMessage*)), Qt::QueuedConnection);
+
+    sa->start();
+}
+
+void AbstractSyncPage::startSync(SyncFile * sf, FolderActionGroup * fag)
+{
+    startSync(new SyncAction(fag, syncExceptionBundle(), syncOptions(), backup_handler->backupAction(), sf));
+}
+
+void AbstractSyncPage::startAnalysis()
+{
+    emit analysisStarted();
+
+    AnalyseAction * aa = new AnalyseAction(folders->folderActionGroup(), syncExceptionBundle(), syncOptions(), backup_handler->backupAction());
+
+    QObject::connect(aa, SIGNAL(finished(AnalyseFile*)), this, SIGNAL(analysisFinished(AnalyseFile*)), Qt::QueuedConnection);
+
+    aa->start();
 }

@@ -43,8 +43,11 @@ public slots:
 
 private slots:
     void itemExpanded(QTreeWidgetItem *);
+    void itemClicked(QTreeWidgetItem *, int);
 
 private:
+    enum TreeColumnIndices { PathCol = 0, RestoreCol = 1, DeleteCol = 2 };
+
     Ui::RestoreForm *ui;
     BackupHandler * backup_handler;
 };

@@ -58,7 +58,7 @@ private:
     Exceptions * exceptions;
     QMap<QTreeWidgetItem *, ExceptionBundle *> * bundles_map;
     ExceptionBundle * current_bundle;
-    ExceptionGroup * itemGroup(QTreeWidgetItem *);
+    int itemGroupType(QTreeWidgetItem *);
 
     QTreeWidgetItem * file_blacklist_group_item;
     QTreeWidgetItem * folder_blacklist_group_item;

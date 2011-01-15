@@ -24,14 +24,12 @@
 #include "folder.h"
 #include "folders.h"
 #include "syncadvancedview.h"
-#include "syncaction.h"
 #include "syncoutmessage.h"
 #include "mttablewidgetitem.h"
 #include "mtprogressbar.h"
 #include "messagehandler.h"
 #include "folderactiongroup.h"
 #include "analyseform.h"
-#include "syncform.h"
 
 #include <QList>
 #include <QTreeWidgetItem>
@@ -53,19 +51,25 @@ SyncTabForm::SyncTabForm(AbstractSyncPage * page, QWidget *parent) :
     progress_bar = new MTProgressBar();
     progress_bar->setHidden(true);
 
-    QObject::connect(ui->add_folder_btn, SIGNAL(clicked()), this, SLOT(addFolder()));
-    QObject::connect(ui->tab_name_le, SIGNAL(textChanged(QString)), this, SLOT(nameChanged(QString)));
-    QObject::connect(ui->advanced_btn, SIGNAL(clicked()), this, SLOT(toggleAdvanced()));
-    QObject::connect(ui->sync_btn, SIGNAL(clicked()), this, SLOT(sync()));
-    QObject::connect(ui->analyse_btn, SIGNAL(clicked()), this, SLOT(analyse()));
-
-    sync_form = new SyncForm(progress_bar, page, ui->logs_stckw);
-    ui->logs_stckw->addWidget(sync_form);
+    msg_handler = new MessageHandler(page->foldersObject(), ui->sync_log_table);
+    ui->sync_log_table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
     analyse_form = new AnalyseForm(page, ui->logs_stckw);
     ui->logs_stckw->addWidget(analyse_form);
 
-    QObject::connect(analyse_form, SIGNAL(syncSig(SyncFile*,FolderActionGroup*)), this, SLOT(sync(SyncFile*,FolderActionGroup*)));
+    QObject::connect(ui->add_folder_btn, SIGNAL(clicked()), this, SLOT(addFolder()));
+    QObject::connect(ui->tab_name_le, SIGNAL(textChanged(QString)), this, SLOT(nameChanged(QString)));
+    QObject::connect(ui->advanced_btn, SIGNAL(clicked()), this, SLOT(toggleAdvanced()));
+    QObject::connect(ui->sync_btn, SIGNAL(clicked()), page, SLOT(startSync()));
+    QObject::connect(ui->analyse_btn, SIGNAL(clicked()), page, SLOT(startAnalysis()));
+
+    QObject::connect(page, SIGNAL(messageBox(QString)), this, SLOT(showMessageBox(QString)), Qt::QueuedConnection);
+    QObject::connect(page, SIGNAL(setProgressBarMaximum(int)), progress_bar, SLOT(setMaximum(int)), Qt::QueuedConnection);
+    QObject::connect(page, SIGNAL(increaseProgressBarValue()), progress_bar, SLOT(increaseValue()), Qt::QueuedConnection);
+    QObject::connect(page, SIGNAL(syncStarted()), this, SLOT(syncStarted()), Qt::QueuedConnection);
+    QObject::connect(page, SIGNAL(syncFinished(int, int)), this, SLOT(syncFinished(int, int)));
+    QObject::connect(page, SIGNAL(messageFromSync(SyncOutMessage*)), msg_handler, SLOT(logMessage(SyncOutMessage*)), Qt::QueuedConnection);
+    QObject::connect(page, SIGNAL(analysisStarted()), this, SLOT(analysisStarted()));
 
     advanced_view = new SyncAdvancedView(page, ui->advanced_tree);
     load();
@@ -227,19 +231,22 @@ void SyncTabForm::hideAdvanced()
     ui->advanced_splitter->setSizes(sizes);
 }
 
-/**
-  * Triggered by user. Starts the sync by creating SyncAction.
-  */
-void SyncTabForm::sync()
+void SyncTabForm::syncStarted()
 {
-    ui->logs_stckw->setCurrentWidget(sync_form);
-    sync_form->startSync();
+    msg_handler->syncStarted();
+
+    progress_bar->setHidden(false);
+    progress_bar->setValue(0);
+
+    ui->logs_stckw->setCurrentWidget(ui->sync_page);
 }
 
-void SyncTabForm::sync(SyncFile * sf, FolderActionGroup * fag)
+void SyncTabForm::syncFinished(int changed_count, int skipped_count)
 {
-    ui->logs_stckw->setCurrentWidget(sync_form);
-    sync_form->startSync(sf, fag);
+    msg_handler->showSkippedMessage(skipped_count);
+    msg_handler->syncFinished(changed_count);
+
+    progress_bar->setHidden(true);
 }
 
 QWidget * SyncTabForm::navigationItemWidget()
@@ -252,8 +259,12 @@ QWidget * SyncTabForm::navigationItemWidget()
     return w;
 }
 
-void SyncTabForm::analyse()
+void SyncTabForm::analysisStarted()
 {
     ui->logs_stckw->setCurrentWidget(analyse_form);
-    analyse_form->analyse();
+}
+
+void SyncTabForm::showMessageBox(const QString s)
+{
+    QMessageBox::information(NULL, "Synkron", s);
 }

@@ -28,6 +28,11 @@ class SyncExceptionBundle;
 class SyncActionGeneralOptions;
 class Exceptions;
 class BackupHandler;
+class SyncAction;
+class FolderActionGroup;
+class SyncFile;
+class AnalyseFile;
+class SyncOutMessage;
 
 #include <QVariant>
 
@@ -66,6 +71,12 @@ public slots:
     void addExceptionBundle(ExceptionBundle *);
     void removeExceptionBundle(int);
 
+    void startSync();
+    void startSync(SyncAction *);
+    void startSync(SyncFile *, FolderActionGroup *);
+
+    void startAnalysis();
+
 protected:
     QMap<QString, QVariant> * getCopyOfSettings();
 
@@ -81,6 +92,16 @@ signals:
     void exceptionBundleAdded(ExceptionBundle *);
     void exceptionBundleRemoved(int);
     void exceptionBundleChanged(ExceptionBundle *);
+
+    void messageBox(QString);
+    void setProgressBarMaximum(int);
+    void increaseProgressBarValue();
+    void messageFromSync(SyncOutMessage *);
+    void syncFinished(int, int);
+    void syncStarted();
+
+    void analysisStarted();
+    void analysisFinished(AnalyseFile *);
 };
 
 #endif // ABSTRACTSYNCPAGE_H

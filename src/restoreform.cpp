@@ -34,7 +34,13 @@ RestoreForm::RestoreForm(BackupHandler * backup_handler, QWidget *parent) :
 
     this->backup_handler = backup_handler;
 
-    QObject::connect(ui->tree, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(itemExpanded(QTreeWidgetItem*)));
+    QObject::connect(ui->items_tree, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(itemExpanded(QTreeWidgetItem*)));
+    QObject::connect(ui->items_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(itemClicked(QTreeWidgetItem*,int)));
+
+    ui->items_tree->header()->setStretchLastSection(false);
+    ui->items_tree->header()->setResizeMode(PathCol, QHeaderView::Stretch);
+    ui->items_tree->header()->setResizeMode(RestoreCol, QHeaderView::ResizeToContents);
+    ui->items_tree->header()->setResizeMode(DeleteCol, QHeaderView::ResizeToContents);
 }
 
 RestoreForm::~RestoreForm()
@@ -46,13 +52,13 @@ void RestoreForm::reload()
 {
     QStringList * new_dates = backup_handler->newDates();
 
-    QTreeWidgetItem * item;
+    RestoreTreeWidgetItem * item;
     for (int i = 0; i < new_dates->count(); ++i) {
-        item = new QTreeWidgetItem(ui->tree);
+        item = new RestoreTreeWidgetItem(ui->items_tree);
         item->setText(0, QDateTime::fromString(new_dates->at(i), "yyyy.MM.dd-hh.mm.ss").toString(Qt::DefaultLocaleShortDate));
         item->setData(0, Qt::UserRole, new_dates->at(i));
         item->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
-        ui->tree->addTopLevelItem(item);
+        ui->items_tree->addTopLevelItem(item);
     }
 
     delete new_dates;
@@ -68,5 +74,25 @@ void RestoreForm::itemExpanded(QTreeWidgetItem * parent_item)
 
     for (int i = 0; i < records->count(); ++i) {
         parent_item->addChild(new RestoreTreeWidgetItem(records->at(i), parent_item));
+    }
+}
+
+void RestoreForm::itemClicked(QTreeWidgetItem * qitem, int column)
+{
+    RestoreTreeWidgetItem * item = (RestoreTreeWidgetItem *) qitem;
+    if (!item->databaseRecord()) return;
+
+    switch (column) {
+    case RestoreCol:
+        if (backup_handler->restoreRecord(item->databaseRecord()))
+            delete item;
+
+        break;
+
+    case DeleteCol:
+        if (backup_handler->removeRecord(item->databaseRecord()))
+            delete item;
+
+        break;
     }
 }

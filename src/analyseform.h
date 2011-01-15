@@ -23,11 +23,8 @@
 #include <QWidget>
 
 class Folders;
-class SyncExceptionBundle;
 class AnalyseFile;
-class SyncFile;
 class AnalyseTreeWidgetItem;
-class FolderActionGroup;
 class AbstractSyncPage;
 
 class QTreeWidgetItem;
@@ -45,8 +42,6 @@ public:
     explicit AnalyseForm(AbstractSyncPage *, QWidget *parent = 0);
     ~AnalyseForm();
 
-    void analyse();
-
 private slots:
     void syncFileReceived(AnalyseFile *);
     void treeItemDoubleClicked(QTreeWidgetItem *, int);
@@ -57,6 +52,7 @@ private slots:
     void blacklistSelected(QAction *);
     void aboutToShowBlacklistMenu();
     void syncSelected();
+    void analysisStarted();
 
 private:
     void loadSyncFile(AnalyseFile *);
@@ -75,9 +71,6 @@ private:
     QTableWidgetItem * num_copy_item;
     QTableWidgetItem * num_delete_item;
     QTableWidgetItem * num_update_item;
-
-signals:
-    void syncSig(SyncFile *, FolderActionGroup *);
 };
 
 #endif // ANALYSEFORM_H

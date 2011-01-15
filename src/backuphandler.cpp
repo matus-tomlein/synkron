@@ -137,3 +137,13 @@ QList<BackupDatabaseRecord *> * BackupHandler::recordsByTime(const QString & tim
 
     return list;
 }
+
+bool BackupHandler::restoreRecord(BackupDatabaseRecord *)
+{
+    return true;
+}
+
+bool BackupHandler::removeRecord(BackupDatabaseRecord *)
+{
+    return true;
+}

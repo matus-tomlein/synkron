@@ -21,13 +21,23 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTreeWidget" name="tree">
+    <widget class="QTreeWidget" name="items_tree">
      <attribute name="headerVisible">
       <bool>false</bool>
      </attribute>
      <column>
       <property name="text">
-       <string notr="true">1</string>
+       <string notr="true">Items</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Restore</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Delete</string>
       </property>
      </column>
     </widget>

@@ -51,7 +51,6 @@ SOURCES += src/main.cpp \
     src/analyseaction.cpp \
     src/analyseform.cpp \
     src/analysetreewidgetitem.cpp \
-    src/syncform.cpp \
     src/analysefile.cpp \
     src/syncactionoptions.cpp \
     src/syncactiongeneraloptions.cpp \
@@ -103,7 +102,6 @@ HEADERS += src/mainwindow.h \
     src/analyseaction.h \
     src/analyseform.h \
     src/analysetreewidgetitem.h \
-    src/syncform.h \
     src/analysefile.h \
     src/syncactionoptions.h \
     src/syncactiongeneraloptions.h \
@@ -119,7 +117,6 @@ FORMS += ui/mainwindow.ui \
     ui/exceptionform.ui \
     ui/navigationitemform.ui \
     ui/analyseform.ui \
-    ui/syncform.ui \
     ui/restoreform.ui
 RESOURCES += resources.qrc \
     i18n.qrc

@@ -187,39 +187,33 @@ void ExceptionForm::addChildToItem(const QString & s, QTreeWidgetItem * parent)
 void ExceptionForm::addBlacklistFile()
 {
     if (!current_bundle) return;
-    ExceptionGroup * group = current_bundle->groupByType(ExceptionGroup::FileBlacklist);
-    if (!group) return;
 
     QString path = QDir::cleanPath(ui->bl_file_path_le->text());
     if (path.isEmpty()) return;
 
-    group->addItem(path);
+    current_bundle->addItemToGroup(ExceptionGroup::FileBlacklist, path);
     addChildToItem(path, file_blacklist_group_item);
 }
 
 void ExceptionForm::addBlacklistFolder()
 {
     if (!current_bundle) return;
-    ExceptionGroup * group = current_bundle->groupByType(ExceptionGroup::FolderBlacklist);
-    if (!group) return;
 
     QString path = QDir::cleanPath(ui->bl_folder_path_le->text());
     if (path.isEmpty()) return;
 
-    group->addItem(path);
+    current_bundle->addItemToGroup(ExceptionGroup::FolderBlacklist, path);
     addChildToItem(path, folder_blacklist_group_item);
 }
 
 void ExceptionForm::addFilter()
 {
     if (!current_bundle) return;
-    ExceptionGroup * group = current_bundle->groupByType(ExceptionGroup::Filters);
-    if (!group) return;
 
     QString path = ui->filter_extension_le->text();
     if (path.isEmpty()) return;
 
-    group->addItem(path);
+    current_bundle->addItemToGroup(ExceptionGroup::Filters, path);
     addChildToItem(path, filter_group_item);
 }
 
@@ -274,21 +268,21 @@ void ExceptionForm::browseBlacklistFolder()
 
 void ExceptionForm::itemClicked(QTreeWidgetItem * item, int col)
 {
-    if (col == 1 && !item->childCount()) {
-        ExceptionGroup * group = itemGroup(item->parent());
-        if (group) {
-            group->removeItem(item->text(0));
+    if (col == 1 && !item->childCount() && current_bundle) {
+        int group_type = itemGroupType(item->parent());
+        if (group_type >= 0) {
+            current_bundle->removeItemFromGroup(group_type, item->text(0));
             delete item;
         }
     }
 }
 
-ExceptionGroup * ExceptionForm::itemGroup(QTreeWidgetItem * item)
+int ExceptionForm::itemGroupType(QTreeWidgetItem * item)
 {
-    if (item == file_blacklist_group_item) return current_bundle->groupByType(ExceptionGroup::FileBlacklist);
-    else if (item == folder_blacklist_group_item) return current_bundle->groupByType(ExceptionGroup::FolderBlacklist);
-    else if (item == filter_group_item) return current_bundle->groupByType(ExceptionGroup::Filters);
-    return NULL;
+    if (item == file_blacklist_group_item) return ExceptionGroup::FileBlacklist;
+    else if (item == folder_blacklist_group_item) return ExceptionGroup::FolderBlacklist;
+    else if (item == filter_group_item) return ExceptionGroup::Filters;
+    return -1;
 }
 
 int ExceptionForm::count()

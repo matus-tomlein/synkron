@@ -27,7 +27,9 @@ class BackupDatabaseRecord;
 class RestoreTreeWidgetItem : public QTreeWidgetItem
 {
 public:
+    RestoreTreeWidgetItem(QTreeWidget *);
     RestoreTreeWidgetItem(BackupDatabaseRecord *, QTreeWidgetItem *);
+    ~RestoreTreeWidgetItem();
 
     BackupDatabaseRecord * databaseRecord();
 

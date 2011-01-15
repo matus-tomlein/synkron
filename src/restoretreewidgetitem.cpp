@@ -21,6 +21,12 @@
 
 #include "backupdatabaserecord.h"
 
+RestoreTreeWidgetItem::RestoreTreeWidgetItem(QTreeWidget * tree)
+    : QTreeWidgetItem(tree)
+{
+    db_record = NULL;
+}
+
 RestoreTreeWidgetItem::RestoreTreeWidgetItem(BackupDatabaseRecord * db_record, QTreeWidgetItem * parent)
     : QTreeWidgetItem(parent)
 {
@@ -29,10 +35,21 @@ RestoreTreeWidgetItem::RestoreTreeWidgetItem(BackupDatabaseRecord * db_record, Q
     setupFromDatabaseRecord();
 }
 
+RestoreTreeWidgetItem::~RestoreTreeWidgetItem()
+{
+    if (db_record)
+        delete db_record;
+}
+
 void RestoreTreeWidgetItem::setupFromDatabaseRecord()
 {
     setText(0, db_record->path());
+    setToolTip(0, db_record->path());
     setCheckState(0, Qt::Unchecked);
+    setToolTip(1, QObject::tr("Restore"));
+    setIcon(1, QIcon(":/images/Restore16.png"));
+    setToolTip(2, QObject::tr("Delete"));
+    setIcon(2, QIcon(":/images/clean_temp_16.png"));
 }
 
 BackupDatabaseRecord * RestoreTreeWidgetItem::databaseRecord()

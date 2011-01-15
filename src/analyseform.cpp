@@ -20,17 +20,14 @@
 #include "analyseform.h"
 #include "ui_analyseform.h"
 
-#include "analyseaction.h"
 #include "folders.h"
 #include "folder.h"
 #include "folderactiongroup.h"
-#include "syncexceptionbundle.h"
 #include "analysefile.h"
 #include "analysetreewidgetitem.h"
 #include "abstractsyncpage.h"
 #include "exceptionbundle.h"
 #include "exceptiongroup.h"
-#include "backuphandler.h"
 
 #include <QTimer>
 #include <QMessageBox>
@@ -70,6 +67,9 @@ AnalyseForm::AnalyseForm(AbstractSyncPage * page, QWidget *parent) :
     QObject::connect(bl_menu, SIGNAL(aboutToShow()), this, SLOT(aboutToShowBlacklistMenu()));
     QObject::connect(bl_menu, SIGNAL(triggered(QAction*)), this, SLOT(blacklistSelected(QAction*)));
     QObject::connect(ui->sync_btn, SIGNAL(clicked()), this, SLOT(syncSelected()));
+
+    QObject::connect(page, SIGNAL(analysisStarted()), this, SLOT(analysisStarted()), Qt::QueuedConnection);
+    QObject::connect(page, SIGNAL(analysisFinished(AnalyseFile*)), this, SLOT(syncFileReceived(AnalyseFile*)), Qt::QueuedConnection);
 }
 
 AnalyseForm::~AnalyseForm()
@@ -77,14 +77,11 @@ AnalyseForm::~AnalyseForm()
     delete ui;
 }
 
-void AnalyseForm::analyse()
+void AnalyseForm::analysisStarted()
 {
     ui->tree->clear();
     sf_queue.clear();
     current_level_item = NULL;
-    AnalyseAction * aa = new AnalyseAction(page->foldersObject()->folderActionGroup(), page->syncExceptionBundle(), page->syncOptions(), page->backupHandler()->backupAction());
-
-    QObject::connect(aa, SIGNAL(finished(AnalyseFile*)), this, SLOT(syncFileReceived(AnalyseFile*)), Qt::QueuedConnection);
 
     Folders * folders = page->foldersObject();
 
@@ -96,8 +93,6 @@ void AnalyseForm::analyse()
         ui->folders_table->setItem(ui->folders_table->rowCount() - 1, 1, new QTableWidgetItem);
         ui->folders_table->setRowHeight(ui->folders_table->rowCount() - 1, 22);
     }
-
-    aa->start();
 }
 
 void AnalyseForm::syncFileReceived(AnalyseFile * sf)
@@ -334,5 +329,5 @@ void AnalyseForm::syncSelected()
     }
 
     if (sf)
-        emit syncSig(sf, sync_fag);
+        page->startSync(sf, sync_fag);
 }
