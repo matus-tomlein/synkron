@@ -32,9 +32,9 @@ class BackupAction;
 
 class QFileInfo;
 
-#include <QThread>
+#include <QObject>
 
-class SyncAction : public QThread
+class SyncAction : public QObject
 {
     Q_OBJECT
 
@@ -42,10 +42,7 @@ public:
     SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionGeneralOptions *, BackupAction *, SyncFile * = NULL);
     ~SyncAction();
 
-    void run();
-
-public slots:
-    void start(Priority = InheritPriority);
+    void sync();
 
 private:
     FolderActionGroup * starting_fag;

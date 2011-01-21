@@ -32,7 +32,7 @@
 #include <QSet>
 #include <QElapsedTimer>
 
-SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, BackupAction * ba, SyncFile * sf) : QThread()
+SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, BackupAction * ba, SyncFile * sf)
 {
     starting_fag = fag;
     exception_bundle = bundle;
@@ -50,16 +50,8 @@ SyncAction::~SyncAction()
     delete backup_action;
 }
 
-void SyncAction::start(Priority priority)
+void SyncAction::sync()
 {
-    QThread::start(priority);
-    moveToThread(this);
-}
-
-void SyncAction::run()
-{
-    QObject::connect(this, SIGNAL(finished()), this, SLOT(deleteLater()), Qt::DirectConnection);
-
     skipped_count = 0;
     changed_count = 0;
 

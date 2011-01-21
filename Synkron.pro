@@ -59,7 +59,8 @@ SOURCES += src/main.cpp \
     src/backupaction.cpp \
     src/restoreform.cpp \
     src/backupdatabaserecord.cpp \
-    src/restoretreewidgetitem.cpp
+    src/restoretreewidgetitem.cpp \
+    src/syncthread.cpp
 HEADERS += src/mainwindow.h \
     src/mtapplication.h \
     src/maincontroller.h \
@@ -110,7 +111,8 @@ HEADERS += src/mainwindow.h \
     src/backupaction.h \
     src/restoreform.h \
     src/backupdatabaserecord.h \
-    src/restoretreewidgetitem.h
+    src/restoretreewidgetitem.h \
+    src/syncthread.h
 FORMS += ui/mainwindow.ui \
     ui/synctabform.ui \
     ui/syncfolderform.ui \
