@@ -28,6 +28,7 @@
 #include "analysefile.h"
 #include "folderactiongroup.h"
 #include "backuphandler.h"
+#include "syncthread.h"
 
 #include <QMessageBox>
 
@@ -222,7 +223,7 @@ void AbstractSyncPage::startSync(SyncAction * sa)
     QObject::connect(sa, SIGNAL(finished(int, int)), this, SIGNAL(syncFinished(int,int)), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(syncOutMessage(SyncOutMessage*)), this, SIGNAL(messageFromSync(SyncOutMessage*)), Qt::QueuedConnection);
 
-    sa->start();
+    new SyncThread(sa);
 }
 
 void AbstractSyncPage::startSync(SyncFile * sf, FolderActionGroup * fag)
@@ -238,5 +239,5 @@ void AbstractSyncPage::startAnalysis()
 
     QObject::connect(aa, SIGNAL(finished(AnalyseFile*)), this, SIGNAL(analysisFinished(AnalyseFile*)), Qt::QueuedConnection);
 
-    aa->start();
+    new SyncThread(aa);
 }
