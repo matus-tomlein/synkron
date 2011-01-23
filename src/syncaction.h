@@ -33,6 +33,7 @@ class BackupAction;
 class QFileInfo;
 
 #include <QObject>
+
 #include "syncthreadaction.h"
 
 class SyncAction : public QObject, public SyncThreadAction

@@ -38,5 +38,6 @@ SyncThread::~SyncThread()
 void SyncThread::run()
 {
     QObject::connect(this, SIGNAL(finished()), this, SLOT(deleteLater()), Qt::DirectConnection);
+
     sta->start();
 }
