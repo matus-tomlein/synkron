@@ -36,6 +36,9 @@ RestoreForm::RestoreForm(BackupHandler * backup_handler, QWidget *parent) :
 
     QObject::connect(ui->items_tree, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(itemExpanded(QTreeWidgetItem*)));
     QObject::connect(ui->items_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(itemClicked(QTreeWidgetItem*,int)));
+    QObject::connect(ui->select_latest_btn, SIGNAL(clicked()), this, SLOT(selectLatest()));
+    QObject::connect(ui->restore_btn, SIGNAL(clicked()), this, SLOT(restoreSelected()));
+    QObject::connect(ui->delete_btn, SIGNAL(clicked()), this, SLOT(deleteSelected()));
 
     QObject::connect(backup_handler, SIGNAL(actionFinished(BackupDatabaseRecord*)), this, SLOT(recordActionFinished(BackupDatabaseRecord*)));
     QObject::connect(backup_handler, SIGNAL(actionFailed(BackupDatabaseRecord*)), this, SLOT(recordActionFailed(BackupDatabaseRecord*)));
@@ -124,4 +127,60 @@ void RestoreForm::recordActionFailed(BackupDatabaseRecord * record)
 void RestoreForm::allActionsFinished()
 {
     items_in_action->clear();
+}
+
+void RestoreForm::selectLatest()
+{
+    if (!ui->items_tree->topLevelItemCount()) return;
+
+    RestoreTreeWidgetItem * parent = (RestoreTreeWidgetItem *) ui->items_tree->topLevelItem(ui->items_tree->topLevelItemCount() - 1);
+
+    for (int i = 0; i < parent->childCount(); ++i) {
+        parent->child(i)->setCheckState(0, Qt::Checked);
+    }
+}
+
+QList<BackupDatabaseRecord *> * RestoreForm::getSelectedRecords()
+{
+    QList<BackupDatabaseRecord *> * bdrs = new QList<BackupDatabaseRecord *>;
+    QTreeWidgetItem * parent;
+    RestoreTreeWidgetItem * item;
+
+    for (int i = 0; i < ui->items_tree->topLevelItemCount(); ++i) {
+        parent = ui->items_tree->topLevelItem(i);
+
+        for (int n = 0; n < parent->childCount(); ++n) {
+            if (parent->child(n)->checkState(0) == Qt::Checked) {
+                item = (RestoreTreeWidgetItem *) parent->child(n);
+                bdrs->append(item->databaseRecord());
+                items_in_action->append(item);
+            }
+        }
+    }
+
+    return bdrs;
+}
+
+void RestoreForm::restoreSelected()
+{
+    QList<BackupDatabaseRecord *> * bdrs = getSelectedRecords();
+
+    if (!bdrs->count()) {
+        delete bdrs;
+        return;
+    }
+
+    backup_handler->restoreRecord(bdrs);
+}
+
+void RestoreForm::deleteSelected()
+{
+    QList<BackupDatabaseRecord *> * bdrs = getSelectedRecords();
+
+    if (!bdrs->count()) {
+        delete bdrs;
+        return;
+    }
+
+    backup_handler->removeRecord(bdrs);
 }
