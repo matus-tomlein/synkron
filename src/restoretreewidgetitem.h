@@ -32,6 +32,7 @@ public:
     ~RestoreTreeWidgetItem();
 
     BackupDatabaseRecord * databaseRecord();
+    void restoreActionFailed();
 
 private:
     void setupFromDatabaseRecord();

@@ -33,8 +33,9 @@ class BackupAction;
 class QFileInfo;
 
 #include <QObject>
+#include "syncthreadaction.h"
 
-class SyncAction : public QObject
+class SyncAction : public QObject, public SyncThreadAction
 {
     Q_OBJECT
 
@@ -42,7 +43,7 @@ public:
     SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionGeneralOptions *, BackupAction *, SyncFile * = NULL);
     ~SyncAction();
 
-    void sync();
+    void start();
 
 private:
     FolderActionGroup * starting_fag;

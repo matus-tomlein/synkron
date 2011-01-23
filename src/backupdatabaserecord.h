@@ -25,13 +25,15 @@
 class BackupDatabaseRecord
 {
 public:
-    BackupDatabaseRecord(const QString &, int);
+    BackupDatabaseRecord(const QString &, const QString &, int);
 
     const QString & path();
+    const QString & time();
     int syncIndex();
 
 private:
     QString path_str;
+    QString time_str;
     int sync_index;
 };
 

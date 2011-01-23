@@ -37,10 +37,16 @@ RestoreForm::RestoreForm(BackupHandler * backup_handler, QWidget *parent) :
     QObject::connect(ui->items_tree, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(itemExpanded(QTreeWidgetItem*)));
     QObject::connect(ui->items_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(itemClicked(QTreeWidgetItem*,int)));
 
+    QObject::connect(backup_handler, SIGNAL(actionFinished(BackupDatabaseRecord*)), this, SLOT(recordActionFinished(BackupDatabaseRecord*)));
+    QObject::connect(backup_handler, SIGNAL(actionFailed(BackupDatabaseRecord*)), this, SLOT(recordActionFailed(BackupDatabaseRecord*)));
+    QObject::connect(backup_handler, SIGNAL(restoreActionsFinished()), this, SLOT(allActionsFinished()));
+
     ui->items_tree->header()->setStretchLastSection(false);
     ui->items_tree->header()->setResizeMode(PathCol, QHeaderView::Stretch);
     ui->items_tree->header()->setResizeMode(RestoreCol, QHeaderView::ResizeToContents);
     ui->items_tree->header()->setResizeMode(DeleteCol, QHeaderView::ResizeToContents);
+
+    items_in_action = new QList<RestoreTreeWidgetItem *>;
 }
 
 RestoreForm::~RestoreForm()
@@ -84,15 +90,38 @@ void RestoreForm::itemClicked(QTreeWidgetItem * qitem, int column)
 
     switch (column) {
     case RestoreCol:
-        if (backup_handler->restoreRecord(item->databaseRecord()))
-            delete item;
-
+        items_in_action->append(item);
+        backup_handler->restoreRecord(item->databaseRecord());
         break;
 
     case DeleteCol:
-        if (backup_handler->removeRecord(item->databaseRecord()))
-            delete item;
-
+        items_in_action->append(item);
+        backup_handler->removeRecord(item->databaseRecord());
         break;
     }
+}
+
+void RestoreForm::recordActionFinished(BackupDatabaseRecord * record)
+{
+    for (int i = 0; i < items_in_action->count(); ++i) {
+        if (items_in_action->at(i)->databaseRecord() == record) {
+            delete items_in_action->takeAt(i);
+            break;
+        }
+    }
+}
+
+void RestoreForm::recordActionFailed(BackupDatabaseRecord * record)
+{
+    for (int i = 0; i < items_in_action->count(); ++i) {
+        if (items_in_action->at(i)->databaseRecord() == record) {
+            items_in_action->takeAt(i)->restoreActionFailed();
+            break;
+        }
+    }
+}
+
+void RestoreForm::allActionsFinished()
+{
+    items_in_action->clear();
 }

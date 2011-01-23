@@ -17,26 +17,42 @@
  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ********************************************************************/
 
-#include "backupdatabaserecord.h"
+#ifndef RESTOREACTION_H
+#define RESTOREACTION_H
 
-BackupDatabaseRecord::BackupDatabaseRecord(const QString & path_str, const QString & time_str, int sync_index)
-{
-    this->path_str = path_str;
-    this->time_str = time_str;
-    this->sync_index = sync_index;
-}
+#include <QObject>
+#include <QDir>
 
-const QString & BackupDatabaseRecord::path()
-{
-    return path_str;
-}
+#include "syncthreadaction.h"
 
-const QString & BackupDatabaseRecord::time()
-{
-    return time_str;
-}
+class BackupDatabaseRecord;
 
-int BackupDatabaseRecord::syncIndex()
+class RestoreAction : public QObject, public SyncThreadAction
 {
-    return sync_index;
-}
+    Q_OBJECT
+
+public:
+    RestoreAction(BackupDatabaseRecord *, QString *, int);
+    RestoreAction(QList<BackupDatabaseRecord *> *, QString *, int);
+    ~RestoreAction();
+
+    enum RestoreActionType { Restore, Delete };
+
+    void start();
+
+private:
+    bool restoreRecord(BackupDatabaseRecord *);
+    bool deleteRecord(BackupDatabaseRecord *);
+    bool runRecordAction(BackupDatabaseRecord *);
+
+    int action_type;
+    QList<BackupDatabaseRecord *> * records;
+    QDir * temp_dir;
+
+signals:
+    void itemDone(BackupDatabaseRecord *);
+    void itemFailed(BackupDatabaseRecord *);
+    void finished();
+};
+
+#endif // RESTOREACTION_H

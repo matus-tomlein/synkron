@@ -50,7 +50,7 @@ SyncAction::~SyncAction()
     delete backup_action;
 }
 
-void SyncAction::sync()
+void SyncAction::start()
 {
     skipped_count = 0;
     changed_count = 0;

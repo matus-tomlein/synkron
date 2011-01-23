@@ -22,6 +22,8 @@
 #include "settings.h"
 #include "backupaction.h"
 #include "backupdatabaserecord.h"
+#include "restoreaction.h"
+#include "syncthread.h"
 
 #include <QDir>
 #include <QSqlDatabase>
@@ -128,22 +130,40 @@ QList<BackupDatabaseRecord *> * BackupHandler::recordsByTime(const QString & tim
     QSqlQuery query(*db);
     QList<BackupDatabaseRecord *> * list = new QList<BackupDatabaseRecord *>;
 
-    if (!query.exec(QString("SELECT path, sync_index FROM records WHERE time = '%1'").arg(time)))
+    if (!query.exec(QString("SELECT path, time, sync_index FROM records WHERE time = '%1'").arg(time)))
         return NULL;
 
     while (query.next()) {
-        list->append(new BackupDatabaseRecord(query.value(0).toString(), query.value(1).toInt()));
+        list->append(new BackupDatabaseRecord(query.value(0).toString(), query.value(1).toString(), query.value(2).toInt()));
     }
 
     return list;
 }
 
-bool BackupHandler::restoreRecord(BackupDatabaseRecord *)
+void BackupHandler::restoreRecord(BackupDatabaseRecord * bdr)
 {
-    return true;
+    runRestoreAction(new RestoreAction(bdr, temp_path, RestoreAction::Restore));
 }
 
-bool BackupHandler::removeRecord(BackupDatabaseRecord *)
+void BackupHandler::removeRecord(BackupDatabaseRecord * bdr)
 {
-    return true;
+    runRestoreAction(new RestoreAction(bdr, temp_path, RestoreAction::Delete));
+}
+
+void BackupHandler::runRestoreAction(RestoreAction * ra)
+{
+    QObject::connect(ra, SIGNAL(itemDone(BackupDatabaseRecord*)), this, SLOT(restoreActionDone(BackupDatabaseRecord*)), Qt::QueuedConnection);
+    QObject::connect(ra, SIGNAL(itemFailed(BackupDatabaseRecord*)), this, SIGNAL(actionFailed(BackupDatabaseRecord*)), Qt::QueuedConnection);
+    QObject::connect(ra, SIGNAL(finished()), this, SIGNAL(restoreActionsFinished()), Qt::QueuedConnection);
+
+    new SyncThread(ra);
+}
+
+void BackupHandler::restoreActionDone(BackupDatabaseRecord * record)
+{
+    QSqlQuery(*db).exec(QString("DELETE FROM records WHERE path = '%1' AND sync_index = %2 AND time = '%3'")
+                            .arg(record->path()).arg(record->syncIndex()).arg(record->time()));
+    db->commit();
+
+    emit actionFinished(record);
 }
