@@ -47,7 +47,9 @@ public:
     QList<BackupDatabaseRecord *> * recordsByTime(const QString &);
 
     void restoreRecord(BackupDatabaseRecord *);
+    void restoreRecord(QList<BackupDatabaseRecord *> *);
     void removeRecord(BackupDatabaseRecord *);
+    void removeRecord(QList<BackupDatabaseRecord *> *);
 
 public slots:
     void record(const QString &, int, const QString &);

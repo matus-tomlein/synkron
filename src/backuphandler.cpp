@@ -145,9 +145,19 @@ void BackupHandler::restoreRecord(BackupDatabaseRecord * bdr)
     runRestoreAction(new RestoreAction(bdr, temp_path, RestoreAction::Restore));
 }
 
+void BackupHandler::restoreRecord(QList<BackupDatabaseRecord *> * bdrs)
+{
+    runRestoreAction(new RestoreAction(bdrs, temp_path, RestoreAction::Restore));
+}
+
 void BackupHandler::removeRecord(BackupDatabaseRecord * bdr)
 {
     runRestoreAction(new RestoreAction(bdr, temp_path, RestoreAction::Delete));
+}
+
+void BackupHandler::removeRecord(QList<BackupDatabaseRecord *> * bdrs)
+{
+    runRestoreAction(new RestoreAction(bdrs, temp_path, RestoreAction::Delete));
 }
 
 void BackupHandler::runRestoreAction(RestoreAction * ra)

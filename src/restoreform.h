@@ -46,12 +46,17 @@ public slots:
 private slots:
     void itemExpanded(QTreeWidgetItem *);
     void itemClicked(QTreeWidgetItem *, int);
+    void selectLatest();
+    void restoreSelected();
+    void deleteSelected();
 
     void recordActionFinished(BackupDatabaseRecord *);
     void recordActionFailed(BackupDatabaseRecord *);
     void allActionsFinished();
 
 private:
+    QList<BackupDatabaseRecord *> * getSelectedRecords();
+
     enum TreeColumnIndices { PathCol = 0, RestoreCol = 1, DeleteCol = 2 };
 
     Ui::RestoreForm *ui;
