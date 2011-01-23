@@ -17,26 +17,24 @@
  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ********************************************************************/
 
-#include "backupdatabaserecord.h"
+#ifndef SYNCDATABASE_H
+#define SYNCDATABASE_H
 
-BackupDatabaseRecord::BackupDatabaseRecord(const QString & path_str, const QString & time_str, int sync_index)
-{
-    this->path_str = path_str;
-    this->time_str = time_str;
-    this->sync_index = sync_index;
-}
+class QString;
+class QSqlDatabase;
 
-const QString & BackupDatabaseRecord::path()
+class SyncDatabase
 {
-    return path_str;
-}
+public:
+    SyncDatabase(int, QString *);
+    ~SyncDatabase();
 
-const QString & BackupDatabaseRecord::time()
-{
-    return time_str;
-}
+private:
+    bool createDatabase();
 
-int BackupDatabaseRecord::syncIndex()
-{
-    return sync_index;
-}
+    int page_id;
+    QString * temp_path;
+    QSqlDatabase * db;
+};
+
+#endif // SYNCDATABASE_H

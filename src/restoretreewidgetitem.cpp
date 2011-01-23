@@ -56,3 +56,9 @@ BackupDatabaseRecord * RestoreTreeWidgetItem::databaseRecord()
 {
     return db_record;
 }
+
+void RestoreTreeWidgetItem::restoreActionFailed()
+{
+    setText(0, QString("%1 - action failed").arg(db_record->path()));
+    setForeground(0, Qt::red);
+}

@@ -24,10 +24,11 @@
 
 class Settings;
 class BackupAction;
-class QSqlDatabase;
+class RestoreAction;
 class BackupDatabaseRecord;
 
 class QString;
+class QSqlDatabase;
 
 class BackupHandler : public QObject
 {
@@ -45,19 +46,28 @@ public:
     QStringList * newDates();
     QList<BackupDatabaseRecord *> * recordsByTime(const QString &);
 
-    bool restoreRecord(BackupDatabaseRecord *);
-    bool removeRecord(BackupDatabaseRecord *);
+    void restoreRecord(BackupDatabaseRecord *);
+    void removeRecord(BackupDatabaseRecord *);
 
 public slots:
     void record(const QString &, int, const QString &);
     void commit();
 
+private slots:
+    void restoreActionDone(BackupDatabaseRecord *);
+
 private:
     bool createDatabase();
+    void runRestoreAction(RestoreAction *);
 
     QString * temp_path;
     QString * last_shown;
     QSqlDatabase * db;
+
+signals:
+    void restoreActionsFinished();
+    void actionFinished(BackupDatabaseRecord *);
+    void actionFailed(BackupDatabaseRecord *);
 };
 
 #endif // BACKUPHANDLER_H

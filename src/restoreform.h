@@ -25,6 +25,8 @@
 class QTreeWidgetItem;
 
 class BackupHandler;
+class BackupDatabaseRecord;
+class RestoreTreeWidgetItem;
 
 namespace Ui {
     class RestoreForm;
@@ -45,11 +47,17 @@ private slots:
     void itemExpanded(QTreeWidgetItem *);
     void itemClicked(QTreeWidgetItem *, int);
 
+    void recordActionFinished(BackupDatabaseRecord *);
+    void recordActionFailed(BackupDatabaseRecord *);
+    void allActionsFinished();
+
 private:
     enum TreeColumnIndices { PathCol = 0, RestoreCol = 1, DeleteCol = 2 };
 
     Ui::RestoreForm *ui;
     BackupHandler * backup_handler;
+
+    QList<RestoreTreeWidgetItem *> * items_in_action;
 };
 
 #endif // RESTOREFORM_H

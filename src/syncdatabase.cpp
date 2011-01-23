@@ -17,44 +17,49 @@
  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ********************************************************************/
 
-#include "backupaction.h"
-#include "mtfile.h"
+#include "syncdatabase.h"
 
 #include <QString>
-#include <QDateTime>
+#include <QDir>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
-BackupAction::BackupAction(QString * tp)
+SyncDatabase::SyncDatabase(int page_id, QString * temp_path)
 {
-    temp = new QDir(*tp);
-    time_str = new QString(QDateTime::currentDateTime().toString("yyyy.MM.dd-hh.mm.ss"));
-    num_backed_up = -1;
+    this->page_id = page_id;
+    this->temp_path = new QString(*temp_path);
+    this->db = NULL;
+
+    createDatabase();
 }
 
-BackupAction::~BackupAction()
+SyncDatabase::~SyncDatabase()
 {
-    emit commit();
-
-    delete temp;
-    delete time_str;
+    delete temp_path;
+    if (db) delete db;
 }
 
-bool BackupAction::backupFile(MTFile * file)
+bool SyncDatabase::createDatabase()
 {
-    if (num_backed_up == -1) {
-        if (!temp->mkdir(*time_str) || !temp->cd(*time_str)) {
+    QDir dir(*temp_path);
+    if (!dir.cd("syncs")) {
+        if (!dir.mkdir("syncs") || !dir.cd("syncs"))
             return false;
-        }
-        num_backed_up = 0;
     }
 
-    if (!file->copy(temp->absoluteFilePath(QString("%1.%2")
-                            .arg(QFileInfo(*file).fileName())
-                            .arg(num_backed_up)))) {
+    db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+    db->setDatabaseName(dir.absoluteFilePath(QString("sync%1.syncdb").arg(page_id)));
+    if (!db->open()) {
+        delete db;
+        db = NULL;
+
         return false;
     }
 
-    emit fileBackedUp(file->fileName(), num_backed_up, *time_str);
+    if (!db->tables().contains("content")) {
+        QSqlQuery(*db).exec("CREATE TABLE content (id INTEGER, parent_id INTEGER, file_name TEXT, last_modified TEXT)");
+    }
+    db->commit();
 
-    num_backed_up++;
     return true;
 }
