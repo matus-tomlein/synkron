@@ -177,3 +177,8 @@ void BackupHandler::restoreActionDone(BackupDatabaseRecord * record)
 
     emit actionFinished(record);
 }
+
+QString * BackupHandler::tempPath()
+{
+    return temp_path;
+}

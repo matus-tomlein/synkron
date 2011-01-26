@@ -18,8 +18,10 @@
 ********************************************************************/
 
 #include "syncdatabase.h"
+#include "syncfile.h"
 
 #include <QString>
+#include <QVariant>
 #include <QDir>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -62,4 +64,26 @@ bool SyncDatabase::createDatabase()
     db->commit();
 
     return true;
+}
+
+void SyncDatabase::setupRootSyncFile(SyncFile * sf)
+{
+    sf->setIndex(0);
+    setupSyncFile(sf);
+}
+
+void SyncDatabase::setupSyncFile(SyncFile * parent_sf)
+{
+    QSqlQuery query(*db);
+    SyncFile * sf;
+
+    if (!query.exec(QString("SELECT id, file_name, last_modified FROM records WHERE parent_id = '%1'").arg(parent_sf->index())))
+        return;
+
+    while (query.next()) {
+        sf = parent_sf->addChild(query.value(2).toString());
+        sf->setIndex(query.value(0).toInt());
+        sf->setLastModified(query.value(3).toString());
+        setupSyncFile(sf);
+    }
 }

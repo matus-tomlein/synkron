@@ -29,6 +29,8 @@ SyncFile::SyncFile(const QString name)
     setBlacklisted(false);
 
     folders = new QList<FolderStatus>;
+    last_modified = NULL;
+    id = -1;
 }
 
 SyncFile::~SyncFile()
@@ -38,6 +40,7 @@ SyncFile::~SyncFile()
             delete children->takeAt(i);
         }
     }
+    if (last_modified) delete last_modified;
 
     delete folders;
 }
@@ -57,6 +60,13 @@ void SyncFile::setName(const QString name)
   */
 SyncFile * SyncFile::addChild(const QString & child_name)
 {
+    if (children) {
+        for (int i = 0; i < children->count(); ++i) {
+            if (children->at(i)->getName() == child_name)
+                return children->at(i);
+        }
+    }
+
     SyncFile * child = new SyncFile(child_name);
     addSyncFile(child);
     return child;
@@ -137,4 +147,18 @@ void SyncFile::setFileStatusInFolder(int i, FileStatus status)
     fstat.file_stat = status;
     fstat.folder_id = i;
     folders->append(fstat);
+}
+
+SyncFile * SyncFile::childByIndex(int ch_id)
+{
+    for (int i = 0; i < children->count(); ++i) {
+        if (children->at(i)->index() == ch_id)
+            return children->at(i);
+    }
+    return NULL;
+}
+
+void SyncFile::setLastModified(const QString & lm)
+{
+    this->last_modified = new QString(lm);
 }

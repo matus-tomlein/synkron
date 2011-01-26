@@ -28,11 +28,12 @@
 #include "mtfile.h"
 #include "syncactiongeneraloptions.h"
 #include "backupaction.h"
+#include "syncdatabase.h"
 
 #include <QSet>
 #include <QElapsedTimer>
 
-SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, BackupAction * ba, SyncFile * sf)
+SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, SyncActionGeneralOptions * opts, BackupAction * ba, SyncDatabase * syncdb, SyncFile * sf)
 {
     starting_fag = fag;
     exception_bundle = bundle;
@@ -40,6 +41,7 @@ SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, Sy
     backup_action = ba;
     starting_sf = sf;
     skipped_count = 0;
+    this->syncdb = syncdb;
     file_compare = new FileCompare();
 }
 
@@ -55,6 +57,9 @@ void SyncAction::start()
     skipped_count = 0;
     changed_count = 0;
 
+    QElapsedTimer timer;
+    timer.start();
+
     dir_filters = QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs;
     if (options->syncHidden())
         dir_filters |= QDir::Hidden;
@@ -66,18 +71,15 @@ void SyncAction::start()
         for (int i = 0; i < starting_fag->count(); ++i) {
             starting_sf->addFolder(starting_fag->idAt(i));
         }
+        syncdb->setupRootSyncFile(starting_sf);
 
         createSyncFileFromFolders(starting_sf, starting_fag);
     }
 
-    //QElapsedTimer timer;
-    //timer.start();
-
     emit filesCounted(starting_sf->count());
     sync(starting_sf, starting_fag);
 
-    //emit messageBox(QString("COUNT %1").arg(sf->count()));
-    //emit messageBox(QString("TIME %1").arg(timer.elapsed()));
+    emit messageBox(QString("TIME %1").arg(timer.elapsed()));
 
     delete starting_fag;
 

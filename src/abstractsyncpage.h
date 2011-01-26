@@ -33,6 +33,7 @@ class FolderActionGroup;
 class SyncFile;
 class AnalyseFile;
 class SyncOutMessage;
+class SyncDatabase;
 
 #include <QVariant>
 
@@ -84,6 +85,7 @@ protected:
     Folders * folders;
     Exceptions * exceptions;
     BackupHandler * backup_handler;
+    SyncDatabase * syncdb;
 
     QMap<QString, QVariant> * settings_map;
     QMap<int, bool> * exception_bundle_ids_map;

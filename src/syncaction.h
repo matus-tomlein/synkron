@@ -29,6 +29,7 @@ class SyncOutMessage;
 class MTFile;
 class SyncActionGeneralOptions;
 class BackupAction;
+class SyncDatabase;
 
 class QFileInfo;
 
@@ -41,7 +42,7 @@ class SyncAction : public QObject, public SyncThreadAction
     Q_OBJECT
 
 public:
-    SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionGeneralOptions *, BackupAction *, SyncFile * = NULL);
+    SyncAction(FolderActionGroup *, SyncExceptionBundle *, SyncActionGeneralOptions *, BackupAction *, SyncDatabase *, SyncFile * = NULL);
     ~SyncAction();
 
     void start();
@@ -53,6 +54,7 @@ private:
     SyncExceptionBundle * exception_bundle;
     SyncActionGeneralOptions * options;
     BackupAction * backup_action;
+    SyncDatabase * syncdb;
     int dir_filters;
 
     int skipped_count;

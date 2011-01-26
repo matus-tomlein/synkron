@@ -61,7 +61,16 @@ public:
     bool isBlacklisted() { return blacklisted; }
     void setBlacklisted(bool b) { blacklisted = b; }
 
+    int index() { return id; }
+    void setIndex(int id) { this->id = id; }
+
+    QString * lastModified() { return last_modified; }
+    void setLastModified(const QString &);
+
+    SyncFile * childByIndex(int);
+
 private:
+    int indexOfFolder(int);
 
     QList<SyncFile *> * children;
     QList<SyncFile::FolderStatus> * folders;
@@ -69,8 +78,8 @@ private:
     QString name;
     bool is_dir;
     bool blacklisted;
-
-    int indexOfFolder(int);
+    int id;
+    QString * last_modified;
 };
 
 #endif // SYNCFILE_H

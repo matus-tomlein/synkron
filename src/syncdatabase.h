@@ -20,8 +20,13 @@
 #ifndef SYNCDATABASE_H
 #define SYNCDATABASE_H
 
+class SyncFile;
+
 class QString;
 class QSqlDatabase;
+
+template<class T>
+class QList;
 
 class SyncDatabase
 {
@@ -29,8 +34,11 @@ public:
     SyncDatabase(int, QString *);
     ~SyncDatabase();
 
+    void setupRootSyncFile(SyncFile *);
+
 private:
     bool createDatabase();
+    void setupSyncFile(SyncFile *);
 
     int page_id;
     QString * temp_path;

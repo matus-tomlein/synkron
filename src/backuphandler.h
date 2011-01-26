@@ -42,6 +42,7 @@ public:
     void save(Settings *);
 
     BackupAction * backupAction();
+    QString * tempPath();
 
     QStringList * newDates();
     QList<BackupDatabaseRecord *> * recordsByTime(const QString &);

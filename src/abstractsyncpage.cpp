@@ -29,6 +29,7 @@
 #include "folderactiongroup.h"
 #include "backuphandler.h"
 #include "syncthread.h"
+#include "syncdatabase.h"
 
 #include <QMessageBox>
 
@@ -42,6 +43,8 @@ AbstractSyncPage::AbstractSyncPage(int id, Exceptions * exceptions, BackupHandle
     exception_bundle_ids_map = new QMap<int, bool>;
 
     setValue("title", QObject::tr("Sync #%1").arg(index()));
+
+    syncdb = new SyncDatabase(id, backup_handler->tempPath());
 }
 
 Folder * AbstractSyncPage::addFolder(int f_id)
@@ -215,7 +218,7 @@ void AbstractSyncPage::startSync(SyncAction * sa)
     emit syncStarted();
 
     if (!sa)
-        sa = new SyncAction(folders->folderActionGroup(), syncExceptionBundle(), syncOptions(), backup_handler->backupAction());
+        sa = new SyncAction(folders->folderActionGroup(), syncExceptionBundle(), syncOptions(), backup_handler->backupAction(), syncdb);
 
     QObject::connect(sa, SIGNAL(messageBox(QString)), this, SIGNAL(messageBox(QString)), Qt::QueuedConnection);
     QObject::connect(sa, SIGNAL(filesCounted(int)), this, SIGNAL(setProgressBarMaximum(int)), Qt::QueuedConnection);
@@ -228,14 +231,14 @@ void AbstractSyncPage::startSync(SyncAction * sa)
 
 void AbstractSyncPage::startSync(SyncFile * sf, FolderActionGroup * fag)
 {
-    startSync(new SyncAction(fag, syncExceptionBundle(), syncOptions(), backup_handler->backupAction(), sf));
+    startSync(new SyncAction(fag, syncExceptionBundle(), syncOptions(), backup_handler->backupAction(), syncdb, sf));
 }
 
 void AbstractSyncPage::startAnalysis()
 {
     emit analysisStarted();
 
-    AnalyseAction * aa = new AnalyseAction(folders->folderActionGroup(), syncExceptionBundle(), syncOptions(), backup_handler->backupAction());
+    AnalyseAction * aa = new AnalyseAction(folders->folderActionGroup(), syncExceptionBundle(), syncOptions(), backup_handler->backupAction(), syncdb);
 
     QObject::connect(aa, SIGNAL(finished(AnalyseFile*)), this, SIGNAL(analysisFinished(AnalyseFile*)), Qt::QueuedConnection);
 

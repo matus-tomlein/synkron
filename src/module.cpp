@@ -199,6 +199,12 @@ void Module::load()
     }
     sync_settings->endGroup();
 
+    // Loading exceptions
+    exceptions->load(sync_settings);
+
+    // Loading restore settings
+    backup_handler->load(sync_settings);
+
     // Loading sync tabs
     sync_settings->beginGroup("syncs");
     QStringList sync_groups = sync_settings->childGroups();
@@ -209,10 +215,4 @@ void Module::load()
         page->load(sync_settings);
     }
     sync_settings->endGroup();
-
-    // Loading exceptions
-    exceptions->load(sync_settings);
-
-    // Loading restore settings
-    backup_handler->load(sync_settings);
 }
