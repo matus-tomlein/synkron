@@ -47,6 +47,7 @@ SyncAction::SyncAction(FolderActionGroup * fag, SyncExceptionBundle * bundle, Sy
 
 SyncAction::~SyncAction()
 {
+    delete starting_fag;
     delete exception_bundle;
     delete options;
     delete backup_action;
@@ -80,8 +81,6 @@ void SyncAction::start()
     sync(starting_sf, starting_fag);
 
     emit messageBox(QString("TIME %1").arg(timer.elapsed()));
-
-    delete starting_fag;
 
     finish(starting_sf);
 }
@@ -238,6 +237,9 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
                     sf->setFileStatusInFolder(fag->idAt(n), SyncFile::OK);
                 }
             }
+            if (newest_fi) {
+                sf->setLastModified(newest_fi->lastModified());
+            }
         }
         emit this->anotherItemChecked();
     }
@@ -291,6 +293,7 @@ bool SyncAction::createFolder(SyncFile *, FolderActionGroup * fag)
 
 void SyncAction::finish(SyncFile * sf)
 {
+    if (syncdb) syncdb->saveSyncFile(sf);
     delete sf;
     emit finished(changed_count, skipped_count);
 }

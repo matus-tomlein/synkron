@@ -69,21 +69,56 @@ bool SyncDatabase::createDatabase()
 void SyncDatabase::setupRootSyncFile(SyncFile * sf)
 {
     sf->setIndex(0);
-    setupSyncFile(sf);
-}
+    int num_records = 0;
 
-void SyncDatabase::setupSyncFile(SyncFile * parent_sf)
-{
     QSqlQuery query(*db);
-    SyncFile * sf;
 
-    if (!query.exec(QString("SELECT id, file_name, last_modified FROM records WHERE parent_id = '%1'").arg(parent_sf->index())))
+    if (!query.exec(QString("SELECT COUNT(id) AS count FROM content")))
+        return;
+
+    if (query.next()) {
+        num_records = query.value(0).toInt();
+    }
+
+    SyncFile ** sf_array = new SyncFile*[num_records];
+    sf_array[0] = sf;
+
+    if (!query.exec(QString("SELECT id, parent_id, file_name, last_modified FROM content ORDER BY id")))
         return;
 
     while (query.next()) {
-        sf = parent_sf->addChild(query.value(2).toString());
-        sf->setIndex(query.value(0).toInt());
+        sf = sf_array[query.value(1).toInt()]->addChild(query.value(2).toString(), query.value(0).toInt());
+
         sf->setLastModified(query.value(3).toString());
-        setupSyncFile(sf);
+        sf_array[sf->index()] = sf;
+    }
+    delete sf_array;
+}
+
+void SyncDatabase::saveSyncFile(SyncFile * sf)
+{
+    for (int i = 0; i < sf->childCount(); ++i) {
+        saveSyncFile(sf->childAt(i), sf->index());
+    }
+    db->commit();
+}
+
+void SyncDatabase::saveSyncFile(SyncFile * sf, int parent_id)
+{
+    if (!sf->isInDatabase()) {
+        QSqlQuery(*db).exec(QString("INSERT INTO content (id, parent_id, file_name, last_modified) VALUES (%1, %2, '%3', '%4')")
+                            .arg(sf->index())
+                            .arg(parent_id)
+                            .arg(sf->getName())
+                            .arg(sf->lastModifiedString()));
+    } else if (sf->wasModified()) {
+        QSqlQuery(*db).exec(QString("UPDATE content SET parent_id = %1, file_name = '%2', last_modified = '%3' WHERE id = %4")
+                            .arg(parent_id)
+                            .arg(sf->getName())
+                            .arg(sf->lastModifiedString())
+                            .arg(sf->index()));
+    }
+    for (int i = 0; i < sf->childCount(); ++i) {
+        saveSyncFile(sf->childAt(i), sf->index());
     }
 }

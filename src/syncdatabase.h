@@ -35,10 +35,11 @@ public:
     ~SyncDatabase();
 
     void setupRootSyncFile(SyncFile *);
+    void saveSyncFile(SyncFile *);
 
 private:
     bool createDatabase();
-    void setupSyncFile(SyncFile *);
+    void saveSyncFile(SyncFile *, int);
 
     int page_id;
     QString * temp_path;

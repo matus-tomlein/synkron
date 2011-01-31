@@ -65,6 +65,7 @@ bool RestoreAction::runRecordAction(BackupDatabaseRecord * record)
         return deleteRecord(record);
         break;
     }
+    return false;
 }
 
 bool RestoreAction::restoreRecord(BackupDatabaseRecord * record)

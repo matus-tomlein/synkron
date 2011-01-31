@@ -18,8 +18,11 @@
 ********************************************************************/
 
 #include "syncfile.h"
+#include "mtfile.h"
 
 #include <QList>
+
+int sf_namespace::highest_sf_id = 0;
 
 SyncFile::SyncFile(const QString name)
 {
@@ -30,6 +33,8 @@ SyncFile::SyncFile(const QString name)
 
     folders = new QList<FolderStatus>;
     last_modified = NULL;
+    modified = false;
+    not_in_db = false;
     id = -1;
 }
 
@@ -58,7 +63,7 @@ void SyncFile::setName(const QString name)
 /**
   * Creates a new SyncFile object. Appends it into the children list. Returns its pointer.
   */
-SyncFile * SyncFile::addChild(const QString & child_name)
+SyncFile * SyncFile::addChild(const QString & child_name, int child_id)
 {
     if (children) {
         for (int i = 0; i < children->count(); ++i) {
@@ -68,6 +73,7 @@ SyncFile * SyncFile::addChild(const QString & child_name)
     }
 
     SyncFile * child = new SyncFile(child_name);
+    child->setIndex(child_id);
     addSyncFile(child);
     return child;
 }
@@ -160,5 +166,34 @@ SyncFile * SyncFile::childByIndex(int ch_id)
 
 void SyncFile::setLastModified(const QString & lm)
 {
-    this->last_modified = new QString(lm);
+    if (last_modified) {
+        if (*last_modified != lm) {
+            modified = true;
+            *last_modified = lm;
+        }
+    } else {
+        last_modified = new QString(lm);
+    }
+}
+
+void SyncFile::setLastModified(const MTEvenDateTime & dt)
+{
+    setLastModified(dt.toString("yyyy.MM.dd-hh.mm.ss"));
+}
+
+void SyncFile::setIndex(int new_id)
+{
+    id = new_id;
+    if (id < 0) {
+        id = ++sf_namespace::highest_sf_id;
+        not_in_db = true;
+    } else if (id > sf_namespace::highest_sf_id) {
+        sf_namespace::highest_sf_id = id;
+    }
+}
+
+const QString SyncFile::lastModifiedString()
+{
+    if (last_modified) return *last_modified;
+    return QString();
 }

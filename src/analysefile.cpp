@@ -27,9 +27,10 @@ AnalyseFile::AnalyseFile(const QString name)
     this->num_obsolete = 0;
 }
 
-SyncFile * AnalyseFile::addChild(const QString & child_name)
+SyncFile * AnalyseFile::addChild(const QString & child_name, int child_id)
 {
     SyncFile * child = new AnalyseFile(child_name);
+    child->setIndex(child_id);
     addSyncFile(child);
     return child;
 }

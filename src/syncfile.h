@@ -22,6 +22,12 @@
 
 #include <QString>
 
+class MTEvenDateTime;
+
+namespace sf_namespace {
+    extern int highest_sf_id;
+}
+
 class SyncFile
 {
 public:
@@ -40,7 +46,7 @@ public:
     SyncFile(const QString);
     ~SyncFile();
 
-    virtual SyncFile * addChild(const QString &);
+    virtual SyncFile * addChild(const QString &, int = -1);
     void addSyncFile(SyncFile *);
 
     void setName(const QString);
@@ -62,10 +68,15 @@ public:
     void setBlacklisted(bool b) { blacklisted = b; }
 
     int index() { return id; }
-    void setIndex(int id) { this->id = id; }
+    void setIndex(int);
 
     QString * lastModified() { return last_modified; }
+    const QString lastModifiedString();
+    void setLastModified(const MTEvenDateTime &);
     void setLastModified(const QString &);
+
+    bool wasModified() { return modified; }
+    bool isInDatabase() { return !not_in_db; }
 
     SyncFile * childByIndex(int);
 
@@ -78,6 +89,8 @@ private:
     QString name;
     bool is_dir;
     bool blacklisted;
+    bool not_in_db;
+    bool modified;
     int id;
     QString * last_modified;
 };
