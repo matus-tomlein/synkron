@@ -72,6 +72,11 @@ SyncFile * SyncFile::addChild(const QString & child_name, int child_id)
         }
     }
 
+    return addNewChild(child_name, child_id);
+}
+
+SyncFile * SyncFile::addNewChild(const QString & child_name, int child_id)
+{
     SyncFile * child = new SyncFile(child_name);
     child->setIndex(child_id);
     addSyncFile(child);
@@ -196,4 +201,9 @@ const QString SyncFile::lastModifiedString()
 {
     if (last_modified) return *last_modified;
     return QString();
+}
+
+int SyncFile::numFoundFolders()
+{
+    return folders->count();
 }

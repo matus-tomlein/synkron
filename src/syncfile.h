@@ -46,7 +46,7 @@ public:
     SyncFile(const QString);
     ~SyncFile();
 
-    virtual SyncFile * addChild(const QString &, int = -1);
+    SyncFile * addChild(const QString &, int = -1);
     void addSyncFile(SyncFile *);
 
     void setName(const QString);
@@ -60,6 +60,7 @@ public:
     bool existsInFolder(int);
     void setFileStatusInFolder(int, FileStatus);
     SyncFile::FileStatus fileStatusInFolder(int);
+    int numFoundFolders();
 
     bool isDir() { return is_dir; }
     void setDir(bool d) { is_dir = d; }
@@ -82,6 +83,7 @@ public:
 
 private:
     int indexOfFolder(int);
+    virtual SyncFile * addNewChild(const QString &, int = -1);
 
     QList<SyncFile *> * children;
     QList<SyncFile::FolderStatus> * folders;

@@ -64,6 +64,26 @@ bool AnalyseAction::createFolder(SyncFile * sf, FolderActionGroup * fag)
     return true;
 }
 
+bool AnalyseAction::deleteFileOrFolder(SyncFile * sf, FolderActionGroup * fag)
+{
+    for (int i = 0; i < fag->count(); ++i) {
+        if (sf->existsInFolder(fag->idAt(i))) {
+            sf->setFileStatusInFolder(fag->idAt(i), SyncFile::Deleted);
+            increaseNumDeleted((AnalyseFile *) sf);
+        }
+    }
+    return true;
+}
+
+void AnalyseAction::increaseNumDeleted(AnalyseFile * af)
+{
+    af->increaseNumDeleted();
+
+    for (int i = 0; i < sf_queue.count(); ++i) {
+        ((AnalyseFile *) sf_queue.at(i))->increaseNumDeleted();
+    }
+}
+
 void AnalyseAction::finish(SyncFile * sf)
 {
     emit finished((AnalyseFile *) sf);

@@ -167,7 +167,10 @@ void SyncAction::sync(SyncFile * parent, FolderActionGroup * fag)
             newest_fi = NULL;
         }
 
-        if (sf->isDir()) {
+        if (sf->isInDatabase() && sf->numFoundFolders() < fag->count()) { // was deleted
+            deleteFileOrFolder(sf, fag);
+        }
+        else if (sf->isDir()) {
             sub_fag = new FolderActionGroup;
             for (int n = 0; n < fag->count(); ++n) {
                 dir.setPath(fag->at(n));
@@ -288,6 +291,12 @@ bool SyncAction::createFolder(SyncFile *, FolderActionGroup * fag)
     }
     emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderCreated, fag));
     changed_count++;
+    return true;
+}
+
+bool SyncAction::deleteFileOrFolder(SyncFile *, FolderActionGroup *)
+{
+
     return true;
 }
 

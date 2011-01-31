@@ -35,6 +35,9 @@ private:
     void copyFile(SyncFile *, FolderActionGroup *);
     void updateFile(SyncFile *, FolderActionGroup *);
     bool createFolder(SyncFile *, FolderActionGroup *);
+    bool deleteFileOrFolder(SyncFile *, FolderActionGroup *);
+
+    void increaseNumDeleted(AnalyseFile *);
 
     SyncFile * createRootSyncFile();
     void finish(SyncFile *);

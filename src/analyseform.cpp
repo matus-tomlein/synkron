@@ -206,6 +206,10 @@ void AnalyseForm::updateSelectedInfo(AnalyseTreeWidgetItem * item)
             folder_item->setText(tr("Obsolete"));
             break;
 
+        case AnalyseFile::Deleted:
+            folder_item->setText(tr("Deleted"));
+            break;
+
         default:
             folder_item->setText(tr("Not found"));
             break;

@@ -65,6 +65,7 @@ private:
     virtual void copyFile(SyncFile *, FolderActionGroup *);
     virtual void updateFile(SyncFile *, FolderActionGroup *);
     virtual bool createFolder(SyncFile *, FolderActionGroup *);
+    virtual bool deleteFileOrFolder(SyncFile *, FolderActionGroup *);
 
     virtual SyncFile * createRootSyncFile();
     virtual void finish(SyncFile *);

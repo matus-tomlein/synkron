@@ -27,8 +27,6 @@ class AnalyseFile : public SyncFile
 public:
     AnalyseFile(const QString);
 
-    SyncFile * addChild(const QString &, int = -1);
-
     void increaseNumObsolete();
     void increaseNumDeleted();
     void increaseNumNotFound();
@@ -39,6 +37,8 @@ public:
     int numNotSynced();
 
 private:
+    SyncFile * addNewChild(const QString &, int = -1);
+
     int num_obsolete;
     int num_deleted;
     int num_not_found;
