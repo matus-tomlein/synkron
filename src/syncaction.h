@@ -62,6 +62,7 @@ private:
 
     void createSyncFileFromFolders(SyncFile *, FolderActionGroup *);
     void sync(SyncFile *, FolderActionGroup *);
+    bool removeFolder(const QFileInfo &);
     virtual void copyFile(SyncFile *, FolderActionGroup *);
     virtual void updateFile(SyncFile *, FolderActionGroup *);
     virtual bool createFolder(SyncFile *, FolderActionGroup *);

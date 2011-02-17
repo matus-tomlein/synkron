@@ -38,7 +38,11 @@ SyncDatabase::SyncDatabase(int page_id, QString * temp_path)
 SyncDatabase::~SyncDatabase()
 {
     delete temp_path;
-    if (db) delete db;
+
+    if (db) {
+        db->close();
+        delete db;
+    }
 }
 
 bool SyncDatabase::createDatabase()
@@ -49,8 +53,9 @@ bool SyncDatabase::createDatabase()
             return false;
     }
 
-    db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
-    db->setDatabaseName(dir.absoluteFilePath(QString("sync%1.syncdb").arg(page_id)));
+    QString sync_name = QString("sync%1.syncdb").arg(page_id);
+    db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", sync_name));
+    db->setDatabaseName(dir.absoluteFilePath(sync_name));
     if (!db->open()) {
         delete db;
         db = NULL;
@@ -111,6 +116,9 @@ void SyncDatabase::saveSyncFile(SyncFile * sf, int parent_id)
                             .arg(parent_id)
                             .arg(sf->getName())
                             .arg(sf->lastModifiedString()));
+    } else if (sf->wasModified() && sf->wasDeleted()) {
+        removeRecords(sf->index());
+        return;
     } else if (sf->wasModified()) {
         QSqlQuery(*db).exec(QString("UPDATE content SET parent_id = %1, file_name = '%2', last_modified = '%3' WHERE id = %4")
                             .arg(parent_id)
@@ -120,5 +128,18 @@ void SyncDatabase::saveSyncFile(SyncFile * sf, int parent_id)
     }
     for (int i = 0; i < sf->childCount(); ++i) {
         saveSyncFile(sf->childAt(i), sf->index());
+    }
+}
+
+void SyncDatabase::removeRecords(int r_id)
+{
+    QSqlQuery query(*db);
+    query.exec(QString("DELETE FROM content WHERE id = %1").arg(r_id));
+
+    if (!query.exec(QString("SELECT id FROM content WHERE parent_id = %1").arg(r_id)))
+        return;
+
+    while (query.next()) {
+        removeRecords(query.value(0).toInt());
     }
 }

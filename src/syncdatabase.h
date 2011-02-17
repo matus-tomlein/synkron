@@ -40,6 +40,7 @@ public:
 private:
     bool createDatabase();
     void saveSyncFile(SyncFile *, int);
+    void removeRecords(int);
 
     int page_id;
     QString * temp_path;

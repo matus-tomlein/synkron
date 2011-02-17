@@ -47,6 +47,13 @@ AbstractSyncPage::AbstractSyncPage(int id, Exceptions * exceptions, BackupHandle
     syncdb = new SyncDatabase(id, backup_handler->tempPath());
 }
 
+AbstractSyncPage::~AbstractSyncPage()
+{
+    delete syncdb;
+    delete settings_map;
+    delete exception_bundle_ids_map;
+}
+
 Folder * AbstractSyncPage::addFolder(int f_id)
 {
     return folders->addFolder(f_id);

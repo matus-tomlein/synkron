@@ -207,3 +207,12 @@ int SyncFile::numFoundFolders()
 {
     return folders->count();
 }
+
+bool SyncFile::wasDeleted()
+{
+    for (int i = 0; i < folders->count(); ++i) {
+        if (folders->at(i).file_stat == Deleted)
+            return true;
+    }
+    return false;
+}

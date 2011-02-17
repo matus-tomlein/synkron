@@ -43,6 +43,7 @@ class AbstractSyncPage : public QObject
 
 public:
     AbstractSyncPage(int, Exceptions *, BackupHandler *);
+    ~AbstractSyncPage();
 
     void save(Settings *);
     void load(Settings *);

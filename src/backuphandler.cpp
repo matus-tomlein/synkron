@@ -58,7 +58,7 @@ bool BackupHandler::load(Settings * settings)
 
 bool BackupHandler::createDatabase()
 {
-    db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+    db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "backup.syncdb"));
     db->setDatabaseName(QDir(*temp_path).absoluteFilePath("backup.syncdb"));
     if (!db->open()) {
         delete db;

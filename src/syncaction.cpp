@@ -294,10 +294,54 @@ bool SyncAction::createFolder(SyncFile *, FolderActionGroup * fag)
     return true;
 }
 
-bool SyncAction::deleteFileOrFolder(SyncFile *, FolderActionGroup *)
+bool SyncAction::deleteFileOrFolder(SyncFile * sf, FolderActionGroup * fag)
 {
+    QFileInfo fi;
+    for (int i = 0; i < fag->count(); ++i) {
+        MTFile file(QDir(fag->at(i)).absoluteFilePath(sf->getName()));
+        fi.setFile(file);
 
+        if (fi.isDir() && !fi.isSymLink()) {
+            if (removeFolder(fi)) {
+                sf->setFileStatusInFolder(fag->idAt(i), SyncFile::Deleted);
+                emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderDeleted, new FolderActionGroup(fag->idAt(i), fi.absoluteFilePath())));
+            } else
+                emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FolderDeleted, new FolderActionGroup(fag->idAt(i), fi.absoluteFilePath()), true));
+        }
+        else {
+            if (!backup_action->backupFile(&file)) {
+                continue;
+            }
+
+            if (file.remove()) {
+                sf->setFileStatusInFolder(fag->idAt(i), SyncFile::Deleted);
+                emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileDeleted, new FolderActionGroup(fag->idAt(i), fi.absoluteFilePath())));
+            } else
+                emit this->syncOutMessage(new SyncOutMessage(SyncOutMessage::FileDeleted, new FolderActionGroup(fag->idAt(i), fi.absoluteFilePath()), true, file.errorString()));
+        }
+    }
+    sf->setModified(true);
     return true;
+}
+
+bool SyncAction::removeFolder(const QFileInfo & fi)
+{
+    QDir dir (fi.absoluteFilePath());
+    QFileInfoList entries = dir.entryInfoList(exception_bundle->filters(), static_cast<QDir::Filter>(dir_filters), (QDir::Name | QDir::DirsFirst | QDir::IgnoreCase));
+
+    for (int i = 0; i < entries.count(); ++i) {
+        if (entries.at(i).isDir() && !entries.at(i).isSymLink()) {
+            removeFolder(entries.at(i));
+        } else {
+            MTFile file(entries.at(i).absoluteFilePath());
+            if (!backup_action->backupFile(&file)) {
+                continue;
+            }
+            file.remove();
+        }
+    }
+    dir.cdUp();
+    return dir.rmdir(fi.fileName());
 }
 
 void SyncAction::finish(SyncFile * sf)

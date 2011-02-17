@@ -40,6 +40,10 @@ Module::Module(const QString & path)
 
 Module::~Module()
 {
+    foreach (AbstractSyncPage * page, *syncs) {
+        delete page;
+    }
+
     delete backup_handler;
     delete exceptions;
     delete syncs;

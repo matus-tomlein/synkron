@@ -77,6 +77,8 @@ public:
     void setLastModified(const QString &);
 
     bool wasModified() { return modified; }
+    bool wasDeleted();
+    void setModified(bool modified) { this->modified = modified; }
     bool isInDatabase() { return !not_in_db; }
 
     SyncFile * childByIndex(int);
