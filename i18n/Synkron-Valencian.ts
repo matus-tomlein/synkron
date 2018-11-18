@@ -99,22 +99,6 @@
         <translation>Erro desconegut al eliminar carpeta %1</translation>
     </message>
     <message>
-        <source>file</source>
-        <translation type="obsolete">archiu</translation>
-    </message>
-    <message>
-        <source>copy</source>
-        <translation type="obsolete">copiar</translation>
-    </message>
-    <message>
-        <source> to temp</source>
-        <translation type="obsolete"> a temporal</translation>
-    </message>
-    <message>
-        <source>Unknown error removing file: %1</source>
-        <translation type="obsolete">Erro desconegut al eliminar archiu %1</translation>
-    </message>
-    <message>
         <source>File %1 deleted</source>
         <translation>Archiu %1 eliminat</translation>
     </message>
@@ -207,10 +191,6 @@
         <translation>Archiu %1 restaurat</translation>
     </message>
     <message>
-        <source>folder</source>
-        <translation type="obsolete">carpeta</translation>
-    </message>
-    <message>
         <source>Error removing file %1</source>
         <translation>Erro al eliminar archiu %1</translation>
     </message>
@@ -229,10 +209,6 @@
     <message>
         <source>%1 %2 files skipped</source>
         <translation>%1 %2 archius omesos</translation>
-    </message>
-    <message>
-        <source>Unknown error %1ing %2: %3%4</source>
-        <translation type="obsolete">Erro desconegut %1ing %2: %3%4</translation>
     </message>
     <message>
         <source>Cannot write file %1: %2</source>
@@ -472,6 +448,14 @@
         <source>Dutch</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Romanian</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turkish</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MTAdvancedGroupBox</name>
@@ -517,10 +501,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Choose a file</source>
-        <translation type="obsolete">Elegixca un archiu</translation>
-    </message>
     <message>
         <source>Synkron</source>
         <translation>Synkron</translation>
@@ -1376,30 +1356,6 @@
         <translation>Sinc totes les pestanyes al iniciar</translation>
     </message>
     <message>
-        <source>Enter file path</source>
-        <translation type="obsolete">Introduixca ruta d&apos;archiu</translation>
-    </message>
-    <message>
-        <source>Enter folder path</source>
-        <translation type="obsolete">Introduixca ruta de la carpeta</translation>
-    </message>
-    <message>
-        <source>Enter file path:</source>
-        <translation type="obsolete">Introduixca ruta d&apos;archiu:</translation>
-    </message>
-    <message>
-        <source>Enter folder path:</source>
-        <translation type="obsolete">Introduixca ruta de la carpeta:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="obsolete">Acceptar</translation>
-    </message>
-    <message>
-        <source>Browse</source>
-        <translation type="obsolete">Examinar</translation>
-    </message>
-    <message>
         <source>%1 files deleted.</source>
         <translation>%1 archius eliminats.</translation>
     </message>
@@ -1537,26 +1493,6 @@
         <translation>Multi-Sincronisació</translation>
     </message>
     <message>
-        <source>Load a multisync</source>
-        <translation type="obsolete">Carregar Multi-Sincronisació</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation type="obsolete">Carregar</translation>
-    </message>
-    <message>
-        <source>Save the current multisync</source>
-        <translation type="obsolete">Guardar Multi-Sincronisació actual</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="obsolete">Guardar</translation>
-    </message>
-    <message>
-        <source>Save as</source>
-        <translation type="obsolete">Guardar com</translation>
-    </message>
-    <message>
         <source>Stop multisync</source>
         <translation>Parar Multi-Sincronisació</translation>
     </message>
@@ -1621,10 +1557,6 @@
         <translation>Seguir enllaços simbólics</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Sources:&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Origens:&lt;/b&gt;</translation>
-    </message>
-    <message>
         <source>Do not backup updated files</source>
         <translation>No fer backup dels archius actualisats</translation>
     </message>
@@ -1643,10 +1575,6 @@
     <message>
         <source>Move contents to destination, leaving sources empty</source>
         <translation>Moure el contingut al destí dixant buit l&apos;orige</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Destination:&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Destí:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Do not backup updated files from destination</source>
@@ -1705,27 +1633,9 @@
         <translation>%1 archiu(s) %2</translation>
     </message>
     <message>
-        <source>Synkron - Save Multisync</source>
-        <translation type="obsolete">Synkron - Guardar Multi-Sincronisació</translation>
-    </message>
-    <message>
-        <source>Synkron Multisyncs (*.slist)</source>
-        <translation type="obsolete">Synkron Multi-Sincronisació (*.slist)</translation>
-    </message>
-    <message>
         <source>Cannot write file %1:
 %2.</source>
         <translation>No se pot escriure l&apos;archiu %1:
-%2.</translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation type="obsolete">Obrir srchiu</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation type="obsolete">No se pot llegir l&apos;archiu %1:
 %2.</translation>
     </message>
     <message>
@@ -1755,10 +1665,6 @@
     <message>
         <source>Root directory</source>
         <translation>Carpeta raïl</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Analyse:&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Analisar:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Fast analysis</source>
@@ -1833,10 +1739,6 @@
         <translation>Detectar i notificar els archius en colisions</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Other:&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Atres:&lt;/b&gt;</translation>
-    </message>
-    <message>
         <source>%1	Synchronisation started</source>
         <translation>%1	Sincronisació iniciada</translation>
     </message>
@@ -1876,6 +1778,14 @@
         <source>Do not create empty folders</source>
         <translation>No crear carpetes temporals</translation>
     </message>
+    <message>
+        <source>Ignore 1 hour difference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Due to Daylight Saving Time (DST), files may have 1 hour delta</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SyncFolder</name>
@@ -1886,10 +1796,6 @@
     <message>
         <source>Remove</source>
         <translation>Eliminar</translation>
-    </message>
-    <message>
-        <source>Path</source>
-        <translation type="obsolete">Ruta</translation>
     </message>
     <message>
         <source>Do not modify the contents of this folder</source>
@@ -2002,22 +1908,6 @@
         <translation>Archiu %1 en la llista negra, omés</translation>
     </message>
     <message>
-        <source>Unknown error creating folder: %1</source>
-        <translation type="obsolete">Erro desconegut al crear carpeta: %1</translation>
-    </message>
-    <message>
-        <source>file</source>
-        <translation type="obsolete">archiu</translation>
-    </message>
-    <message>
-        <source>copy</source>
-        <translation type="obsolete">copiar</translation>
-    </message>
-    <message>
-        <source> to temp</source>
-        <translation type="obsolete">a temp</translation>
-    </message>
-    <message>
         <source>File %1 restored</source>
         <translation>Archiu %1 restaurat</translation>
     </message>
@@ -2038,24 +1928,12 @@
         <translation>Sincronisar</translation>
     </message>
     <message>
-        <source>Clone</source>
-        <translation type="obsolete">Clonar</translation>
-    </message>
-    <message>
-        <source>Clone folder 1</source>
-        <translation type="obsolete">Clonar carpeta 1</translation>
-    </message>
-    <message>
         <source>&lt;b&gt;Analysis:&lt;/b&gt;</source>
         <translation>&lt;b&gt;Anàlisis:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>File name</source>
         <translation>Nom d&apos;archiu</translation>
-    </message>
-    <message>
-        <source>Folder %1</source>
-        <translation type="obsolete">Carpeta %1</translation>
     </message>
     <message>
         <source>&lt;b&gt;Sync log:&lt;/b&gt;</source>
@@ -2110,10 +1988,6 @@
         <translation>Detindre sincronisació</translation>
     </message>
     <message>
-        <source>Show advanced options</source>
-        <translation type="obsolete">Mostrar opcions alvançades</translation>
-    </message>
-    <message>
         <source>Synchronise hidden files and folders</source>
         <translation>Sincronisar els archius i carpetes ocultes</translation>
     </message>
@@ -2150,48 +2024,8 @@
         <translation>Seguir enllaços simbòlics</translation>
     </message>
     <message>
-        <source>Do not backup updated files from Folder 1</source>
-        <translation type="obsolete">No fer backup dels archius actualisats de la carpeta 1</translation>
-    </message>
-    <message>
-        <source>Update existing files in Folder 1 only</source>
-        <translation type="obsolete">Nomes actualisar achius existents en la carpeta 1</translation>
-    </message>
-    <message>
-        <source>Do not backup updated files from Folder 2</source>
-        <translation type="obsolete">No fer backup dels archius actualisats de la carpeta 2</translation>
-    </message>
-    <message>
-        <source>Update existing files in Folder 2 only</source>
-        <translation type="obsolete">Nomes actualisar archius existents en la carpeta 2</translation>
-    </message>
-    <message>
         <source>Filters</source>
         <translation>Filtres</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to remove &quot;%1&quot; from every synced location?</source>
-        <translation type="obsolete">¿Està segur de que vol eliminar &quot;%1&quot; de cada ubicació sincronisada?</translation>
-    </message>
-    <message>
-        <source>Add extension to blacklist</source>
-        <translation type="obsolete">Afegir extensions a la llista negra</translation>
-    </message>
-    <message>
-        <source>Type a new name for &quot;%1&quot;:</source>
-        <translation type="obsolete">Escriga un nou nom per a &quot;%1&quot;:</translation>
-    </message>
-    <message>
-        <source>Error renaming directory %1</source>
-        <translation type="obsolete">Erro al renomenar carpeta %1</translation>
-    </message>
-    <message>
-        <source>File %1 renamed</source>
-        <translation type="obsolete">Archiu %1 renomenat</translation>
-    </message>
-    <message>
-        <source>Error renaming file %1</source>
-        <translation type="obsolete">Erro al renomenar archiu %1</translation>
     </message>
     <message>
         <source>Fast analysis</source>
@@ -2200,14 +2034,6 @@
     <message>
         <source>List files which need to be synchronised only</source>
         <translation>Llista d&apos;archius que necessiten nomes sincronisar-se</translation>
-    </message>
-    <message>
-        <source>Folder 1</source>
-        <translation type="obsolete">Carpeta 1</translation>
-    </message>
-    <message>
-        <source>Folder 2</source>
-        <translation type="obsolete">Carpeta 2</translation>
     </message>
     <message>
         <source>Analysis</source>
@@ -2358,6 +2184,14 @@
     <message>
         <source>Do not create empty folders</source>
         <translation>No crear carpetes temporals</translation>
+    </message>
+    <message>
+        <source>Due to Daylight Saving Time (DST), files may have 1 hour delta</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore 1 hour difference</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

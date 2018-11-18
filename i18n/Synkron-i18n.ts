@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="sk_SK">
-<defaultcodec></defaultcodec>
+<!DOCTYPE TS>
+<TS version="2.0" language="sk_SK">
 <context>
     <name>LanguageNames</name>
     <message>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <source>French</source>
-        <translation>français</translation>
+        <translation>Français</translation>
     </message>
     <message>
         <source>Italian</source>
@@ -47,21 +47,29 @@
         <source>Chinese</source>
         <translation>中文</translation>
     </message>
-	  <message>
+    <message>
         <source>Valencian</source>
         <translation>valencià</translation>
     </message>
     <message>
-	      <source>Finnish</source>
-	      <translation>suomi</translation>
+        <source>Finnish</source>
+        <translation>suomi</translation>
     </message>
     <message>
-	      <source>Czech</source>
-	      <translation>Čeština</translation>
+        <source>Czech</source>
+        <translation>Čeština</translation>
     </message>
     <message>
-	      <source>Dutch</source>
-	      <translation>Nederlands</translation>
+        <source>Dutch</source>
+        <translation>Nederlands</translation>
+    </message>
+    <message>
+        <source>Romanian</source>
+        <translation>Română</translation>
+    </message>
+    <message>
+        <source>Turkish</source>
+        <translation>Türkçe</translation>
     </message>
 </context>
 </TS>

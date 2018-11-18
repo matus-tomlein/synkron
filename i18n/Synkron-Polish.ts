@@ -99,22 +99,6 @@
         <translation>Nieznany błąd podczas usuwania katalogu: %1</translation>
     </message>
     <message>
-        <source>file</source>
-        <translation type="obsolete">plik</translation>
-    </message>
-    <message>
-        <source>copy</source>
-        <translation type="obsolete">kopiuj</translation>
-    </message>
-    <message>
-        <source> to temp</source>
-        <translation type="obsolete">tymczasowo</translation>
-    </message>
-    <message>
-        <source>Unknown error removing file: %1</source>
-        <translation type="obsolete">Nieznany błąd podczas usuwania pliku: %1</translation>
-    </message>
-    <message>
         <source>File %1 deleted</source>
         <translation>Usunięto plik %1</translation>
     </message>
@@ -207,10 +191,6 @@
         <translation>Przywrócono plik %1</translation>
     </message>
     <message>
-        <source>folder</source>
-        <translation type="obsolete">folder</translation>
-    </message>
-    <message>
         <source>Error removing file %1</source>
         <translation>Błąd podczas usuwania pliku %1</translation>
     </message>
@@ -229,10 +209,6 @@
     <message>
         <source>%1 %2 files skipped</source>
         <translation>%1 %2 pominięto plików</translation>
-    </message>
-    <message>
-        <source>Unknown error %1ing %2: %3%4</source>
-        <translation type="obsolete">Nieznany błąd 1% %2: %3%4</translation>
     </message>
     <message>
         <source>Cannot write file %1: %2</source>
@@ -446,7 +422,7 @@
     </message>
     <message>
         <source>Chinese</source>
-        <translation type="unfinished">Chiński</translation>
+        <translation>Chiński</translation>
     </message>
     <message>
         <source>Italian</source>
@@ -466,11 +442,19 @@
     </message>
     <message>
         <source>Czech</source>
-        <translation type="unfinished"></translation>
+        <translation>Czeski</translation>
     </message>
     <message>
         <source>Dutch</source>
-        <translation type="unfinished"></translation>
+        <translation>Niderlandzki</translation>
+    </message>
+    <message>
+        <source>Romanian</source>
+        <translation>Rumuński</translation>
+    </message>
+    <message>
+        <source>Turkish</source>
+        <translation>Turecki</translation>
     </message>
 </context>
 <context>
@@ -552,34 +536,6 @@
     <message>
         <source>Are you sure you want to remove the selected extension from blacklist?</source>
         <translation>Czy na pewno chcesz usunąć wybrane rozszerzenie z czarnej listy?</translation>
-    </message>
-    <message>
-        <source>Enter file path</source>
-        <translation type="obsolete">Podaj ścieżkę pliku</translation>
-    </message>
-    <message>
-        <source>Enter folder path</source>
-        <translation type="obsolete">Podaj ścieżkę folderu</translation>
-    </message>
-    <message>
-        <source>Enter file path:</source>
-        <translation type="obsolete">Wpisz ścieżkę pliku:</translation>
-    </message>
-    <message>
-        <source>Enter folder path:</source>
-        <translation type="obsolete">Wpisz ścieżkę folderu:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="obsolete">OK</translation>
-    </message>
-    <message>
-        <source>Browse</source>
-        <translation type="obsolete">Przeglądaj</translation>
-    </message>
-    <message>
-        <source>Choose a file</source>
-        <translation type="obsolete">Wybierz plik</translation>
     </message>
     <message>
         <source>Set filter name</source>
@@ -1537,26 +1493,6 @@
         <translation>Multi-synchronizacja</translation>
     </message>
     <message>
-        <source>Load a multisync</source>
-        <translation type="obsolete">Załaduj multi-synchronizację</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation type="obsolete">Załaduj</translation>
-    </message>
-    <message>
-        <source>Save the current multisync</source>
-        <translation type="obsolete">Zapisz aktualną multi-synchronizację</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="obsolete">Zapisz</translation>
-    </message>
-    <message>
-        <source>Save as</source>
-        <translation type="obsolete">Zapisz jako</translation>
-    </message>
-    <message>
         <source>Stop multisync</source>
         <translation>Zatrzymaj multi-synchronizację</translation>
     </message>
@@ -1621,10 +1557,6 @@
         <translation>Śledź linki symboliczne</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Sources:&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Źródła:&lt;/b&gt;</translation>
-    </message>
-    <message>
         <source>Do not backup updated files</source>
         <translation>Nie zachowuj zaktualizowanych plików</translation>
     </message>
@@ -1643,10 +1575,6 @@
     <message>
         <source>Move contents to destination, leaving sources empty</source>
         <translation>Przenieś zawartość do celu, pozostawiając puste źródła</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Destination:&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Cel:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Do not backup updated files from destination</source>
@@ -1705,27 +1633,9 @@
         <translation>%1 plik(ów) %2</translation>
     </message>
     <message>
-        <source>Synkron - Save Multisync</source>
-        <translation type="obsolete">Synkron - Zapisz MultiSync</translation>
-    </message>
-    <message>
-        <source>Synkron Multisyncs (*.slist)</source>
-        <translation type="obsolete">Synkron Multi-synchronizacje (*.slist)</translation>
-    </message>
-    <message>
         <source>Cannot write file %1:
 %2.</source>
         <translation>Nie można zapisać pliku %1:
-%2.</translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation type="obsolete">Otwórz plik</translation>
-    </message>
-    <message>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation type="obsolete">Nie można odczytać pliku %1:
 %2.</translation>
     </message>
     <message>
@@ -1759,10 +1669,6 @@
     <message>
         <source>Press the &quot;Multisync&quot; button to start synchronisation</source>
         <translation>Naciśnij przycisk &quot;Multi-synchronizuj&quot;, aby rozpocząć synchronizację</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Analyse:&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Analiza:&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Fast analysis</source>
@@ -1833,10 +1739,6 @@
         <translation>Wykrywaj i alarmuj pliki kolizji</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Other:&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Inne:&lt;/b&gt;</translation>
-    </message>
-    <message>
         <source>%1	Synchronisation started</source>
         <translation>Rozpoczęta synchronizacja	%1</translation>
     </message>
@@ -1876,16 +1778,20 @@
         <source>Do not create empty folders</source>
         <translation>Nie twórz pustych folderów</translation>
     </message>
+    <message>
+        <source>Ignore 1 hour difference</source>
+        <translation>Ignoruj różnicę 1 godziny</translation>
+    </message>
+    <message>
+        <source>Due to Daylight Saving Time (DST), files may have 1 hour delta</source>
+        <translation>Ze względu na zmianę czasu letniego (DST), pliki mogą mieć różnicę 1 godziny w czasie</translation>
+    </message>
 </context>
 <context>
     <name>SyncFolder</name>
     <message>
         <source>Remove</source>
         <translation>Usuń</translation>
-    </message>
-    <message>
-        <source>Path</source>
-        <translation type="obsolete">Ścieżka</translation>
     </message>
     <message>
         <source>Browse</source>
@@ -1962,10 +1868,6 @@
         <translation>Nazwa pliku</translation>
     </message>
     <message>
-        <source>Folder %1</source>
-        <translation type="obsolete">Folder %1</translation>
-    </message>
-    <message>
         <source>&lt;b&gt;Sync log:&lt;/b&gt;</source>
         <translation>&lt;b&gt;Synchronizacja dziennika:&lt;/b&gt;</translation>
     </message>
@@ -1974,44 +1876,12 @@
         <translation>Katalog główny</translation>
     </message>
     <message>
-        <source>DELETED</source>
-        <translation type="obsolete">USUNIĘTO</translation>
-    </message>
-    <message>
         <source>NOT FOUND</source>
         <translation>NIE ZNALEZIONO</translation>
     </message>
     <message>
-        <source>Loading...</source>
-        <translation type="obsolete">Ładowanie...</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation type="obsolete">Otwórz</translation>
-    </message>
-    <message>
         <source>Sync</source>
         <translation>Synchronizuj</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="obsolete">Usuń</translation>
-    </message>
-    <message>
-        <source>Rename</source>
-        <translation type="obsolete">Zmień nazwę</translation>
-    </message>
-    <message>
-        <source>Add to blacklist</source>
-        <translation type="obsolete">Dodaj do czarnej listy</translation>
-    </message>
-    <message>
-        <source>Remove from blacklist</source>
-        <translation type="obsolete">Usuń z czarnej listy</translation>
-    </message>
-    <message>
-        <source>Add extension to blacklist</source>
-        <translation type="obsolete">Dodaj rozszerzenie do czarnej listy</translation>
     </message>
     <message>
         <source>%1 Failed to create directory %2</source>
@@ -2036,30 +1906,6 @@
     <message>
         <source>%1 files %2</source>
         <translation>%1 pliki %2</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to remove &quot;%1&quot; from every synced location?</source>
-        <translation type="obsolete">Czy na pewno chcesz usunąć &quot;%1&quot; z każdego synchronizowanego miejsca?</translation>
-    </message>
-    <message>
-        <source>Synkron - Rename file</source>
-        <translation type="obsolete">Synkron - Zmiana nazwy pliku</translation>
-    </message>
-    <message>
-        <source>Type a new name for &quot;%1&quot;:</source>
-        <translation type="obsolete">Wpisz nową nazwę dla &quot;%1&quot;:</translation>
-    </message>
-    <message>
-        <source>Error renaming directory %1</source>
-        <translation type="obsolete">Błąd zmiany nazwy katalogu %1</translation>
-    </message>
-    <message>
-        <source>File %1 renamed</source>
-        <translation type="obsolete">Nazwa pliku %1 zmieniona</translation>
-    </message>
-    <message>
-        <source>Error renaming file %1</source>
-        <translation type="obsolete">Błąd zmiany nazwy pliku %1</translation>
     </message>
     <message>
         <source>Set sync name</source>
@@ -2114,10 +1960,6 @@
         <translation>Zatrzymaj synchronizację</translation>
     </message>
     <message>
-        <source>Show advanced options</source>
-        <translation type="obsolete">Pokaż zaawansowane opcje</translation>
-    </message>
-    <message>
         <source>Synchronise hidden files and folders</source>
         <translation>Synchronizuj ukryte pliki i foldery</translation>
     </message>
@@ -2158,36 +2000,8 @@
         <translation>Filtry</translation>
     </message>
     <message>
-        <source>Folder 1</source>
-        <translation type="obsolete">Folder 1</translation>
-    </message>
-    <message>
-        <source>Do not backup updated files from Folder 1</source>
-        <translation type="obsolete">Nie zachowuj zaktualizowanych plików z Folderu 1</translation>
-    </message>
-    <message>
-        <source>Update existing files in Folder 1 only</source>
-        <translation type="obsolete">Aktualizuj tylko istniejące pliki w Folderze 1</translation>
-    </message>
-    <message>
         <source>Move contents to folder 2, leaving folder 1 empty</source>
         <translation>Przenieś zawartość z folderu 2, pozostawiając Folder 1 pusty</translation>
-    </message>
-    <message>
-        <source>Folder 2</source>
-        <translation type="obsolete">Folder 2</translation>
-    </message>
-    <message>
-        <source>Do not backup updated files from Folder 2</source>
-        <translation type="obsolete">Nie zachowuj zaktualizowanych plików z Folderu 2</translation>
-    </message>
-    <message>
-        <source>Update existing files in Folder 2 only</source>
-        <translation type="obsolete">Aktualizuj tylko istniejące pliki w Folderze 2</translation>
-    </message>
-    <message>
-        <source>Clone folder 1</source>
-        <translation type="obsolete">Klonuj folder 1</translation>
     </message>
     <message>
         <source>Analysis</source>
@@ -2234,32 +2048,12 @@
         <translation>Plik %1 jest na czarnej liście, pominięto</translation>
     </message>
     <message>
-        <source>Unknown error creating folder: %1</source>
-        <translation type="obsolete">Nieznany błąd przy tworzeniu folderu: %1</translation>
-    </message>
-    <message>
-        <source>file</source>
-        <translation type="obsolete">plik</translation>
-    </message>
-    <message>
-        <source>copy</source>
-        <translation type="obsolete">kopiuj</translation>
-    </message>
-    <message>
-        <source> to temp</source>
-        <translation type="obsolete">tymczasowo</translation>
-    </message>
-    <message>
         <source>File %1 restored</source>
         <translation>Przywrócono plik %1</translation>
     </message>
     <message>
         <source>Move</source>
         <translation>Przenieś</translation>
-    </message>
-    <message>
-        <source>Clone</source>
-        <translation type="obsolete">Klonuj</translation>
     </message>
     <message>
         <source>Press the &quot;Sync&quot; button to start synchronisation</source>
@@ -2390,6 +2184,14 @@
     <message>
         <source>Do not create empty folders</source>
         <translation>Nie twórz pustych folderów</translation>
+    </message>
+    <message>
+        <source>Due to Daylight Saving Time (DST), files may have 1 hour delta</source>
+        <translation>Ze względu na zmianę czasu letniego (DST), pliki mogą mieć różnicę 1 godziny w czasie</translation>
+    </message>
+    <message>
+        <source>Ignore 1 hour difference</source>
+        <translation>Ignoruj różnicę 1 godziny</translation>
     </message>
 </context>
 <context>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>867</width>
-    <height>630</height>
+    <width>663</width>
+    <height>615</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -17,45 +17,95 @@
    <string>Synkron</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="../resources.qrc">
     <normaloff>:/new/prefix1/images/Synkron128.png</normaloff>:/new/prefix1/images/Synkron128.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_4">
-    <property name="spacing">
+   <layout class="QGridLayout">
+    <property name="leftMargin">
      <number>2</number>
     </property>
-    <property name="margin">
+    <property name="topMargin">
      <number>2</number>
     </property>
-    <item>
-     <widget class="QSplitter" name="splitter_2">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QStackedWidget" name="mainStackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="verticalLayoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <property name="spacing">
-         <number>2</number>
+      <widget class="QWidget" name="page">
+       <layout class="QGridLayout">
+        <property name="leftMargin">
+         <number>0</number>
         </property>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QLabel" name="label_7">
-            <property name="pixmap">
-             <pixmap resource="../resources.qrc">:/images/Synkron16.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_6">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab">
+           <attribute name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/new/prefix1/images/Synkron128.png</normaloff>:/new/prefix1/images/Synkron128.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string>Sync #1</string>
+           </attribute>
+           <attribute name="toolTip">
+            <string>Sync #1</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_2">
+       <layout class="QGridLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0" colspan="2">
+         <layout class="QGridLayout">
+          <item row="0" column="1">
+           <widget class="QLabel" name="label">
             <property name="text">
-             <string>Navigation</string>
+             <string>&lt;b&gt;Files available for restoring:&lt;/b&gt;</string>
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="horizontalSpacer_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="pixmap">
+             <pixmap resource="../resources.qrc">:/new/prefix1/images/Restore16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <spacer>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -69,526 +119,1236 @@
           </item>
          </layout>
         </item>
+        <item row="1" column="0">
+         <layout class="QGridLayout">
+          <item row="1" column="0">
+           <widget class="ExtendedListWidget" name="restore_list">
+            <property name="statusTip">
+             <string>List of files available for restoring</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <layout class="QGridLayout">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="selTmpAllBtn">
+              <property name="statusTip">
+               <string>Select all temporary files</string>
+              </property>
+              <property name="text">
+               <string>Select all</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="0">
+           <widget class="ExtendedLineEdit" name="restore_search">
+            <property name="text">
+             <string>Search</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="1">
+         <layout class="QGridLayout">
+          <item row="5" column="0">
+           <widget class="QLineEdit" name="path_of_syncfile">
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
+            <property name="statusTip">
+             <string>Original file path</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QCheckBox" name="to_black_list">
+            <property name="statusTip">
+             <string>Add file to blacklist</string>
+            </property>
+            <property name="text">
+             <string>Do not synchronise this file again (add to blacklist)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Date and time of synchronisation:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Original file path:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>&lt;b&gt;About the selected item:&lt;/b&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QDateTimeEdit" name="date_of_sync">
+            <property name="statusTip">
+             <string>Date and time of synchronisation</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="displayFormat">
+             <string>yyyy.MM.dd-hh:mm:ss</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="11" column="0">
+           <layout class="QGridLayout">
+            <item row="0" column="1">
+             <widget class="QPushButton" name="restore_files">
+              <property name="statusTip">
+               <string>Restore selected files</string>
+              </property>
+              <property name="text">
+               <string>Restore</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../resources.qrc">
+                <normaloff>:/new/prefix1/images/Restore.png</normaloff>:/new/prefix1/images/Restore.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="8" column="0">
+           <widget class="MTAdvancedGroupBox" name="restore_select_gb" native="true"/>
+          </item>
+          <item row="9" column="0">
+           <widget class="MTAdvancedGroupBox" name="restore_clean_gb" native="true"/>
+          </item>
+          <item row="10" column="0">
+           <widget class="QGroupBox" name="restore_clean_auto_gb">
+            <property name="title">
+             <string>Clean temporary files automatically after each sync</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <layout class="QGridLayout" name="gridLayout8">
+             <item row="0" column="0">
+              <widget class="QLabel" name="keep_auto">
+               <property name="text">
+                <string>Keep </string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QSpinBox" name="restore_clean_auto_files">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>3</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="files_auto">
+               <property name="text">
+                <string> latest versions</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_3">
+       <layout class="QGridLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <layout class="QGridLayout">
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>&lt;b&gt;Files in the blacklist:&lt;/b&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="pixmap">
+             <pixmap resource="../resources.qrc">:/new/prefix1/images/file.png</pixmap>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <widget class="QListWidget" name="blacklist_fileslist">
+          <property name="statusTip">
+           <string>List of files in the blacklist</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <layout class="QGridLayout">
+          <item row="0" column="2">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="blacklist_removefile">
+            <property name="statusTip">
+             <string>Remove file from blacklist</string>
+            </property>
+            <property name="text">
+             <string>Remove</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="blacklist_addfile">
+            <property name="statusTip">
+             <string>Add file to black list</string>
+            </property>
+            <property name="text">
+             <string>Add</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="3" column="0">
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <layout class="QGridLayout">
+          <item row="0" column="2">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>&lt;b&gt;Folders in the blacklist:&lt;/b&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="pixmap">
+             <pixmap resource="../resources.qrc">:/new/prefix1/images/folder_16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="5" column="0">
+         <widget class="QListWidget" name="blacklist_folderslist">
+          <property name="statusTip">
+           <string>List of folders in the blacklist</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <layout class="QGridLayout">
+          <item row="0" column="2">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="blacklist_removefolder">
+            <property name="statusTip">
+             <string>Remove folder from blacklist</string>
+            </property>
+            <property name="text">
+             <string>Remove</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="blacklist_addfolder">
+            <property name="statusTip">
+             <string>Add folder to blacklist</string>
+            </property>
+            <property name="text">
+             <string>Add</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="9" column="0">
+         <widget class="QListWidget" name="blacklist_extslist">
+          <property name="statusTip">
+           <string>List of extensions in the blacklist</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>&lt;b&gt;Extensions in the blacklist:&lt;/b&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="0">
+         <layout class="QHBoxLayout">
+          <item>
+           <widget class="QPushButton" name="blacklist_addext">
+            <property name="statusTip">
+             <string>Add extension to blacklist</string>
+            </property>
+            <property name="text">
+             <string>Add</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="blacklist_removeext">
+            <property name="statusTip">
+             <string>Remove extension from blacklist</string>
+            </property>
+            <property name="text">
+             <string>Remove</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_4">
+       <layout class="QVBoxLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
-         <widget class="ExtendedTreeWidget" name="navigation_tree">
-          <attribute name="headerVisible">
-           <bool>false</bool>
-          </attribute>
-          <column>
-           <property name="text">
-            <string>Navigation</string>
-           </property>
-          </column>
+         <widget class="QTabWidget" name="multi_tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab_2">
+           <attribute name="icon">
+            <iconset resource="../resources.qrc">
+             <normaloff>:/new/prefix1/images/multisync.png</normaloff>:/new/prefix1/images/multisync.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string>Sync #1</string>
+           </attribute>
+           <attribute name="toolTip">
+            <string>Sync #1</string>
+           </attribute>
+          </widget>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QStackedWidget" name="main_stckw">
-       <property name="currentIndex">
-        <number>1</number>
-       </property>
-       <widget class="QWidget" name="synchronise_page">
-        <layout class="QGridLayout" name="gridLayout_2">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>2</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QStackedWidget" name="sync_stckw">
-           <widget class="QWidget" name="page"/>
-           <widget class="QWidget" name="page_2"/>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="multisync_page">
-        <layout class="QVBoxLayout">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QTabWidget" name="multi_tabWidget">
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <widget class="QWidget" name="tab_2">
-            <attribute name="icon">
-             <iconset>
-              <normaloff>:/new/prefix1/images/multisync.png</normaloff>:/new/prefix1/images/multisync.png</iconset>
-            </attribute>
-            <attribute name="title">
-             <string>Sync #1</string>
-            </attribute>
-            <attribute name="toolTip">
-             <string>Sync #1</string>
-            </attribute>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="scheduler_page">
-        <layout class="QGridLayout">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>3</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QSplitter" name="splitter">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <widget class="QWidget" name="layoutWidget">
-            <layout class="QVBoxLayout">
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
-               <property name="spacing">
-                <number>5</number>
-               </property>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_3">
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_3">
-                   <item>
-                    <widget class="QLabel" name="label_12">
-                     <property name="text">
-                      <string/>
-                     </property>
-                     <property name="pixmap">
-                      <pixmap>:/new/prefix1/images/scheduler16.png</pixmap>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_13">
-                     <property name="text">
-                      <string>&lt;b&gt;Schedules:&lt;/b&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <spacer name="verticalSpacer_2">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <widget class="QTableWidget" name="tw_schedules">
-                 <property name="statusTip">
-                  <string>List of schedules</string>
-                 </property>
-                 <property name="editTriggers">
-                  <set>QAbstractItemView::EditKeyPressed</set>
-                 </property>
-                 <property name="showGrid">
-                  <bool>false</bool>
-                 </property>
-                 <property name="columnCount">
-                  <number>2</number>
-                 </property>
-                 <column/>
-                 <column/>
-                </widget>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_2">
-                 <property name="spacing">
-                  <number>5</number>
-                 </property>
-                 <item>
-                  <widget class="QPushButton" name="add_schedule">
-                   <property name="statusTip">
-                    <string>Add a schedule</string>
-                   </property>
-                   <property name="text">
-                    <string>Add</string>
-                   </property>
-                   <property name="icon">
-                    <iconset>
-                     <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="remove_schedule">
-                   <property name="statusTip">
-                    <string>Remove the current schedule</string>
-                   </property>
-                   <property name="text">
-                    <string>Remove</string>
-                   </property>
-                   <property name="icon">
-                    <iconset>
-                     <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="verticalSpacer">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="startall_schedules">
-                   <property name="statusTip">
-                    <string>Start all schedules</string>
-                   </property>
-                   <property name="text">
-                    <string>Start all</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="stopall_schedules">
-                   <property name="statusTip">
-                    <string>Stop all schedules</string>
-                   </property>
-                   <property name="text">
-                    <string>Stop all</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QGroupBox" name="schedGroupBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="title">
-             <string>Schedule options</string>
-            </property>
-            <layout class="QGridLayout">
-             <property name="leftMargin">
-              <number>5</number>
-             </property>
-             <property name="topMargin">
-              <number>6</number>
-             </property>
-             <property name="rightMargin">
-              <number>5</number>
-             </property>
-             <property name="bottomMargin">
-              <number>5</number>
-             </property>
-             <property name="spacing">
-              <number>5</number>
-             </property>
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="scheduler_sched_name_grid">
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="sched_name">
-                 <property name="statusTip">
-                  <string>Set schedule name</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <spacer>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="0">
-                <spacer>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item row="1" column="0">
-              <layout class="QHBoxLayout">
-               <property name="spacing">
-                <number>5</number>
-               </property>
-               <item>
-                <layout class="QVBoxLayout">
-                 <item>
-                  <layout class="QGridLayout" name="scheduer_tabs_grid">
-                   <item row="1" column="1">
-                    <widget class="QListWidget" name="sched_multitab_lw">
-                     <property name="statusTip">
-                      <string>Select multisyncs to use</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QListWidget" name="sched_tab_lw">
-                     <property name="statusTip">
-                      <string>Select syncs to use</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_10">
-                     <property name="text">
-                      <string>&lt;b&gt;Syncs to use:&lt;/b&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QLabel" name="label_11">
-                     <property name="text">
-                      <string>&lt;b&gt;Multisyncs to use:&lt;/b&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QGridLayout" name="scheduler_start_btn_grid">
-                   <item row="0" column="2">
-                    <widget class="QPushButton" name="sched_stop">
-                     <property name="statusTip">
-                      <string>Stop schedule</string>
-                     </property>
-                     <property name="text">
-                      <string>Stop</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QPushButton" name="sched_start">
-                     <property name="statusTip">
-                      <string>Start schedule</string>
-                     </property>
-                     <property name="text">
-                      <string>Start</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="3">
-                    <spacer>
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <widget class="QTabWidget" name="timing_tabWidget">
-                 <property name="currentIndex">
-                  <number>0</number>
-                 </property>
-                 <widget class="QWidget" name="sync_times">
-                  <attribute name="title">
-                   <string>Sync times</string>
-                  </attribute>
-                  <layout class="QVBoxLayout">
-                   <property name="spacing">
-                    <number>5</number>
-                   </property>
-                   <property name="margin">
-                    <number>6</number>
-                   </property>
-                   <item>
-                    <widget class="QLabel" name="label_15">
-                     <property name="text">
-                      <string>&lt;b&gt;Times:&lt;/b&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QListWidget" name="sched_time_lw">
-                     <property name="statusTip">
-                      <string>List of sync times</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <layout class="QGridLayout" name="scheduler_add_sync_time_grid">
-                     <item row="0" column="2">
-                      <spacer>
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QPushButton" name="sched_add_time">
-                       <property name="statusTip">
-                        <string>Add a sync time</string>
-                       </property>
-                       <property name="text">
-                        <string>Add</string>
-                       </property>
-                       <property name="icon">
-                        <iconset>
-                         <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QTimeEdit" name="sched_time_edit">
-                       <property name="statusTip">
-                        <string>Set sync time</string>
-                       </property>
-                       <property name="displayFormat">
-                        <string>H:mm</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="3">
-                      <widget class="QPushButton" name="sched_remove_time">
-                       <property name="statusTip">
-                        <string>Remove the selected sync times</string>
-                       </property>
-                       <property name="text">
-                        <string>Remove</string>
-                       </property>
-                       <property name="icon">
-                        <iconset>
-                         <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <widget class="MTAdvancedGroupBox" name="sched_dates_agb" native="true"/>
-                   </item>
-                  </layout>
+      <widget class="QWidget" name="page_5">
+       <layout class="QGridLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QWidget" name="layoutWidget">
+           <layout class="QVBoxLayout">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <property name="spacing">
+               <number>5</number>
+              </property>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_3">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_3">
+                  <item>
+                   <widget class="QLabel" name="label_12">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="pixmap">
+                     <pixmap resource="../resources.qrc">:/new/prefix1/images/scheduler16.png</pixmap>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_13">
+                    <property name="text">
+                     <string>&lt;b&gt;Schedules:&lt;/b&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QTableWidget" name="tw_schedules">
+                <property name="statusTip">
+                 <string>List of schedules</string>
+                </property>
+                <property name="editTriggers">
+                 <set>QAbstractItemView::EditKeyPressed</set>
+                </property>
+                <property name="showGrid">
+                 <bool>false</bool>
+                </property>
+                <property name="columnCount">
+                 <number>2</number>
+                </property>
+                <column/>
+                <column/>
+               </widget>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_2">
+                <property name="spacing">
+                 <number>5</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="add_schedule">
+                  <property name="statusTip">
+                   <string>Add a schedule</string>
+                  </property>
+                  <property name="text">
+                   <string>Add</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
+                  </property>
                  </widget>
-                 <widget class="QWidget" name="periodically">
-                  <attribute name="title">
-                   <string>Synchronise periodically</string>
-                  </attribute>
-                  <layout class="QHBoxLayout">
-                   <item>
-                    <spacer>
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_19">
-                     <property name="text">
-                      <string>Synchronise every</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QSpinBox" name="sched_interval_spin">
-                     <property name="minimum">
-                      <number>1</number>
-                     </property>
-                     <property name="maximum">
-                      <number>9999999</number>
-                     </property>
-                     <property name="value">
-                      <number>5</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_14">
-                     <property name="text">
-                      <string>minute(s)</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer>
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="remove_schedule">
+                  <property name="statusTip">
+                   <string>Remove the current schedule</string>
+                  </property>
+                  <property name="text">
+                   <string>Remove</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
+                  </property>
                  </widget>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="startall_schedules">
+                  <property name="statusTip">
+                   <string>Start all schedules</string>
+                  </property>
+                  <property name="text">
+                   <string>Start all</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="stopall_schedules">
+                  <property name="statusTip">
+                   <string>Stop all schedules</string>
+                  </property>
+                  <property name="text">
+                   <string>Stop all</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="page_6">
-        <layout class="QGridLayout">
-         <property name="margin">
-          <number>2</number>
-         </property>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="syncview_page">
-        <layout class="QVBoxLayout">
-         <property name="margin">
-          <number>0</number>
-         </property>
-        </layout>
-       </widget>
+          <widget class="QGroupBox" name="schedGroupBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="title">
+            <string>Schedule options</string>
+           </property>
+           <layout class="QGridLayout">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
+             <number>5</number>
+            </property>
+            <property name="spacing">
+             <number>5</number>
+            </property>
+            <item row="0" column="0">
+             <layout class="QGridLayout">
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="sched_name">
+                <property name="statusTip">
+                 <string>Set schedule name</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <spacer>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="0">
+               <spacer>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="1" column="0">
+             <layout class="QHBoxLayout">
+              <property name="spacing">
+               <number>5</number>
+              </property>
+              <item>
+               <layout class="QVBoxLayout">
+                <item>
+                 <layout class="QGridLayout">
+                  <item row="1" column="1">
+                   <widget class="QListWidget" name="sched_multitab_lw">
+                    <property name="statusTip">
+                     <string>Select multisyncs to use</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QListWidget" name="sched_tab_lw">
+                    <property name="statusTip">
+                     <string>Select syncs to use</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_10">
+                    <property name="text">
+                     <string>&lt;b&gt;Syncs to use:&lt;/b&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="label_11">
+                    <property name="text">
+                     <string>&lt;b&gt;Multisyncs to use:&lt;/b&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QGridLayout">
+                  <item row="0" column="2">
+                   <widget class="QPushButton" name="sched_stop">
+                    <property name="statusTip">
+                     <string>Stop schedule</string>
+                    </property>
+                    <property name="text">
+                     <string>Stop</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QPushButton" name="sched_start">
+                    <property name="statusTip">
+                     <string>Start schedule</string>
+                    </property>
+                    <property name="text">
+                     <string>Start</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="3">
+                   <spacer>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QTabWidget" name="timing_tabWidget">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <widget class="QWidget" name="sync_times">
+                 <attribute name="title">
+                  <string>Sync times</string>
+                 </attribute>
+                 <layout class="QVBoxLayout">
+                  <property name="spacing">
+                   <number>5</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>6</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>6</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>6</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>6</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="label_15">
+                    <property name="text">
+                     <string>&lt;b&gt;Times:&lt;/b&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QListWidget" name="sched_time_lw">
+                    <property name="statusTip">
+                     <string>List of sync times</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QGridLayout">
+                    <item row="0" column="2">
+                     <spacer>
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QPushButton" name="sched_add_time">
+                      <property name="statusTip">
+                       <string>Add a sync time</string>
+                      </property>
+                      <property name="text">
+                       <string>Add</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="../resources.qrc">
+                        <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QTimeEdit" name="sched_time_edit">
+                      <property name="statusTip">
+                       <string>Set sync time</string>
+                      </property>
+                      <property name="displayFormat">
+                       <string>H:mm</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="3">
+                     <widget class="QPushButton" name="sched_remove_time">
+                      <property name="statusTip">
+                       <string>Remove the selected sync times</string>
+                      </property>
+                      <property name="text">
+                       <string>Remove</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="../resources.qrc">
+                        <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="MTAdvancedGroupBox" name="sched_dates_agb" native="true"/>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="periodically">
+                 <attribute name="title">
+                  <string>Synchronise periodically</string>
+                 </attribute>
+                 <layout class="QHBoxLayout">
+                  <item>
+                   <spacer>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_19">
+                    <property name="text">
+                     <string>Synchronise every</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="sched_interval_spin">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>9999999</number>
+                    </property>
+                    <property name="value">
+                     <number>5</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_14">
+                    <property name="text">
+                     <string>minute(s)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_6">
+       <layout class="QGridLayout">
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item row="0" column="0" colspan="3">
+         <layout class="QHBoxLayout">
+          <item>
+           <widget class="QLabel" name="label_18">
+            <property name="pixmap">
+             <pixmap resource="../resources.qrc">:/new/prefix1/images/filter16.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_16">
+            <property name="text">
+             <string>&lt;b&gt;Filters:&lt;/b&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0" rowspan="3" colspan="3">
+         <widget class="QListWidget" name="filter_list">
+          <property name="statusTip">
+           <string>List of filters</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3" colspan="3">
+         <widget class="QLabel" name="label_17">
+          <property name="text">
+           <string>&lt;b&gt;Extensions in the selected filter:&lt;/b&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3" colspan="3">
+         <widget class="QListWidget" name="filter_extensions_list">
+          <property name="statusTip">
+           <string>List of extensions in the selected filter</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="3" column="4">
+         <widget class="QPushButton" name="filter_add_extension">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="statusTip">
+           <string>Add an extension</string>
+          </property>
+          <property name="text">
+           <string>Add</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources.qrc">
+            <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="5">
+         <widget class="QPushButton" name="filter_remove_extension">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="statusTip">
+           <string>Remove the current extension</string>
+          </property>
+          <property name="text">
+           <string>Remove</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources.qrc">
+            <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="filter_add">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="statusTip">
+           <string>Add a filter</string>
+          </property>
+          <property name="text">
+           <string>Add</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources.qrc">
+            <normaloff>:/new/prefix1/images/add.png</normaloff>:/new/prefix1/images/add.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QPushButton" name="filter_remove">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="statusTip">
+           <string>Remove the current filter</string>
+          </property>
+          <property name="text">
+           <string>Remove</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources.qrc">
+            <normaloff>:/new/prefix1/images/remove.png</normaloff>:/new/prefix1/images/remove.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_7">
+       <layout class="QVBoxLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout">
+          <item>
+           <layout class="QGridLayout">
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_21">
+              <property name="text">
+               <string>&lt;b&gt;Syncs:&lt;/b&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_24">
+              <property name="pixmap">
+               <pixmap resource="../resources.qrc">:/new/prefix1/images/Synkron16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="syncs_syncview">
+            <property name="statusTip">
+             <string>List of syncs</string>
+            </property>
+            <property name="columnCount">
+             <number>1</number>
+            </property>
+            <column/>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout">
+          <item>
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QLabel" name="label_23">
+              <property name="pixmap">
+               <pixmap resource="../resources.qrc">:/new/prefix1/images/multisync_16.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_22">
+              <property name="text">
+               <string>&lt;b&gt;Multisyncs:&lt;/b&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="multisyncs_syncview">
+            <property name="statusTip">
+             <string>List of multisyncs</string>
+            </property>
+            <property name="columnCount">
+             <number>1</number>
+            </property>
+            <column/>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -599,78 +1359,80 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>867</width>
-     <height>22</height>
+     <width>663</width>
+     <height>20</height>
     </rect>
    </property>
-   <widget class="QMenu" name="file_menu">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="sync_all_act"/>
+    <addaction name="actionSync_all"/>
     <addaction name="separator"/>
-    <addaction name="quit_act"/>
+    <addaction name="actionQuit"/>
    </widget>
-   <widget class="QMenu" name="help_menu">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="check_for_updates_act"/>
-    <addaction name="about_act"/>
+    <addaction name="actionCheck_for_updates"/>
+    <addaction name="actionAbout"/>
    </widget>
-   <widget class="QMenu" name="view_menu">
+   <widget class="QMenu" name="menuView">
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="synchronise_act"/>
-    <addaction name="multisync_act"/>
-    <addaction name="exceptions_act"/>
-    <addaction name="scheduler_act"/>
-    <addaction name="restore_act"/>
+    <addaction name="actionSynchronise"/>
+    <addaction name="actionMultisync"/>
+    <addaction name="actionScheduler"/>
+    <addaction name="actionRestore"/>
+    <addaction name="actionBlacklist"/>
+    <addaction name="actionFilters"/>
    </widget>
-   <widget class="QMenu" name="options_menu">
+   <widget class="QMenu" name="menuOptions">
     <property name="title">
      <string>Options</string>
     </property>
-    <addaction name="run_hidden_act"/>
-    <addaction name="disable_tray_messages_act"/>
-    <addaction name="change_temp_act"/>
+    <addaction name="actionRun_hidden"/>
+    <addaction name="actionDisable_tray_messages"/>
+    <addaction name="actionChange_temp"/>
     <addaction name="separator"/>
-    <addaction name="sync_at_launch_act"/>
-    <addaction name="quit_after_sync_act"/>
-    <addaction name="shut_down_after_sync_act"/>
+    <addaction name="actionSync_at_launch"/>
+    <addaction name="actionQuit_after_sync"/>
+    <addaction name="actionShut_down_after_sync"/>
     <addaction name="separator"/>
-    <addaction name="change_language_act"/>
+    <addaction name="actionChange_language"/>
    </widget>
-   <widget class="QMenu" name="tab_menu">
+   <widget class="QMenu" name="menuTab">
     <property name="title">
      <string>Tab</string>
     </property>
-    <addaction name="new_tab_act"/>
-    <addaction name="close_tab_act"/>
+    <addaction name="actionNew_sync"/>
+    <addaction name="actionClose_sync"/>
     <addaction name="separator"/>
-    <addaction name="load_tab_act"/>
-    <addaction name="save_tab_act"/>
-    <addaction name="save_tab_as_act"/>
+    <addaction name="actionLoad_tab"/>
+    <addaction name="actionSave_tab"/>
+    <addaction name="actionSave_tab_as"/>
     <addaction name="separator"/>
-    <addaction name="save_log_act"/>
+    <addaction name="actionSave_log"/>
     <addaction name="separator"/>
-    <addaction name="run_sync_act"/>
-    <addaction name="run_analyse_act"/>
-    <addaction name="show_advanced_act"/>
+    <addaction name="actionSync"/>
+    <addaction name="actionAnalyse"/>
+    <addaction name="actionAdvanced"/>
    </widget>
-   <addaction name="file_menu"/>
-   <addaction name="tab_menu"/>
-   <addaction name="view_menu"/>
-   <addaction name="options_menu"/>
-   <addaction name="help_menu"/>
+   <addaction name="menuFile"/>
+   <addaction name="menuTab"/>
+   <addaction name="menuView"/>
+   <addaction name="menuOptions"/>
+   <addaction name="menuHelp"/>
   </widget>
-  <widget class="QToolBar" name="toolbar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
    <property name="movable">
-    <bool>false</bool>
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="iconSize">
     <size>
@@ -678,8 +1440,8 @@
      <height>32</height>
     </size>
    </property>
-   <property name="floatable">
-    <bool>false</bool>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonIconOnly</enum>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -687,12 +1449,20 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="new_tab_act"/>
-   <addaction name="close_tab_act"/>
+   <addaction name="actionNew_sync"/>
+   <addaction name="actionClose_sync"/>
+   <addaction name="separator"/>
+   <addaction name="actionSynchronise"/>
+   <addaction name="actionMultisync"/>
+   <addaction name="actionSyncView"/>
+   <addaction name="actionScheduler"/>
+   <addaction name="actionRestore"/>
+   <addaction name="actionBlacklist"/>
+   <addaction name="actionFilters"/>
   </widget>
-  <action name="quit_act">
+  <action name="actionQuit">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/quit.png</normaloff>:/new/prefix1/images/quit.png</iconset>
    </property>
    <property name="text">
@@ -705,9 +1475,9 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="about_act">
+  <action name="actionAbout">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/Synkron128.png</normaloff>:/new/prefix1/images/Synkron128.png</iconset>
    </property>
    <property name="text">
@@ -719,7 +1489,7 @@
   </action>
   <action name="actionFolder_1">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/folder.png</normaloff>:/new/prefix1/images/folder.png</iconset>
    </property>
    <property name="text">
@@ -728,17 +1498,17 @@
   </action>
   <action name="actionFolder_2">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/folder.png</normaloff>:/new/prefix1/images/folder.png</iconset>
    </property>
    <property name="text">
     <string>Set synchronization folder 2</string>
    </property>
   </action>
-  <action name="new_tab_act">
+  <action name="actionNew_sync">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/tab-new_32.png</normaloff>:/images/tab-new_32.png</iconset>
+     <normaloff>:/new/prefix1/images/tab-new_32.png</normaloff>:/new/prefix1/images/tab-new_32.png</iconset>
    </property>
    <property name="text">
     <string>New tab</string>
@@ -750,10 +1520,10 @@
     <string>Ctrl+T</string>
    </property>
   </action>
-  <action name="close_tab_act">
+  <action name="actionClose_sync">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/tab-remove_32.png</normaloff>:/images/tab-remove_32.png</iconset>
+     <normaloff>:/new/prefix1/images/tab-remove_32.png</normaloff>:/new/prefix1/images/tab-remove_32.png</iconset>
    </property>
    <property name="text">
     <string>Close tab</string>
@@ -765,25 +1535,31 @@
     <string>Ctrl+W</string>
    </property>
   </action>
-  <action name="synchronise_act">
+  <action name="actionSynchronise">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="checked">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/Synchronise.png</normaloff>:/images/Synchronise.png</iconset>
+     <normaloff>:/new/prefix1/images/Synchronise.png</normaloff>:/new/prefix1/images/Synchronise.png</iconset>
    </property>
    <property name="text">
-    <string>Syncs</string>
+    <string>Synchronise</string>
    </property>
    <property name="statusTip">
     <string>Go to Synchronise</string>
    </property>
   </action>
-  <action name="restore_act">
+  <action name="actionRestore">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/Restore.png</normaloff>:/images/Restore.png</iconset>
+     <normaloff>:/new/prefix1/images/Restore.png</normaloff>:/new/prefix1/images/Restore.png</iconset>
    </property>
    <property name="text">
     <string>Restore</string>
@@ -792,19 +1568,22 @@
     <string>Go to Restore</string>
    </property>
   </action>
-  <action name="exceptions_act">
+  <action name="actionBlacklist">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/blacklist.png</normaloff>:/images/blacklist.png</iconset>
+     <normaloff>:/new/prefix1/images/blacklist.png</normaloff>:/new/prefix1/images/blacklist.png</iconset>
    </property>
    <property name="text">
-    <string>Exceptions</string>
+    <string>Blacklist</string>
    </property>
    <property name="statusTip">
     <string>Go to Blacklist</string>
    </property>
   </action>
-  <action name="run_hidden_act">
+  <action name="actionRun_hidden">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -815,9 +1594,9 @@
     <string>Start Synkron hidden</string>
    </property>
   </action>
-  <action name="sync_all_act">
+  <action name="actionSync_all">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/sync_all.png</normaloff>:/new/prefix1/images/sync_all.png</iconset>
    </property>
    <property name="text">
@@ -827,9 +1606,9 @@
     <string>Sync all</string>
    </property>
   </action>
-  <action name="check_for_updates_act">
+  <action name="actionCheck_for_updates">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/reload.png</normaloff>:/new/prefix1/images/reload.png</iconset>
    </property>
    <property name="text">
@@ -839,22 +1618,28 @@
     <string>Check for updates</string>
    </property>
   </action>
-  <action name="multisync_act">
+  <action name="actionMultisync">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/multisync.png</normaloff>:/images/multisync.png</iconset>
+     <normaloff>:/new/prefix1/images/multisync.png</normaloff>:/new/prefix1/images/multisync.png</iconset>
    </property>
    <property name="text">
-    <string>Multisyncs</string>
+    <string>Multisync</string>
    </property>
    <property name="statusTip">
     <string>Go to Multisync</string>
    </property>
   </action>
-  <action name="scheduler_act">
+  <action name="actionScheduler">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/scheduler64.png</normaloff>:/images/scheduler64.png</iconset>
+     <normaloff>:/new/prefix1/images/scheduler64.png</normaloff>:/new/prefix1/images/scheduler64.png</iconset>
    </property>
    <property name="text">
     <string>Scheduler</string>
@@ -863,9 +1648,9 @@
     <string>Go to Scheduler</string>
    </property>
   </action>
-  <action name="change_language_act">
+  <action name="actionChange_language">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/locale.png</normaloff>:/new/prefix1/images/locale.png</iconset>
    </property>
    <property name="text">
@@ -875,7 +1660,22 @@
     <string>Change language</string>
    </property>
   </action>
-  <action name="disable_tray_messages_act">
+  <action name="actionFilters">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/new/prefix1/images/filter32.png</normaloff>:/new/prefix1/images/filter32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Filters</string>
+   </property>
+   <property name="statusTip">
+    <string>Go to Filters</string>
+   </property>
+  </action>
+  <action name="actionDisable_tray_messages">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -886,21 +1686,21 @@
     <string>Disable tray icon messages</string>
    </property>
   </action>
-  <action name="save_log_act">
+  <action name="actionSave_log">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/save.png</normaloff>:/new/prefix1/images/save.png</iconset>
    </property>
    <property name="text">
     <string>Save log</string>
    </property>
   </action>
-  <action name="syncview_act">
+  <action name="actionSyncView">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/syncview_48.png</normaloff>:/new/prefix1/images/syncview_48.png</iconset>
    </property>
    <property name="text">
@@ -910,7 +1710,7 @@
     <string>Go to SyncView</string>
    </property>
   </action>
-  <action name="sync_at_launch_act">
+  <action name="actionSync_at_launch">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -921,7 +1721,7 @@
     <string>Sync all tabs at launch</string>
    </property>
   </action>
-  <action name="shut_down_after_sync_act">
+  <action name="actionShut_down_after_sync">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -932,7 +1732,7 @@
     <string>Shut down computer after synchronisation finishes</string>
    </property>
   </action>
-  <action name="quit_after_sync_act">
+  <action name="actionQuit_after_sync">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -943,60 +1743,60 @@
     <string>Quit Synkron after synchronisation finishes</string>
    </property>
   </action>
-  <action name="save_tab_act">
+  <action name="actionSave_tab">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/save.png</normaloff>:/new/prefix1/images/save.png</iconset>
    </property>
    <property name="text">
     <string>Save tab</string>
    </property>
   </action>
-  <action name="load_tab_act">
+  <action name="actionLoad_tab">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/open.png</normaloff>:/new/prefix1/images/open.png</iconset>
    </property>
    <property name="text">
     <string>Load tab</string>
    </property>
   </action>
-  <action name="save_tab_as_act">
+  <action name="actionSave_tab_as">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources.qrc">
      <normaloff>:/new/prefix1/images/save-as.png</normaloff>:/new/prefix1/images/save-as.png</iconset>
    </property>
    <property name="text">
     <string>Save tab as</string>
    </property>
   </action>
-  <action name="change_temp_act">
+  <action name="actionChange_temp">
    <property name="text">
     <string>Change temporary folder path</string>
    </property>
   </action>
-  <action name="run_sync_act">
+  <action name="actionSync">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/sync.png</normaloff>:/images/sync.png</iconset>
+     <normaloff>:/new/prefix1/images/sync22.png</normaloff>:/new/prefix1/images/sync22.png</iconset>
    </property>
    <property name="text">
     <string>Sync</string>
    </property>
   </action>
-  <action name="run_analyse_act">
+  <action name="actionAnalyse">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/analyse_16.png</normaloff>:/images/analyse_16.png</iconset>
+     <normaloff>:/new/prefix1/images/analyse_16.png</normaloff>:/new/prefix1/images/analyse_16.png</iconset>
    </property>
    <property name="text">
     <string>Analyse</string>
    </property>
   </action>
-  <action name="show_advanced_act">
+  <action name="actionAdvanced">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/images/configure16.png</normaloff>:/images/configure16.png</iconset>
+     <normaloff>:/new/prefix1/images/configure16.png</normaloff>:/new/prefix1/images/configure16.png</iconset>
    </property>
    <property name="text">
     <string>Advanced</string>
@@ -1005,15 +1805,20 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>ExtendedLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>extendedlineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>MTAdvancedGroupBox</class>
    <extends>QWidget</extends>
-   <header>src/mtadvancedgroupbox.h</header>
+   <header>mtadvancedgroupbox.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ExtendedTreeWidget</class>
-   <extends>QTreeWidget</extends>
-   <header location="global">src/extendedtreewidget.h</header>
+   <class>ExtendedListWidget</class>
+   <extends>QListWidget</extends>
+   <header>extendedlistwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

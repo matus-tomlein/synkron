@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/new/prefix1">
         <file>images/Restore.png</file>
         <file>images/Restore16.png</file>
         <file>images/Synchronise.png</file>

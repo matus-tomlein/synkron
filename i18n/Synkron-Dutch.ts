@@ -448,6 +448,14 @@
         <source>Dutch</source>
         <translation>Nederlands</translation>
     </message>
+    <message>
+        <source>Romanian</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turkish</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MTAdvancedGroupBox</name>
@@ -1771,6 +1779,14 @@
         <translation>Kan bestand %1:
 %2 niet wegschrijven.</translation>
     </message>
+    <message>
+        <source>Ignore 1 hour difference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Due to Daylight Saving Time (DST), files may have 1 hour delta</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SyncFolder</name>
@@ -2169,6 +2185,14 @@
 %2.</source>
         <translation>Kan bestand %1:
 %2 niet wegschrijven.</translation>
+    </message>
+    <message>
+        <source>Due to Daylight Saving Time (DST), files may have 1 hour delta</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore 1 hour difference</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

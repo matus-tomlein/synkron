@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Icon=Synkron128
+Name=Synkron
+Comment=A folder synchronization tool
+Comment[ru]=Средство для синхронизации папок
+Comment[uk]=Засіб синхронізації тек
+Categories=Utility;
+Exec=synkron
+StartupNotify=false
+Terminal=false

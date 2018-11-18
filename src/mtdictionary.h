@@ -1,6 +1,6 @@
 /*******************************************************************
  This file is part of Synkron
- Copyright (C) 2005-2010 Matus Tomlein
+ Copyright (C) 2009 Matus Tomlein
 
  Synkron is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public Licence
@@ -16,9 +16,6 @@
  along with Synkron; if not, write to the Free Software Foundation,
  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ********************************************************************/
-
-#ifndef MTDICTIONARY_H
-#define MTDICTIONARY_H
 
 #include <QStringList>
 
@@ -153,7 +150,7 @@ public:
     };
     Key key(int i) const { if (i >= 0 && i < dict_keys.count()) return dict_keys.at(i); else return Key(); };
     Key firstKey(const T & value) const {
-        return dict_values.indexOf(value) < 0 ? Key() : dict_keys.at(dict_values.indexOf(value));
+        return dict_values.indexOf(value) < 0 ? value : dict_keys.at(dict_values.indexOf(value));
     };
     QList<Key> keys() const { return dict_keys; };
     int indexOfKey(const Key & key) const { return dict_keys.indexOf(key); };
@@ -161,8 +158,10 @@ public:
         return dict_keys.contains(key);
     };
     T value(int i) const { if (i >= 0 && i < dict_keys.count()) return dict_values.at(i); else return T(); };
-    inline T value(const Key & key, const T & default_value = T()) const { return valueForKey(key, default_value); };
-    T valueForKey(const Key & key, const T & default_value = T()) const {
+    T value(const Key & key) const {
+        return dict_keys.indexOf(key) < 0 ? key : dict_values.at(dict_keys.indexOf(key));
+    };
+    T value(const Key & key, const T & default_value) const {
         return dict_keys.indexOf(key) < 0 ? default_value : dict_values.at(dict_keys.indexOf(key));
     };
     QList<T> values() const { return dict_values; };
@@ -196,5 +195,3 @@ private:
     QList<Key> dict_keys;
     QList<T> dict_values;
 };
-
-#endif // MTDICTIONARY_H

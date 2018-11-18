@@ -1,6 +1,6 @@
 /*******************************************************************
  This file is part of Synkron
- Copyright (C) 2005-2011 Matus Tomlein (matus.tomlein@gmail.com)
+ Copyright (C) 2005-2009 Matus Tomlein (matus.tomlein@gmail.com)
 
  Synkron is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public Licence
@@ -17,374 +17,480 @@
  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ********************************************************************/
 
-#include "ui_mainwindow.h"
 #include "mainwindow.h"
-#include "synctabform.h"
-#include "mttreewidgetitem.h"
-#include "module.h"
-#include "syncpage.h"
-#include "exceptionform.h"
-#include "exceptionbundle.h"
-#include "restoreform.h"
 
-#include <QActionGroup>
-#include <QMessageBox>
-#include <QMap>
-#include <QProgressBar>
-#include <QToolButton>
-
-MainWindow::MainWindow(Module * module, QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+enum MainStackedWidgetIndex
 {
-    ui->setupUi(this);
+    kMainStackedWidgetIndexSync = 0,
+    kMainStackedWidgetIndexMultisync = 3
+};
+
+MainWindow::MainWindow(QSettings * s)
+{
+    setupUi(this);
+
+    f_ver = 1.63;
+    ver = "1.6.3";
+
+    if (tr("LTR") == "RTL")
+    {
+        qApp->setLayoutDirection(Qt::RightToLeft);
+    }
 
 #ifdef Q_WS_MAC
+    actionBrushedMetalStyle = new QAction(tr("Use the brushed metal style"), this);
+    actionBrushedMetalStyle->setStatusTip(tr("Use the brushed metal style"));
+    actionBrushedMetalStyle->setCheckable(true);
+    menuOptions->addAction(actionBrushedMetalStyle);
 
-    ui->navigation_tree->setAttribute(Qt::WA_MacShowFocusRect, false);
-    ui->navigation_tree->setAutoFillBackground(true);
-
-    QPalette palette = ui->navigation_tree->palette();
-    QColor macSidebarColor(231, 237, 246);
-    // QColor macSidebarHighlightColor(168, 183, 205);
-    // palette.setColor(QPalette::Highlight, macSidebarHighlightColor);
-    palette.setColor(QPalette::Base, macSidebarColor);
-    ui->navigation_tree->setPalette(palette);
-
+    actionQuit->setMenuRole(QAction::QuitRole);
+    actionAbout->setMenuRole(QAction::AboutRole);
 #endif
 
-    ui->main_stckw->setCurrentIndex(0);
-    for (int i = ui->sync_stckw->count() - 1; i >= 0; --i) delete ui->sync_stckw->widget(i);
+#if QT_VERSION >= 0x050000
+    http = new QNetworkAccessManager(this);
+#else
+    http = new QHttp(this);
+#endif
 
-    sync_item_tab_map = new QMap<QTreeWidgetItem *, SyncTabForm *>;
-    this->module = module;
 
-    if (tr("LTR") == "RTL") { qApp->setLayoutDirection(Qt::RightToLeft); }
-    setUnifiedTitleAndToolBarOnMac(true);
-    createNavigationTreeActions();
-    connectActions();
+    http_buffer = new QBuffer(this);
 
-    exception_form = new ExceptionForm(nav_exceptions_item, module->getExceptions(), ui->main_stckw);
-    ui->main_stckw->addWidget(exception_form);
+    createActions();
+    createTrayIcon();
+    trayIcon->show();
+    trayIconVisible(true);
+    syncingAll = false;
+    sched_removed = false;
+    run_hidden = false;
+    no_closedialogue = false;
+    skip_close_event = false;
+    shown_manually = false;
 
-    restore_form = new RestoreForm(module->backupHandler());
-    ui->main_stckw->addWidget(restore_form);
+    tw_schedules->setHorizontalHeaderLabels(QStringList() << tr("Schedule name") << tr("Status"));
+    tw_schedules->verticalHeader()->hide();
 
-    // Toolbar menus +++
-    sync_act_menu = new QMenu;
-    QObject::connect(sync_act_menu, SIGNAL(aboutToShow()), this, SLOT(aboutToShowSyncActMenu()));
-    QObject::connect(sync_act_menu, SIGNAL(triggered(QAction*)), this, SLOT(syncActMenuActionTriggered(QAction*)));
-    ui->synchronise_act->setMenu(sync_act_menu);
+    temp_path = QString("%1/.Synkron").arg(QDir::homePath());
 
-    exception_act_menu = new QMenu;
-    QObject::connect(exception_act_menu, SIGNAL(aboutToShow()), this, SLOT(aboutToShowExceptionActMenu()));
-    QObject::connect(exception_act_menu, SIGNAL(triggered(QAction*)), this, SLOT(exceptionActMenuActionTriggered(QAction*)));
-    ui->exceptions_act->setMenu(exception_act_menu);
+#ifndef Q_WS_WIN
+#if QT_VERSION >= 0x050000
+    tw_schedules->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+#else
+    tw_schedules->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+#endif
 
-    QToolButton * view_toolbar_btn = new QToolButton(ui->toolbar);
-    view_toolbar_btn->setToolTip(tr("View"));
-    view_toolbar_btn->setIcon(QIcon(":/images/syncview_48.png"));
-    view_toolbar_btn->setMenu(ui->view_menu);
-    view_toolbar_btn->setPopupMode(QToolButton::InstantPopup);
-    view_toolbar_btn->setIconSize(QSize(32, 32));
-    view_toolbar_btn->setMaximumSize(32, 32);
+    actionShut_down_after_sync->setVisible(false);
+#else
+    tw_schedules->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+#endif
 
-    ui->toolbar->addSeparator();
-    ui->toolbar->addWidget(view_toolbar_btn);
-    // Toolbar menus ---
+#if QT_VERSION >= 0x050000
+    syncs_syncview->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+#else
+    syncs_syncview->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+#endif
+    syncs_syncview->horizontalHeader()->hide();
+    syncs_syncview->verticalHeader()->hide();
 
-    load();
-    makeReady();
+#if QT_VERSION >= 0x050000
+    multisyncs_syncview->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+#else
+    multisyncs_syncview->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+#endif
+    multisyncs_syncview->horizontalHeader()->hide();
+    multisyncs_syncview->verticalHeader()->hide();
+
+    actgrpView = new QActionGroup(this);
+    actgrpView->addAction(actionSynchronise);
+    actgrpView->addAction(actionRestore);
+    actgrpView->addAction(actionBlacklist);
+    actgrpView->addAction(actionMultisync);
+    actgrpView->addAction(actionScheduler);
+    actgrpView->addAction(actionFilters);
+    actgrpView->addAction(actionSyncView);
+
+    QActionGroup * options_actgrp = new QActionGroup(this);
+    options_actgrp->addAction(actionShut_down_after_sync);
+    options_actgrp->addAction(actionQuit_after_sync);
+    options_actgrp->addAction(actionSync_at_launch);
+    options_actgrp->setExclusive(false);
+
+    actionShow_icons_only = new QAction(tr("Show icons only"), this);
+    actionShow_icons_only->setCheckable(true);
+
+    QTranslator translator; translator.load(":/i18n/Synkron-i18n.qm");
+    synkron_i18n.insert("English", "English");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Slovak"), "Slovak");
+    synkron_i18n.insert(translator.translate("LanguageNames", "German"), "German");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Japanese"), "Japanese");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Arabic"), "Arabic");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Russian"), "Russian");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Spanish"), "Spanish");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Brazilian Portuguese"), "Brazilian Portuguese");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Polish"), "Polish");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Italian"), "Italian");
+    synkron_i18n.insert(translator.translate("LanguageNames", "French"), "French");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Valencian"), "Valencian");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Finnish"), "Finnish");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Czech"), "Czech");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Chinese"), "Chinese");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Dutch"), "Dutch");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Romanian"), "Romanian");
+    synkron_i18n.insert(translator.translate("LanguageNames", "Turkish"), "Turkish");
+
+    connect(actionAbout, SIGNAL(triggered()), this, SLOT(about()));
+    connect(actionNew_sync, SIGNAL(triggered()), this, SLOT(addTab()));
+    connect(actionClose_sync, SIGNAL(triggered()), this, SLOT(closeTab()));
+    connect(actgrpView, SIGNAL(triggered(QAction*)), this, SLOT(switchView(QAction*)));
+    connect(options_actgrp, SIGNAL(triggered(QAction*)), this, SLOT(optionClicked(QAction*)));
+    connect(restore_list, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(restoreItemChanged(QListWidgetItem *, QListWidgetItem *)));
+    connect(to_black_list, SIGNAL(stateChanged(int)), this, SLOT(addToBlackList(int)));
+    connect(restore_files, SIGNAL(released()), this, SLOT(restoreFiles()));
+    connect(blacklist_addfile, SIGNAL(released()), this, SLOT(addFileToBlacklist()));
+    connect(blacklist_removefile, SIGNAL(released()), this, SLOT(removeFileFromBlacklist()));
+    connect(blacklist_addfolder, SIGNAL(released()), this, SLOT(addFolderToBlacklist()));
+    connect(blacklist_removefolder, SIGNAL(released()), this, SLOT(removeFolderFromBlacklist()));
+    connect(blacklist_addext, SIGNAL(released()), this, SLOT(addExtToBlacklist()));
+    connect(blacklist_removeext, SIGNAL(released()), this, SLOT(removeExtFromBlacklist()));
+    connect(selTmpAllBtn, SIGNAL(released()), this, SLOT(selTmpAll()));
+    connect(actionRun_hidden, SIGNAL(toggled(bool)), this, SLOT(setRunHidden(bool)));
+    connect(actionSync_all, SIGNAL(triggered()), this, SLOT(syncAll()));
+    connect(actionCheck_for_updates, SIGNAL(triggered()), this, SLOT(checkForUpdates()));
+    connect(http, SIGNAL(done(bool)), this, SLOT(httpRequestFinished(bool)));
+    connect(add_schedule, SIGNAL(released()), this, SLOT(addSchedule()));
+    connect(remove_schedule, SIGNAL(released()), this, SLOT(removeSchedule()));
+    connect(tw_schedules, SIGNAL(currentCellChanged(int, int, int, int)), this, SLOT(scheduleActivated(int, int, int, int)));
+    connect(sched_name, SIGNAL(textEdited(const QString)), this, SLOT(setSchedName(const QString)));
+    connect(sched_add_time, SIGNAL(released()), this, SLOT(addSchedTime()));
+    connect(sched_remove_time, SIGNAL(released()), this, SLOT(removeSchedTime()));
+    connect(sched_start, SIGNAL(released()), this, SLOT(startSchedule()));
+    connect(sched_stop, SIGNAL(released()), this, SLOT(stopSchedule()));
+    connect(restore_search, SIGNAL(textEdited(const QString)), this, SLOT(searchLw(const QString)));
+    connect(startall_schedules, SIGNAL(released()), this, SLOT(startAllSchedules()));
+    connect(stopall_schedules, SIGNAL(released()), this, SLOT(stopAllSchedules()));
+    connect(actionChange_language, SIGNAL(triggered()), this, SLOT(changeLanguage()));
+    connect(filter_add, SIGNAL(released()), this, SLOT(addFilter()));
+    connect(filter_remove, SIGNAL(released()), this, SLOT(removeFilter()));
+    connect(filter_add_extension, SIGNAL(released()), this, SLOT(addFilterExtension()));
+    connect(filter_remove_extension, SIGNAL(released()), this, SLOT(removeFilterExtension()));
+    connect(filter_list, SIGNAL(itemSelectionChanged()), this, SLOT(filterChanged()));
+    connect(sched_tab_lw, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(schedTabClicked(QListWidgetItem*)));
+    connect(sched_multitab_lw, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(schedMultitabClicked(QListWidgetItem*)));
+    connect(sched_time_lw, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(schedTimeClicked(QListWidgetItem*)));
+    connect(actionQuit, SIGNAL(triggered()), this, SLOT(closeApp()));
+    connect(actionSave_log, SIGNAL(triggered()), this, SLOT(saveSyncLog()));
+    connect(restore_list, SIGNAL(sigconmenu(QPoint)), this, SLOT(restoreListConMenu(QPoint)));
+    connect(sched_interval_spin, SIGNAL(valueChanged(int)), this, SLOT(schedIntervalChanged(int)));
+    connect(timing_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(timingTabIndexChanged(int)));
+    connect(actionSave_tab, SIGNAL(triggered()), this, SLOT(saveTab()));
+    connect(actionSave_tab_as, SIGNAL(triggered()), this, SLOT(saveTabAs()));
+    connect(actionLoad_tab, SIGNAL(triggered()), this, SLOT(loadTab()));
+    connect(actionChange_temp, SIGNAL(triggered()), this, SLOT(changeTemp()));
+    connect(actionShow_icons_only, SIGNAL(toggled(bool)), this, SLOT(showIconsOnly(bool)));
+    connect(actionSync, SIGNAL(triggered()), this, SLOT(syncCurrentTab()));
+    connect(actionAnalyse, SIGNAL(triggered()), this, SLOT(analyseCurrentTab()));
+    connect(menuTab, SIGNAL(aboutToShow()), this, SLOT(aboutToShowTabMenu()));
+
+    connect(mainStackedWidget,SIGNAL(currentChanged(int)),this,
+            SLOT(updateActionsEnabling(int)));
+
+    setCleanGB();
+    setSelectGB();
+    setSchedDatesGB();
+    tabWidget->removeTab(0);
+    multi_tabWidget->removeTab(0);
+
+    sync_settings = s;
+    readSettings();
+    loadTempSettings();
+    if (tabWidget->count()==0) addSyncTab();
+    if (multi_tabWidget->count()==0) addMultiTab();
+
+    QSettings settings ("Matus Tomlein", "Synkron");
+    tcp_server = new QTcpServer(this);
+    QObject::connect(tcp_server, SIGNAL(newConnection()), this, SLOT(addConnection()));
+    tcp_socket = new QTcpSocket(this);
+    //QObject::connect(tcp_socket, SIGNAL(connected()), this, SLOT(sendMessageAndClose()));
+    //QObject::connect(tcp_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(initServer(QAbstractSocket::SocketError)));
+    tcp_socket->connectToHost("Localhost", settings.value("process_id", 1).toUInt());
+    if (tcp_socket->waitForConnected(1000)) {
+        sendMessageAndClose();
+        skip_close_event = true;
+        QTimer::singleShot(0, this, SLOT(close())); }
+    else {
+        initServer(QAbstractSocket::SocketTimeoutError);
+        if (actionSync_at_launch->isChecked()) {
+            QTimer::singleShot(0, this, SLOT(syncAll()));
+        }
+    }
+    QTimer::singleShot(2000, this, SLOT(setShownManually()));
 }
 
-MainWindow::~MainWindow()
+// +++ Connection +++
+
+void MainWindow::initServer(QAbstractSocket::SocketError)
 {
-    delete ui;
+    if (tcp_server->isListening()) { return; }
+    if (!tcp_server->listen() && !tcp_server->isListening()) {
+        tcp_server->close();
+    } else {
+        QSettings settings ("Matus Tomlein", "Synkron");
+        settings.setValue("process_id", tcp_server->serverPort());
+        for (int i = 1; i < qApp->arguments().count(); ++i) {
+            if (qApp->arguments().at(i) == "-delete" && i < qApp->arguments().count() - 1) {
+                globalDelete(qApp->arguments().at(i + 1));
+                i++;
+            } else if (qApp->arguments().at(i) == "-rename" && i < qApp->arguments().count() - 1) {
+                bool ok = false;
+                QString file_name = QFileInfo(qApp->arguments().at(i + 1)).fileName();
+                QString new_name = QInputDialog::getText(this, tr("Synkron - Rename file"), tr("Type a new name for \"%1\":").arg(qApp->arguments().at(i + 1)), QLineEdit::Normal, file_name, &ok);
+                if (ok) globalRename(qApp->arguments().at(i + 1), new_name);
+                i++;
+            } else {
+                QFileInfo file_info (qApp->arguments().at(i));
+                //QMessageBox::information(this, tr("Synkron"), tr("%1").arg(qApp->arguments().at(i)));
+                if (file_info.exists()) {
+                    loadTab(file_info.absoluteFilePath());
+                }
+            }
+        }
+    }
 }
 
-void MainWindow::changeEvent(QEvent *e)
+void MainWindow::sendMessageAndClose()
 {
-    QMainWindow::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+    QByteArray ba;
+    QDataStream out(&ba, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_2);
+    out << static_cast<quint64> (0);
+    if (qApp->arguments().count() < 2) {
+        out << QString("[Synkron raise];") << QString("\n");
+    } else {
+        for (int i = 1; i < qApp->arguments().count(); ++i) {
+            if (qApp->arguments().at(i) == "-delete" && i < qApp->arguments().count() - 1) {
+                out << QString("[Synkron globalDelete \"%1\"];").arg(qApp->arguments().at(i + 1)) << QString("\n");
+                i++;
+            } else if (qApp->arguments().at(i) == "-rename" && i < qApp->arguments().count() - 1) {
+                out << QString("[Synkron globalRename \"%1\"];").arg(qApp->arguments().at(i + 1)) << QString("\n");
+                i++;
+            } else {
+                QFileInfo file_info (qApp->arguments().at(i));
+                if (file_info.exists()) {
+                    out << QString("[Synkron loadMultisync \"%1\"];").arg(qApp->arguments().at(i)) << QString("\n");
+                    //QMessageBox::information(this, tr("Synkron"), tr("%1").arg(qApp->arguments().at(i)));
+                }
+            }
+        }
+    }
+    out.device()->seek(0);
+    out << static_cast<quint64>(ba.size()) - sizeof(quint64);
+    tcp_socket->write(ba);
+    tcp_socket->disconnectFromHost();
+    qApp->processEvents();
+}
+
+void MainWindow::addConnection()
+{
+    new ClientConnection(this, tcp_server->nextPendingConnection());
+}
+
+void MainWindow::closeApp()
+{
+    qApp->quit();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Tabs
+
+void MainWindow::addTab()
+{
+    int widgetIndex = mainStackedWidget->currentIndex();
+    if (kMainStackedWidgetIndexSync == widgetIndex)
+    {
+        addSyncTab();
+    }
+    else if (kMainStackedWidgetIndexMultisync == widgetIndex)
+    {
+        addMultiTab();
+    }
+
+    this->updateActionsEnabling(widgetIndex);
+}
+
+void MainWindow::closeTab()
+{
+    int widgetIndex = mainStackedWidget->currentIndex();
+    if (((kMainStackedWidgetIndexSync == widgetIndex) && (0 == tabWidget->count())) ||
+            ((kMainStackedWidgetIndexMultisync == widgetIndex) &&
+             (0 == multi_tabWidget->count())))
+    {
+        return;
+    }
+
+    QMessageBox msgBox;
+    msgBox.setText(tr("Are you sure you want to close this tab?"));
+    msgBox.setWindowTitle(QString("Synkron"));
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    switch (msgBox.exec())
+    {
+    case QMessageBox::Yes:
+    {
+        if (widgetIndex == kMainStackedWidgetIndexSync)
+        {
+            tabs.value(tabWidget->currentWidget())->deleteAllFolderDatabases();
+            tabs.remove(tabWidget->currentWidget());
+            tabWidget->removeTab(tabWidget->currentIndex());
+        }
+        else if (widgetIndex == kMainStackedWidgetIndexMultisync)
+        {
+            ( static_cast<MultisyncPage *> (multi_tabWidget->currentWidget())->deleteAllFolderDatabases());
+            multi_tabWidget->removeTab(multi_tabWidget->currentIndex());
+        }
+        break;
+    }
+    case QMessageBox::No:
         break;
     default:
         break;
     }
+    this->updateActionsEnabling(widgetIndex);
 }
 
-void MainWindow::createNavigationTreeActions()
+void MainWindow::saveTab()
 {
-    nav_sync_item = new QTreeWidgetItem(ui->navigation_tree, QStringList(tr("Syncs")));
-    nav_sync_item->setExpanded(true);
-    nav_sync_item->setIcon(0, QIcon(":/images/Synchronise.png"));
-
-    nav_multisync_item = new QTreeWidgetItem(ui->navigation_tree, QStringList(tr("Multisyncs")));
-    nav_multisync_item->setExpanded(true);
-    nav_multisync_item->setIcon(0, QIcon(":/images/multisync_16.png"));
-
-    nav_exceptions_item = new QTreeWidgetItem(ui->navigation_tree, QStringList(tr("Exceptions")));
-    nav_exceptions_item->setExpanded(true);
-    nav_exceptions_item->setIcon(0, QIcon(":/images/blacklist.png"));
-
-    nav_scheduler_item = new QTreeWidgetItem(ui->navigation_tree, QStringList(tr("Scheduler")));
-    nav_scheduler_item->setIcon(0, QIcon(":/images/scheduler16.png"));
-
-    nav_restore_item = new QTreeWidgetItem(ui->navigation_tree, QStringList(tr("Restore")));
-    nav_restore_item->setIcon(0, QIcon(":/images/Restore16.png"));
-}
-
-/**
-  * Run at startup. Connects actions inside the UI.
-  */
-void MainWindow::connectActions()
-{
-    QObject::connect(ui->navigation_tree, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(switchView(QTreeWidgetItem *, int)));
-    QObject::connect(ui->quit_act, SIGNAL(triggered()), this, SLOT(close()));
-    QObject::connect(ui->new_tab_act, SIGNAL(triggered()), this, SLOT(addTab()));
-    QObject::connect(ui->close_tab_act, SIGNAL(triggered()), this, SLOT(closeTab()));
-    //QObject::connect(ui->navigation_add_btn, SIGNAL(clicked()), this, SLOT(addTab()));
-    //QObject::connect(ui->navigation_remove_btn, SIGNAL(clicked()), this, SLOT(closeTab()));
-
-    ui->synchronise_act->trigger();
-
-#ifdef Q_WS_MAC
-    ui->quit_act->setMenuRole(QAction::QuitRole);
-    ui->about_act->setMenuRole(QAction::AboutRole);
-#endif
-}
-
-/**
-  * Changes the current index on the main stacked widget or any other sub stacked widgets according to the item received
-  */
-void MainWindow::switchView(QTreeWidgetItem * item, int)
-{
-    if (item == nav_sync_item) {
-        ui->main_stckw->setCurrentWidget(ui->synchronise_page);
+    if (mainStackedWidget->currentIndex() == kMainStackedWidgetIndexSync)
+    {
+        tabs.value(tabWidget->currentWidget())->save();
     }
-    else if (item == nav_restore_item) {
-        ui->main_stckw->setCurrentWidget(restore_form);
-        restore_form->reload();
-    }
-    else if (item == nav_exceptions_item) {
-        ui->main_stckw->setCurrentWidget(exception_form);
-    }
-    else if (item == nav_multisync_item) {
-        ui->main_stckw->setCurrentWidget(ui->multisync_page);
-    }
-    else if (item == nav_scheduler_item) {
-        ui->main_stckw->setCurrentWidget(ui->scheduler_page);
-    }
-    else if (item->parent()) {
-        if (item->parent() == nav_sync_item) {
-            ui->sync_stckw->setCurrentWidget(sync_item_tab_map->value(item));
-
-            ui->main_stckw->setCurrentWidget(ui->synchronise_page);
-        }
-        else if (item->parent() == nav_exceptions_item) {
-            ui->main_stckw->setCurrentWidget(exception_form);
-
-            exception_form->navigationItemClicked(item);
-        }
+    else if (mainStackedWidget->currentIndex() == kMainStackedWidgetIndexMultisync)
+    {
+        ( static_cast<MultisyncPage *> ( multi_tabWidget->currentWidget())->save());
     }
 }
 
-/**
-  * Slot called when the new tab action (new_tab_act) is triggered. Decides whether to create a sync or multisync tab.
-  */
-void MainWindow::addTab()
+void MainWindow::saveTabAs()
 {
-    if (ui->main_stckw->currentWidget() == ui->synchronise_page) {
-        addSyncTab();
-    } else if (ui->main_stckw->currentWidget() == ui->multisync_page) {
-
-    } else if (ui->main_stckw->currentWidget() == exception_form) {
-        addExceptionBundle();
+    if (mainStackedWidget->currentIndex() == kMainStackedWidgetIndexSync)
+    {
+        ( static_cast<AbstractSyncPage *> (tabs.value(
+                    tabWidget->currentWidget()))->saveAs());
+    }
+    else if (mainStackedWidget->currentIndex() == kMainStackedWidgetIndexMultisync)
+    {
+        ( static_cast<AbstractSyncPage *> (multi_tabWidget->currentWidget())->saveAs());
     }
 }
 
-/**
-  * Slot called when the remove button is clicked. Removes all of the selected items in the navigation tree.
-  */
-void MainWindow::closeTab()
+void MainWindow::loadTab(QString file_name)
 {
-    QList<QTreeWidgetItem *> items = ui->navigation_tree->selectedItems();
-
-    for (int n = items.count() - 1; n >= 0; --n) {
-        if (items.at(n)->parent() == nav_sync_item) {
-            SyncTabForm * form = sync_item_tab_map->value(items.at(n));
-            int i = form->index();
-            delete items.at(n);
-            delete form;
-            module->closeSync(i);
-        } else if (items.at(n)->parent() == nav_exceptions_item) {
-            exception_form->removeBundle(items.at(n));
-        }
-    }
-}
-
-/**
-  * Creates a new SyncPage. Usually called when user clicks the add tab button.
-  */
-void MainWindow::addSyncTab()
-{
-    addSyncTab(module->addSync());
-}
-
-/**
-  * Creates a new SyncTabForm from the SyncPage.
-  */
-void MainWindow::addSyncTab(AbstractSyncPage * sync_page)
-{
-    SyncTabForm * tab_form = new SyncTabForm(sync_page);
-
-    QObject::connect(tab_form, SIGNAL(addFolderSig(int,int)), module, SLOT(addSyncFolder(int,int)));
-    QObject::connect(tab_form, SIGNAL(closeFolderSig(int,int)), module, SLOT(closeSyncFolder(int,int)));
-
-    ui->sync_stckw->addWidget(tab_form);
-    ui->sync_stckw->setCurrentWidget(tab_form);
-
-    MTTreeWidgetItem * item = new MTTreeWidgetItem(nav_sync_item, QStringList(tab_form->title()));
-    selectTreeItemExclusive(ui->navigation_tree, item);
-
-    tab_form->assignNavigationItem(item);
-    sync_item_tab_map->insert(item, tab_form);
-
-    ui->navigation_tree->setItemWidget(item, 0, tab_form->navigationItemWidget());
-    ui->main_stckw->setCurrentWidget(ui->synchronise_page);
-}
-
-void MainWindow::addExceptionBundle()
-{
-    exception_form->addBundle();
-}
-
-/**
-  * Selects the given item and deselects all other items in the given tree
-  */
-void MainWindow::selectTreeItemExclusive(QTreeWidget * tree, QTreeWidgetItem * item)
-{
-    QList<QTreeWidgetItem *> items = tree->selectedItems();
-
-    for (int i = 0; i < items.count(); ++i) {
-        items.at(i)->setSelected(false);
-    }
-    item->setSelected(true);
-}
-
-/**
-  * Loads the settings from Module
-  */
-void MainWindow::load()
-{
-    QMapIterator<int, AbstractSyncPage *> * i = module->syncIterator();
-    while (i->hasNext()) {
-        i->next();
-        addSyncTab(i->value());
-    }
-    delete i;
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    module->save();
-    QMainWindow::closeEvent(event);
-}
-
-/**
-  * This is called after all settings were loaded to make sure everything is ready for the user to use the MainWindow
-  * (like there is at least one sync tab...)
-  */
-void MainWindow::makeReady()
-{
-    if (!sync_item_tab_map->count()) addSyncTab();
-}
-
-void MainWindow::aboutToShowSyncActMenu()
-{
-    QAction * act;
-
-    sync_act_menu->clear();
-
-    QMapIterator<QTreeWidgetItem *, SyncTabForm *> i(*sync_item_tab_map);
-    while (i.hasNext()) {
-        i.next();
-
-        act = new QAction(sync_act_menu);
-        act->setText(i.value()->title());
-        act->setData(i.value()->index());
-        sync_act_menu->addAction(act);
-    }
-
-    sync_act_menu->addSeparator();
-
-    QAction * new_sync_act = new QAction(sync_act_menu);
-    new_sync_act->setText(tr("Add sync"));
-    new_sync_act->setIcon(QIcon(":/images/add.png"));
-    QObject::connect(new_sync_act, SIGNAL(triggered()), this, SLOT(addSyncTab()));
-    sync_act_menu->addAction(new_sync_act);
-}
-
-void MainWindow::aboutToShowExceptionActMenu()
-{
-    QAction * act;
-
-    exception_act_menu->clear();
-
-    QMapIterator<QTreeWidgetItem *, ExceptionBundle *> i(*(exception_form->bundles()));
-    while (i.hasNext()) {
-        i.next();
-
-        act = new QAction(exception_act_menu);
-        act->setText(i.value()->name());
-        act->setData(i.value()->index());
-        exception_act_menu->addAction(act);
-    }
-
-    exception_act_menu->addSeparator();
-
-    QAction * new_exc_act = new QAction(exception_act_menu);
-    new_exc_act->setText(tr("Add exception bundle"));
-    new_exc_act->setIcon(QIcon(":/images/add.png"));
-    QObject::connect(new_exc_act, SIGNAL(triggered()), this, SLOT(addExceptionBundle()));
-    exception_act_menu->addAction(new_exc_act);
-}
-
-void MainWindow::syncActMenuActionTriggered(QAction * act)
-{
-    if (act->data().isNull()) return;
-
-    ui->main_stckw->setCurrentWidget(ui->synchronise_page);
-    int id = act->data().toInt();
-    QMapIterator<QTreeWidgetItem *, SyncTabForm *> i(*sync_item_tab_map);
-    while (i.hasNext()) {
-        i.next();
-
-        if (i.value()->index() == id) {
-            ui->navigation_tree->clearSelection();
-            i.key()->setSelected(true);
-            ui->sync_stckw->setCurrentWidget(i.value());
+    if (file_name.isEmpty())
+    {
+        file_name = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                 QDir::homePath(),
+                                                 tr("Synkron Tabs (*.slist)"));
+        if (file_name.isEmpty())
+        {
             return;
         }
     }
+    QFile file(file_name);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        QMessageBox::critical(this, tr("Synkron"),
+                              tr("Cannot read file %1:\n%2.").arg(file_name)
+                              .arg(file.errorString()));
+        return;
+    }
+    QTextStream in(&file);
+    QDomDocument domdoc;
+    domdoc.setContent(in.readAll());
+    QDomElement el_sync = domdoc.firstChildElement("sync");
+    if (el_sync.attribute("type") == "sync")
+    {
+        SyncPage * page = addSyncTab();
+        page->load(domdoc, file_name);
+        actionSynchronise->trigger();
+    }
+    else
+    { //Multisync
+        MultisyncPage * multi_page = addMultiTab();
+        multi_page->load(domdoc, file_name);
+        mainStackedWidget->setCurrentIndex(kMainStackedWidgetIndexMultisync);
+        actionMultisync->trigger();
+    }
 }
 
-void MainWindow::exceptionActMenuActionTriggered(QAction * act)
+void MainWindow::syncCurrentTab()
 {
-    if (act->data().isNull()) return;
+    if (mainStackedWidget->currentIndex() == kMainStackedWidgetIndexSync)
+    {
+        ( static_cast<AbstractSyncPage *> (tabs.value(tabWidget->currentWidget()))->sync());
+    }
+    else if (mainStackedWidget->currentIndex() == kMainStackedWidgetIndexMultisync)
+    {
+        ( static_cast<AbstractSyncPage *> (multi_tabWidget->currentWidget())->sync());
+    }
+}
 
-    ui->main_stckw->setCurrentWidget(exception_form);
-    int id = act->data().toInt();
-    QMapIterator<QTreeWidgetItem *, ExceptionBundle *> i(*exception_form->bundles());
-    while (i.hasNext()) {
-        i.next();
+void MainWindow::analyseCurrentTab()
+{
+    if (mainStackedWidget->currentIndex() == kMainStackedWidgetIndexSync)
+    {
+        tabs.value(tabWidget->currentWidget())->goToAnalyse();
+    }
+}
 
-        if (i.value()->index() == id) {
-            ui->navigation_tree->clearSelection();
-            i.key()->setSelected(true);
-            exception_form->navigationItemClicked(i.key());
-            return;
+void MainWindow::aboutToShowTabMenu()
+{
+    int widgetIndex = mainStackedWidget->currentIndex();
+    if (kMainStackedWidgetIndexSync == widgetIndex)
+    {
+        AbstractSyncPage *syncPage = static_cast<AbstractSyncPage *> (tabs.value(
+                    tabWidget->currentWidget()));
+        if (nullptr != syncPage)
+        {
+            actionAdvanced->setMenu(syncPage->advanced_menu);
+        }
+        actionAnalyse->setMenu(nullptr);
+    }
+    else if (kMainStackedWidgetIndexMultisync == widgetIndex)
+    {
+        MultisyncPage *multiSyncPage = static_cast<MultisyncPage *> (
+                multi_tabWidget->currentWidget());
+        if (nullptr != multiSyncPage)
+        {
+            actionAdvanced->setMenu(multiSyncPage->advanced_menu);
+            actionAnalyse->setMenu(multiSyncPage->analyse_con_menu);
         }
     }
+}
+
+void MainWindow::updateActionsEnabling(int widgetIndex)
+{
+    bool tabActionsEnabled = false;
+    switch(widgetIndex)
+    {
+    case kMainStackedWidgetIndexSync:
+    {
+        tabActionsEnabled = (0 != tabWidget->count());
+        break;
+    }
+    case kMainStackedWidgetIndexMultisync:
+    {
+        tabActionsEnabled = (0 != multi_tabWidget->count());
+        break;
+    }
+    default:
+    {
+
+    }
+    }
+    actionClose_sync->setEnabled(tabActionsEnabled);
+
+    actionSave_tab->setEnabled(tabActionsEnabled);
+    actionSave_tab_as->setEnabled(tabActionsEnabled);
+    actionSave_log->setEnabled(tabActionsEnabled);
+    actionSync->setEnabled(tabActionsEnabled);
+    actionAnalyse->setEnabled(tabActionsEnabled);
 }

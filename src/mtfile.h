@@ -1,6 +1,6 @@
 /*******************************************************************
  This file is part of Synkron
- Copyright (C) 2005-2011 Matus Tomlein (matus.tomlein@gmail.com)
+ Copyright (C) 2005-2009 Matus Tomlein (matus.tomlein@gmail.com)
 
  Synkron is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public Licence
@@ -34,10 +34,10 @@
 class MTFile : public QFile
 {
 public:
-	MTFile(QString);
-	MTFile(QString, QObject *);
+    MTFile(QString);
+    MTFile(QString, QObject *);
     bool copy(QString);
-	bool touch(QApplication *);
+    bool touch(QApplication *);
     bool openAndTouch(QString);
 };
 
@@ -51,10 +51,15 @@ public:
 
     void setTime(const QTime & time) { QDateTime::setTime(time); /*makeEven();*/ };
     void setTime_t(uint seconds) { QDateTime::setTime_t(seconds); /*makeEven();*/ };
-    int compareWith(MTEvenDateTime other, int ignored_secs = 1) {
+    int compareWith(MTEvenDateTime other, int ignored_secs = 1, bool DST = true) {
         QString this_str = QDateTime::toString("yyyyMMddhhmmss");
         QString other_str = other.toString("yyyyMMddhhmmss");
         if (this_str == other_str) {
+            return 0;
+        } else if ((DST) &&
+                   ((QDateTime::addSecs(0 - 3600).toString("yyyyMMddhhmmss") > other_str) ||
+                    (QDateTime::addSecs(3600).toString("yyyyMMddhhmmss") > other_str))) {
+            // Ignore Daylight Saving Time (DST), which means time could be shifted by exactly 1 hour
             return 0;
         } else if (this_str > other_str) {
             if (QDateTime::addSecs(0 - ignored_secs).toString("yyyyMMddhhmmss") > other_str) {
@@ -76,21 +81,14 @@ protected:
 class MTFileInfo : public QFileInfo
 {
 public:
-    MTFileInfo(): QFileInfo() {}
-    MTFileInfo(const QString & file): QFileInfo(file) {}
-    MTFileInfo(const QFile & file): QFileInfo(file) {}
-    MTFileInfo(const QDir & dir, const QString & file): QFileInfo(dir, file) {}
-    MTFileInfo(const QFileInfo & fileinfo): QFileInfo(fileinfo) {}
-    MTFileInfo(const QFileInfo & fileinfo, int f_id): QFileInfo(fileinfo) { this->f_id = f_id; }
+    MTFileInfo(): QFileInfo() {};
+    MTFileInfo(const QString & file): QFileInfo(file) {};
+    MTFileInfo(const QFile & file): QFileInfo(file) {};
+    MTFileInfo(const QDir & dir, const QString & file): QFileInfo(dir, file) {};
+    MTFileInfo(const QFileInfo & fileinfo): QFileInfo(fileinfo) {};
 
-    MTEvenDateTime lastModified() const { return MTEvenDateTime(QFileInfo::lastModified()); }
-    MTEvenDateTime lastRead() const { return MTEvenDateTime(QFileInfo::lastRead()); }
-
-    int folderId() { return f_id; }
-    void setFolderId(int i) { f_id = i; }
-
-private:
-    int f_id;
+    MTEvenDateTime lastModified() const { return MTEvenDateTime(QFileInfo::lastModified()); };
+    MTEvenDateTime lastRead() const { return MTEvenDateTime(QFileInfo::lastRead()); };
 };
 
 class MTCheckBoxGroup : public QWidget
